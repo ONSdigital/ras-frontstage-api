@@ -14,13 +14,13 @@ def logger_initial_config(service_name=None,
     if not logger_date_format:
         logger_date_format = os.getenv('LOGGING_DATE_FORMAT', "%Y-%m-%dT%H:%M%s")
     if not log_level:
-        log_level = os.getenv('LOGGING_LEVEL', 'INFO')
+        log_level = os.getenv('LOGGING_LEVEL')
     if not logger_format:
         logger_format = "%(message)s"
     if not service_name:
-        service_name = os.getenv('NAME', 'ras-frontstage-api')
+        service_name = os.getenv('NAME')
     try:
-        indent = int(os.getenv('JSON_INDENT_LOGGING', 1))
+        indent = int(os.getenv('JSON_INDENT_LOGGING'))
     except TypeError:
         indent = None
     except ValueError:
@@ -36,6 +36,3 @@ def logger_initial_config(service_name=None,
     logging.basicConfig(level=log_level, format=logger_format)
     configure(processors=[add_log_level, filter_by_level, add_service,
                           TimeStamper(fmt=logger_date_format, utc=True, key="created_at"), JSONRenderer(indent=indent)])
-    oauth_log = logging.getLogger("requests_oauthlib")
-    oauth_log.addHandler(logging.NullHandler())
-    oauth_log.propagate = False

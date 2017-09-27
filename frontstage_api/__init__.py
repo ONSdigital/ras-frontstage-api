@@ -2,8 +2,7 @@ import os
 
 from flask import Flask
 
-from frontstage_api.logger_config import logger_initial_config
-
+from logger_config import logger_initial_config
 
 app = Flask(__name__)
 

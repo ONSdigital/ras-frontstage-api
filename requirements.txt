@@ -1,2 +1,2 @@
-flask==0.12
+Flask==0.12
 structlog==17.2.0

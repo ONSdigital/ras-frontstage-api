@@ -13,3 +13,4 @@ logger_initial_config(service_name='ras-frontstage-api', log_level=app.config['L
 
 
 import frontstage_api.views.secure_messaging  # NOQA
+import frontstage_api.error_handlers  # NOQA

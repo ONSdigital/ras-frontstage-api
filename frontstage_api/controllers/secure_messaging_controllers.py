@@ -15,11 +15,9 @@ logger = wrap_logger(logging.getLogger(__name__))
 def get_messages_list(encoded_jwt):
     logger.debug('Attempting to retrieve the messages list')
     method = 'GET'
-    url = app.config['MESSAGES_LIST_URL']
-    headers = {"Authorization": encoded_jwt}
     label = request.args.get('label')
-    if label is not None:
-        url = url + "&label=" + label
+    url = '{}&label={}'.format(app.config['MESSAGES_LIST_URL'], label)
+    headers = {"Authorization": encoded_jwt}
     response = request_handler(method, url, headers)
 
     if response.status_code != 200:

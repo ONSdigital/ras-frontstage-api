@@ -99,5 +99,3 @@ class TestSecureMessaging(unittest.TestCase):
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue("Unexpected status code received from service".encode() in response.data)
-
-

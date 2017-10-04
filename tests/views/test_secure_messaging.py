@@ -5,6 +5,7 @@ import requests
 import requests_mock
 
 from frontstage_api import app
+from frontstage_api.exceptions.exceptions import InvalidRequestMethod
 
 
 url_get_messages_list_INBOX = '{}&label={}'.format(app.config['MESSAGES_LIST_URL'], 'INBOX')
@@ -61,6 +62,16 @@ class TestSecureMessaging(unittest.TestCase):
         self.assertTrue('Unexpected status code received from service'.encode() in response.data)
 
     @requests_mock.mock()
+    def test_get_messages_list_invalid_method(self, mock_request):
+        mock_request.get(url_get_messages_list_INBOX, exc=InvalidRequestMethod('GOT', 'http://fakeurl.com'))
+        headers = {'authorization': encoded_jwt}
+
+        response = self.app.get("/messages_list?label=INBOX", headers=headers)
+
+        self.assertEqual(response.status_code, 500)
+        self.assertTrue('Invalid request method'.encode() in response.data)
+
+    @requests_mock.mock()
     def test_get_messages_list_no_jwt(self, mock_request):
         mock_request.get(url_get_messages_list_INBOX, json=messages_list_inbox)
 
@@ -88,3 +99,5 @@ class TestSecureMessaging(unittest.TestCase):
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue("Unexpected status code received from service".encode() in response.data)
+
+

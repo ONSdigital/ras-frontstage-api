@@ -4,7 +4,7 @@ from requests.exceptions import ConnectionError, ConnectTimeout
 import requests_mock
 
 from frontstage_api.common.utilities import request_handler
-from frontstage_api.exceptions.exceptions import FailedRequest
+from frontstage_api.exceptions.exceptions import FailedRequest, InvalidRequestMethod
 
 
 url = 'http://testurl'
@@ -49,3 +49,10 @@ class TestSecureMessaging(unittest.TestCase):
 
         with self.assertRaises(FailedRequest):
             request_handler('GET', url)
+
+    @requests_mock.mock()
+    def test_get_response_invalid_method(self, mock_request):
+        mock_request.get(url, exc=ConnectTimeout)
+
+        with self.assertRaises(InvalidRequestMethod):
+            request_handler('GOT', url)

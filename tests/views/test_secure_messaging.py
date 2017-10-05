@@ -5,7 +5,7 @@ import requests
 import requests_mock
 
 from frontstage_api import app
-from frontstage_api.exceptions.exceptions import InvalidRequestMethod
+from frontstage_api.exceptions.exceptions import FailedRequest, InvalidRequestMethod
 
 
 url_get_messages_list_INBOX = '{}&label={}'.format(app.config['MESSAGES_LIST_URL'], 'INBOX')
@@ -24,12 +24,14 @@ class TestSecureMessaging(unittest.TestCase):
     @requests_mock.mock()
     def test_get_messages_list(self, mock_request):
         mock_request.get(url_get_messages_list_INBOX, json=messages_list_inbox)
+        mock_request.get(url_get_unread_messages_total, json={"total": "10"})
         headers = {'authorization': encoded_jwt}
 
         response = self.app.get("/messages_list?label=INBOX", headers=headers)
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue('The European languages are members of the same family'.encode() in response.data)
+        self.assertTrue('"total": "10"'.encode() in response.data)
 
     @requests_mock.mock()
     def test_get_messages_list_connection_error(self, mock_request):
@@ -81,21 +83,12 @@ class TestSecureMessaging(unittest.TestCase):
         self.assertTrue('No JWT provided in request header'.encode() in response.data)
 
     @requests_mock.mock()
-    def test_get_unread_message_total(self, mock_request):
-        mock_request.get(url_get_unread_messages_total, json={"total": "10"})
-        headers = {'authorization': encoded_jwt}
-
-        response = self.app.get("/unread_message_total", headers=headers)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue("10".encode() in response.data)
-
-    @requests_mock.mock()
-    def test_get_unread_message_total_unexpected_code(self, mock_request):
+    def test_get_messages_unread_total_unexpected_code(self, mock_request):
+        mock_request.get(url_get_messages_list_INBOX, json=messages_list_inbox)
         mock_request.get(url_get_unread_messages_total, status_code=500)
         headers = {'authorization': encoded_jwt}
 
-        response = self.app.get("/unread_message_total", headers=headers)
+        response = self.app.get("/messages_list?label=INBOX", headers=headers)
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue("Unexpected status code received from service".encode() in response.data)

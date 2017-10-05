@@ -5,8 +5,8 @@ from flask import request
 from structlog import wrap_logger
 
 from frontstage_api import app
-from frontstage_api.exceptions.exceptions import UnexpectedStatusCode
 from frontstage_api.common.utilities import request_handler
+from frontstage_api.exceptions.exceptions import UnexpectedStatusCode
 
 
 logger = wrap_logger(logging.getLogger(__name__))

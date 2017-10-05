@@ -1,29 +1,26 @@
 import logging
 
-from flask import Blueprint, jsonify, make_response, request
+from flask import jsonify, make_response, request
+from flask_restplus import Resource
 from structlog import wrap_logger
 
-from frontstage_api import app
+from frontstage_api import api
 from frontstage_api.controllers import secure_messaging_controllers
 from frontstage_api.decorators.jwt_decorators import get_jwt
 
 
 logger = wrap_logger(logging.getLogger(__name__))
 
-secure_message_bp = Blueprint('secure_message_bp', __name__, static_folder='static', template_folder='templates')
+
+class GetMessagesList(Resource):
+    method_decorators = [get_jwt(request)]
+
+    @staticmethod
+    def get(encoded_jwt):
+        messages = secure_messaging_controllers.get_messages_list(encoded_jwt)
+        total = secure_messaging_controllers.get_unread_message_total(encoded_jwt)
+        messages_list = {**messages, **total}
+        return make_response(jsonify(messages_list), 200)
 
 
-@app.route('/messages_list', methods=['GET'])
-@get_jwt(request)
-def get_message_list(encoded_jwt):
-    messages = secure_messaging_controllers.get_messages_list(encoded_jwt)
-    return make_response(jsonify(messages), 200)
-
-
-@app.route('/unread_message_total', methods=['GET'])
-@get_jwt(request)
-def get_unread_message_total(encoded_jwt):
-    total = secure_messaging_controllers.get_unread_message_total(encoded_jwt)
-    return make_response(jsonify(total), 200)
-
-
+api.add_resource(GetMessagesList, '/messages_list')

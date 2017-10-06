@@ -38,7 +38,7 @@ def get_unread_message_total(encoded_jwt):
     response = request_handler(method, url, headers, fail=False)
 
     # If request handler has failed to generate a response return the error message
-    if isinstance(response, Response):
+    if not isinstance(response, Response):
         return response
 
     # If the response status code is not 200 return json error message

@@ -5,7 +5,7 @@ import requests
 import requests_mock
 
 from frontstage_api import app
-from frontstage_api.exceptions.exceptions import FailedRequest, InvalidRequestMethod
+from frontstage_api.exceptions.exceptions import InvalidRequestMethod
 
 
 url_get_messages_list_INBOX = '{}&label={}'.format(app.config['MESSAGES_LIST_URL'], 'INBOX')

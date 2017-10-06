@@ -3,7 +3,7 @@ import unittest
 from requests.exceptions import ConnectionError, ConnectTimeout
 import requests_mock
 
-from frontstage_api.common.utilities import request_handler
+from frontstage_api.common.request_handler import request_handler
 from frontstage_api.exceptions.exceptions import FailedRequest, InvalidRequestMethod
 
 

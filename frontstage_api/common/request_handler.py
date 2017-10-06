@@ -10,7 +10,7 @@ from frontstage_api.exceptions.exceptions import FailedRequest, InvalidRequestMe
 logger = wrap_logger(logging.getLogger(__name__))
 
 
-def request_handler(method, url, headers=None, json=None):
+def request_handler(method, url, headers=None, json=None, fail=True):
     try:
         if method == 'GET':
             response = requests.get(url, headers=headers)
@@ -23,9 +23,21 @@ def request_handler(method, url, headers=None, json=None):
             raise InvalidRequestMethod(method, url)
     except ConnectTimeout as e:
         logger.error('Connection to remote server timed out', method=method, url=url, exception=str(e))
-        raise FailedRequest(method, url, e)
+        if fail:
+            raise FailedRequest(method, url, e)
+        else:
+            return {
+                "error": "Connection timeout",
+                "url": url
+            }
     except ConnectionError as e:
         logger.error('Failed to connect to external service', method=method, url=url, exception=str(e))
-        raise FailedRequest(method, url, e)
+        if fail:
+            raise FailedRequest(method, url, e)
+        else:
+            return {
+                "error": "Connection error",
+                "url": url
+            }
 
     return response

@@ -18,8 +18,8 @@ class GetMessagesList(Resource):
     @staticmethod
     def get(encoded_jwt):
         messages = secure_messaging_controllers.get_messages_list(encoded_jwt)
-        total = secure_messaging_controllers.get_unread_message_total(encoded_jwt)
-        messages_list = {**messages, **total}
+        unread_messages_total = secure_messaging_controllers.get_unread_message_total(encoded_jwt)
+        messages_list = {**messages, **unread_messages_total}
         return make_response(jsonify(messages_list), 200)
 
 

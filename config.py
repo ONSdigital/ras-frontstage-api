@@ -2,7 +2,7 @@ import os
 
 
 class Config(object):
-    DEBUG = False
+    DEBUG = os.getenv('DEBUG', False)
     TESTING = False
     NAME = 'ras-frontstage-api'
     VERSION = os.getenv('VERSION', '0.0.1')
@@ -21,7 +21,7 @@ class Config(object):
 
 
 class DevelopmentConfig(Config):
-    DEBUG = True
+    DEBUG = os.getenv('DEBUG', True)
     LOGGING_LEVEL = os.getenv('LOGGING_LEVEL', 'DEBUG')
 
 

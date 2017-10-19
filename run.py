@@ -7,7 +7,7 @@ from structlog import wrap_logger
 if not os.getenv('APP_SETTINGS'):
     os.environ['APP_SETTINGS'] = 'DevelopmentConfig'
 
-from frontstage_api import app  # NOQA
+from frontstage_api import app  # NOQA # pylint: disable=wrong-import-position
 
 logger = wrap_logger(logging.getLogger(__name__))
 

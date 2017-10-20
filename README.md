@@ -58,9 +58,9 @@ For each external application which frontstage-api communicates with there are 3
 
 | Environment Variable                | Description                              | Default
 |-------------------------------------|------------------------------------------|-------------------------------
-| RAS_SECURE_MESSAGE_SERVICE_HOST     | Host address for secure message service  | 'http'
-| RAS_SECURE_MESSAGE_SERVICE_PORT     | Port for secure message service          | 'localhost'
-| RAS_SECURE_MESSAGE_SERVICE_PROTOCOL | Protocol used for secure message service | '5050'
+| RAS_SECURE_MESSAGE_SERVICE_HOST     | Host address for secure message service  | 'localhost'
+| RAS_SECURE_MESSAGE_SERVICE_PORT     | Port for secure message service          | '5050'
+| RAS_SECURE_MESSAGE_SERVICE_PROTOCOL | Protocol used for secure message service | 'http'
 
 The services these variables exist for are listed below with the beginnings of their variables and their github links:
 

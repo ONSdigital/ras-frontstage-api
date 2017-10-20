@@ -49,7 +49,7 @@ Environment variables available for configuration are listed below:
 | NAME                            | Name of application                             | 'ras-frontstage-api'
 | VERSION                         | Version number of application                   | '0.0.1' (manually update as application updates)
 | APP_SETTINGS                    | Which config to use                             | 'Config' (DevelopmentConfig is set in run.py)
-| PORT                            | Which port application runs on                  | 8082
+| PORT                            | Which port application runs on                  | '8083'
 | LOGGING_LEVEL                   | Level which the application logs at             | 'INFO' ('DEBUG' for DevelopmentConfig)
 | MESSAGE_LIMIT                   | Maximum number of messages to return from messaging service | 1000
 

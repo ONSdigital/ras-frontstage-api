@@ -6,7 +6,7 @@ class Config(object):
     TESTING = False
     NAME = 'ras-frontstage-api'
     VERSION = os.getenv('VERSION', '0.0.1')
-    PORT = os.getenv('PORT', 8082)
+    PORT = os.getenv('PORT', 8083)
     LOGGING_LEVEL = os.getenv('LOGGING_LEVEL', 'INFO')
 
     RAS_SECURE_MESSAGE_SERVICE_HOST = os.getenv('RAS_SECURE_MESSAGE_SERVICE_HOST', 'localhost')

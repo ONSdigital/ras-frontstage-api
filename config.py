@@ -16,6 +16,9 @@ class Config(object):
                                                       RAS_SECURE_MESSAGE_SERVICE_HOST,
                                                       RAS_SECURE_MESSAGE_SERVICE_PORT)
     MESSAGE_LIMIT = os.getenv('MESSAGE_LIMIT', 1000)
+    MESSAGE_URL = '{}message'.format(RAS_SECURE_MESSAGE_SERVICE)
+    DRAFT_URL = '{}draft'.format(RAS_SECURE_MESSAGE_SERVICE)
+    THREAD_URL = '{}thread'.format(RAS_SECURE_MESSAGE_SERVICE)
     MESSAGES_LIST_URL = '{}messages?limit={}'.format(RAS_SECURE_MESSAGE_SERVICE, MESSAGE_LIMIT)
     UNREAD_MESSAGES_TOTAL_URL = '{}labels?name=unread'.format(RAS_SECURE_MESSAGE_SERVICE)
 

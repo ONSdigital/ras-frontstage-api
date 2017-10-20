@@ -50,7 +50,7 @@ Environment variables available for configuration are listed below:
 | VERSION                         | Version number of application                   | '0.0.1' (manually update as application updates)
 | APP_SETTINGS                    | Which config to use                             | 'Config' (DevelopmentConfig is set in run.py)
 | PORT                            | Which port application runs on                  | 8082
-| LOGGING_LEVEL                   | Which port application runs on                  | 'INFO' ('DEBUG' for DevelopmentConfig)
+| LOGGING_LEVEL                   | Level which the application logs at             | 'INFO' ('DEBUG' for DevelopmentConfig)
 | MESSAGE_LIMIT                   | Maximum number of messages to return from messaging service | 1000
 
 

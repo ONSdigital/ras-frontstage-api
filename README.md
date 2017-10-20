@@ -23,7 +23,6 @@ Start server
 python run.py
 ```
 
-
 ## Run Tests
 
 Install test dependencies using pip
@@ -40,3 +39,31 @@ Run tests with coverage
 ```
 py.test tests/ --cov=frontstage_api
 ```
+
+## Configuration
+
+Environment variables available for configuration are listed below:
+
+| Environment Variable            | Description                                     | Default
+|---------------------------------|-------------------------------------------------|-------------------------------
+| NAME                            | Name of application                             | 'ras-frontstage-api'
+| VERSION                         | Version number of application                   | '0.0.1' (manually update as application updates)
+| APP_SETTINGS                    | Which config to use                             | 'Config' (DevelopmentConfig is set in run.py)
+| PORT                            | Which port application runs on                  | 8082
+| LOGGING_LEVEL                   | Which port application runs on                  | 'INFO' ('DEBUG' for DevelopmentConfig)
+| MESSAGE_LIMIT                   | Maximum number of messages to return from messaging service | 1000
+
+
+For each external application which frontstage-api communicates with there are 3 environment variables e.g. for the RAS Secure Messaging service:
+
+| Environment Variable                | Description                              | Default
+|-------------------------------------|------------------------------------------|-------------------------------
+| RAS_SECURE_MESSAGE_SERVICE_HOST     | Host address for secure message service  | 'http'
+| RAS_SECURE_MESSAGE_SERVICE_PORT     | Port for secure message service          | 'localhost'
+| RAS_SECURE_MESSAGE_SERVICE_PROTOCOL | Protocol used for secure message service | '5050'
+
+The services these variables exist for are listed below with the beginnings of their variables and their github links:
+
+| Service                         | Start of variables          | Github
+|---------------------------------|-----------------------------|-----------------------------
+| Secure message service          | RAS_SECURE_MESSAGE_SERVICE  | https://github.com/ONSdigital/ras-secure-message

@@ -46,4 +46,4 @@ def unexpected_status_code(error):
         'content': error.content
     }
     logger.error('Unexpected status code returned from service', method=error.method, url=error.url, status_code=error.status_code)
-    return message_json, error.status_code
+    return message_json, 200

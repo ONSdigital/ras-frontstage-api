@@ -5,7 +5,7 @@ import requests
 import requests_mock
 
 from frontstage_api import app
-from frontstage_api.exceptions.exceptions import InvalidRequestMethod
+from frontstage_api.exceptions.exceptions import InvalidRequestMethod, UnexpectedStatusCode
 
 
 url_get_messages_list_INBOX = '{}&label={}'.format(app.config['MESSAGES_LIST_URL'], 'INBOX')
@@ -23,6 +23,8 @@ with open('tests/test_data/secure_messaging/draft_with_thread.json') as json_dat
 url_get_thread = '{}/{}'.format(app.config['THREAD_URL'], 'dfcb2b2c-a1d8-4d86-a974-7ffe05a3141c')
 with open('tests/test_data/secure_messaging/thread.json') as json_data:
     thread = json.load(json_data)
+with open('tests/test_data/secure_messaging/thread_no_party.json') as json_data:
+    thread_no_party = json.load(json_data)
 
 encoded_jwt = 'testjwt'
 
@@ -71,7 +73,7 @@ class TestSecureMessaging(unittest.TestCase):
 
         response = self.app.get("/messages_list?label=INBOX", headers=headers)
 
-        self.assertEqual(response.status_code, 500)
+        self.assertEqual(response.status_code, 200)
         self.assertTrue('Unexpected status code received from service'.encode() in response.data)
 
     @requests_mock.mock()
@@ -138,6 +140,17 @@ class TestSecureMessaging(unittest.TestCase):
         self.assertTrue('"body": "TEsdfdsfST"'.encode() in response.data)
 
     @requests_mock.mock()
+    def test_get_message_fail(self, mock_request):
+        mock_request.get(url_get_message, status_code=500)
+        headers = {'authorization': encoded_jwt}
+        message_url = "/message?message_id=dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b&label=INBOX&party_id=1f5e1d68-2a4c-4698-8086-e23c0b98923f"
+
+        response = self.app.get(message_url, headers=headers)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('"status_code": 500'.encode() in response.data)
+
+    @requests_mock.mock()
     def test_get_message_draft_no_thread(self, mock_request):
         mock_request.get(url_get_draft, json=draft)
         headers = {'authorization': encoded_jwt}
@@ -160,3 +173,27 @@ class TestSecureMessaging(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue('"body": "TEsdfdsfST"'.encode() in response.data)
         self.assertTrue('"body": "Replying "'.encode() in response.data)
+
+    @requests_mock.mock()
+    def test_get_message_draft_thread_no_party(self, mock_request):
+        mock_request.get(url_get_draft, json=draft_with_thread)
+        mock_request.get(url_get_thread, json=thread_no_party)
+        headers = {'authorization': encoded_jwt}
+        message_url = "/message?message_id=dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b&label=DRAFT&party_id=1f5e1d68-2a4c-4698-8086-e23c0b98923f"
+
+        response = self.app.get(message_url, headers=headers)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('"body": "TEsdfdsfST"'.encode() in response.data)
+
+    @requests_mock.mock()
+    def test_get_message_draft_thread_fail(self, mock_request):
+        mock_request.get(url_get_draft, json=draft_with_thread)
+        mock_request.get(url_get_thread, status_code=500)
+        headers = {'authorization': encoded_jwt}
+        message_url = "/message?message_id=dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b&label=DRAFT&party_id=1f5e1d68-2a4c-4698-8086-e23c0b98923f"
+
+        response = self.app.get(message_url, headers=headers)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('"status_code": 500'.encode() in response.data)

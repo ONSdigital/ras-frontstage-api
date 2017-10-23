@@ -34,7 +34,7 @@ class GetMessageView(Resource):
 
         message = secure_messaging_controllers.get_message(encoded_jwt, message_id, label)
 
-        # If message is a draft also return the last message from the thread
+        # If message is a draft also return the last message from the thread if it exists
         if label == 'DRAFT':
             draft = message
             thread_id = draft.get('thread_id')

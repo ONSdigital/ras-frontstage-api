@@ -1,10 +1,9 @@
-class FailedRequest(Exception):
+class ApiError(Exception):
 
-    def __init__(self, method, url, exception=None):
+    def __init__(self, error_code, data=None):
         super().__init__()
-        self.method = str(method)
-        self.url = url
-        self.exception = str(exception) if exception else None
+        self.error_code = error_code
+        self.data = data
 
 
 class InvalidRequestMethod(Exception):
@@ -17,13 +16,3 @@ class InvalidRequestMethod(Exception):
 
 class NoJWTError(Exception):
     pass
-
-
-class UnexpectedStatusCode(Exception):
-
-    def __init__(self, method, url, status_code, content):
-        super().__init__()
-        self.method = method
-        self.url = url
-        self.status_code = status_code
-        self.content = str(content)

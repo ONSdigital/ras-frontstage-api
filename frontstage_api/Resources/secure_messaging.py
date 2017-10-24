@@ -5,7 +5,7 @@ from flask_restplus import Resource
 from structlog import wrap_logger
 
 from frontstage_api import api
-from frontstage_api.controllers import secure_messaging_controllers
+from frontstage_api.controllers import case_controller, party_controller, secure_messaging_controllers
 from frontstage_api.decorators.jwt_decorators import get_jwt
 
 
@@ -17,10 +17,16 @@ class GetMessagesList(Resource):
 
     @staticmethod
     def get(encoded_jwt):
-        messages = secure_messaging_controllers.get_messages_list(encoded_jwt)
-        unread_messages_total = secure_messaging_controllers.get_unread_message_total(encoded_jwt)
-        messages_list = {**messages, **unread_messages_total}
-        return make_response(jsonify(messages_list), 200)
+        label = request.args.get('label')
+
+        messages = secure_messaging_controllers.get_messages_list(encoded_jwt, label)
+        # If the messages were returned with errors return the error message
+        if messages.get('error'):
+            return make_response(jsonify(messages), 200)
+
+        messages["unread_messages_total"] = secure_messaging_controllers.get_unread_message_total(encoded_jwt)
+
+        return make_response(jsonify(messages), 200)
 
 
 class GetMessageView(Resource):
@@ -33,6 +39,9 @@ class GetMessageView(Resource):
         party_id = request.args.get('party_id')
 
         message = secure_messaging_controllers.get_message(encoded_jwt, message_id, label)
+        # If the message was returned with errors return the error message
+        if message.get('error'):
+            return make_response(jsonify(message), 200)
 
         # If message is a draft also return the last message from the thread if it exists
         if label == 'DRAFT':
@@ -44,13 +53,69 @@ class GetMessageView(Resource):
                 message = {}
         else:
             draft = {}
+        # If the message was returned with errors return the error message
+        if message.get('error'):
+            make_response(jsonify(message), 200)
 
+        remove_unread_label = secure_messaging_controllers.remove_unread_label(encoded_jwt, message_id) if label == 'UNREAD' else {}
+        # Create json response
         response_json = {
             "message": message,
             "draft": draft
         }
+        # If we failed to remove the unread label append error but don't fail request
+        if remove_unread_label.get('error'):
+            response_json = {**response_json, **remove_unread_label}
+
         return make_response(jsonify(response_json), 200)
+
+
+class SendMessage(Resource):
+    method_decorators = [get_jwt(request)]
+
+    @staticmethod
+    def post(encoded_jwt):
+        message_json = request.get_json(force=True)
+        party_id = message_json['msg_from']
+        is_draft = request.args.get('is_draft')
+
+        # Retrieving business party, case and survey id's
+        party = party_controller.get_party_by_respondent_id(party_id)
+        if party.get('error'):
+            return party
+        associations = party.get('associations')
+        if associations:
+            business_party_id = associations[0].get('partyId')
+            survey_id = associations[0].get('enrolments')[0].get('surveyId')
+
+        case = case_controller.get_case_by_party_id(party_id)
+        if not isinstance(case, list):
+            return case
+        case_id = case[0].get('id')
+
+        # Creating message json block to send to secure messaging
+        message_json = {
+            **message_json,
+            'msg_to': ['BRES'],
+            'msg_from': party_id,
+            'collection_case': case_id,
+            'ru_id': business_party_id,
+            'survey': survey_id
+        }
+
+        if is_draft == 'False':
+            message = secure_messaging_controllers.send_message(encoded_jwt, message_json)
+        else:
+            message = secure_messaging_controllers.save_draft(encoded_jwt, message_json)
+
+        # If the form was submitted with errors and is part of an existing thread, return the last message from thread
+        if message.get('error', {}).get('code') == 'FA006' and message_json.get('thread_id'):
+            thread_message = secure_messaging_controllers.get_thread_message(encoded_jwt, message_json['thread_id'], party_id)
+            message['error']['data'] = {**message['error']['data'], "thread_message": thread_message}
+
+        return make_response(jsonify(message), 200)
 
 
 api.add_resource(GetMessagesList, '/messages_list')
 api.add_resource(GetMessageView, '/message')
+api.add_resource(SendMessage, '/send_message')

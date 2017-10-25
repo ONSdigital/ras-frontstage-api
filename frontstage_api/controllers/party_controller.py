@@ -22,7 +22,8 @@ def get_party_by_respondent_id(party_id):
         logger.warning('No respondent found for party id', party_id=party_id)
         raise ApiError('FA100')
     elif response.status_code != 200:
-        logger.error('Failed to retrieve party')
+        logger.error('Failed to retrieve party', party_id=party_id)
         raise ApiError('FA101')
 
+    logger.debug('Successfully retrieved party', party_id=party_id)
     return json.loads(response.text)

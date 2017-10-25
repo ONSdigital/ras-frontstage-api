@@ -22,7 +22,8 @@ def get_case_by_party_id(party_id):
         logger.warning('No case found for party id', party_id=party_id)
         raise ApiError('FA200')
     elif response.status_code != 200:
-        logger.error('Failed to retrieve case')
+        logger.error('Failed to retrieve case', party_id=party_id)
         raise ApiError('FA201')
 
+    logger.debug('Successfully retrieved case', party_id=party_id)
     return json.loads(response.text)

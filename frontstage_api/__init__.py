@@ -16,5 +16,7 @@ logger_initial_config(service_name='ras-frontstage-api', log_level=app.config['L
 
 
 import frontstage_api.error_handlers  # NOQA # pylint: disable=wrong-import-position
-import frontstage_api.resources.secure_messaging  # NOQA # pylint: disable=wrong-import-position
 import frontstage_api.resources.info  # NOQA # pylint: disable=wrong-import-position
+from frontstage_api.resources.secure_messaging.get_message import GetMessageView  # NOQA # pylint: disable=wrong-import-position
+from frontstage_api.resources.secure_messaging.get_message_list import GetMessagesList  # NOQA # pylint: disable=wrong-import-position
+from frontstage_api.resources.secure_messaging.send_message import SendMessage  # NOQA # pylint: disable=wrong-import-position

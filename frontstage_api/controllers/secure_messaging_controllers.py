@@ -39,7 +39,7 @@ def get_unread_message_total(encoded_jwt):
         raise ApiError('FA002')
 
     logger.debug('Successfully retrieved the unread message total')
-    return json.loads(response.text)
+    return {"unread_messages_total": json.loads(response.text).get('total')}
 
 
 @api_error_handler

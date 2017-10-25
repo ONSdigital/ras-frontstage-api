@@ -65,7 +65,7 @@ class TestSecureMessaging(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue('The European languages are members of the same family'.encode() in response.data)
-        self.assertTrue('"total": "10"'.encode() in response.data)
+        self.assertTrue('"unread_messages_total": "10"'.encode() in response.data)
 
     @requests_mock.mock()
     def test_get_messages_list_connection_error(self, mock_request):

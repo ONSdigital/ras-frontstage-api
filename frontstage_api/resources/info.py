@@ -12,6 +12,7 @@ from frontstage_api import api, app
 logger = wrap_logger(logging.getLogger(__name__))
 
 
+@api.route('/info')
 class Info(Resource):
 
     @staticmethod
@@ -28,6 +29,3 @@ class Info(Resource):
         info = dict(_health_check, **info)
 
         return make_response(jsonify(info), 200)
-
-
-api.add_resource(Info, '/info')

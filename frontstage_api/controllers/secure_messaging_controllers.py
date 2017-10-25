@@ -20,10 +20,10 @@ def get_messages_list(encoded_jwt, label):
     response = request_handler('GET', url, headers=headers, error_code='FA001')
 
     if response.status_code != 200:
-        logger.error('Error retrieving the messages list', status_code=response.status_code)
+        logger.error('Error retrieving the messages list', label=label, status_code=response.status_code)
         raise ApiError('FA001')
 
-    logger.debug('Successfully retrieved the messages list')
+    logger.debug('Successfully retrieved the messages list', label=label)
     messages_json = {"messages": json.loads(response.text)}
     return messages_json
 

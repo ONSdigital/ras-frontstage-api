@@ -12,6 +12,7 @@ from frontstage_api.decorators.jwt_decorators import get_jwt
 logger = wrap_logger(logging.getLogger(__name__))
 
 
+@api.route('/messages_list')
 class GetMessagesList(Resource):
     method_decorators = [get_jwt(request)]
 
@@ -29,6 +30,7 @@ class GetMessagesList(Resource):
         return make_response(jsonify(messages), 200)
 
 
+@api.route('/message')
 class GetMessageView(Resource):
     method_decorators = [get_jwt(request)]
 
@@ -70,6 +72,7 @@ class GetMessageView(Resource):
         return make_response(jsonify(response_json), 200)
 
 
+@api.route('/send_message')
 class SendMessage(Resource):
     method_decorators = [get_jwt(request)]
 
@@ -114,8 +117,3 @@ class SendMessage(Resource):
             message['error']['data'] = {**message['error']['data'], "thread_message": thread_message}
 
         return make_response(jsonify(message), 200)
-
-
-api.add_resource(GetMessagesList, '/messages_list')
-api.add_resource(GetMessageView, '/message')
-api.add_resource(SendMessage, '/send_message')

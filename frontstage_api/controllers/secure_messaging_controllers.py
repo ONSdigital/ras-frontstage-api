@@ -5,14 +5,12 @@ from structlog import wrap_logger
 
 from frontstage_api import app
 from frontstage_api.common.request_handler import request_handler
-from frontstage_api.decorators.api_error_handler import api_error_handler
 from frontstage_api.exceptions.exceptions import ApiError
 
 
 logger = wrap_logger(logging.getLogger(__name__))
 
 
-@api_error_handler
 def get_messages_list(encoded_jwt, label):
     logger.debug('Attempting to retrieve the messages list', label=label)
     url = '{}&label={}'.format(app.config['MESSAGES_LIST_URL'], label)
@@ -28,7 +26,6 @@ def get_messages_list(encoded_jwt, label):
     return messages_json
 
 
-@api_error_handler
 def get_unread_message_total(encoded_jwt):
     logger.debug('Attempting to retrieve the unread message total')
     url = app.config['UNREAD_MESSAGES_TOTAL_URL']
@@ -36,13 +33,17 @@ def get_unread_message_total(encoded_jwt):
     response = request_handler('GET', url, headers=headers, error_code='FA002')
 
     if response.status_code != 200:
-        raise ApiError('FA002')
+        error_json = {
+            "error": {
+                "code": "FA002"
+            }
+        }
+        return error_json
 
     logger.debug('Successfully retrieved the unread message total')
     return {"unread_messages_total": json.loads(response.text).get('total')}
 
 
-@api_error_handler
 def get_message(encoded_jwt, message_id, label):
     logger.debug('Attempting to retrieve message', message_id=message_id, label=label)
     url = app.config['DRAFT_URL'] if label == 'DRAFT' else app.config['MESSAGE_URL']
@@ -58,7 +59,6 @@ def get_message(encoded_jwt, message_id, label):
     return json.loads(response.text)
 
 
-@api_error_handler
 def get_thread_message(encoded_jwt, thread_id, party_id):
     logger.debug('Attempting to retrieve thread message', thread_id=thread_id, party_id=party_id)
     method = 'GET'
@@ -84,7 +84,6 @@ def get_thread_message(encoded_jwt, thread_id, party_id):
     return message
 
 
-@api_error_handler
 def remove_unread_label(encoded_jwt, message_id):
     logger.debug('Attempting to remove unread label', message_id=message_id)
     url = app.config['REMOVE_UNREAD_LABEL_URL'].format(message_id)
@@ -94,13 +93,17 @@ def remove_unread_label(encoded_jwt, message_id):
 
     if response.status_code != 200:
         logger.error('Error removing unread message label', status_code=response.status_code, message_id=message_id)
-        raise ApiError('FA005')
+        error_json = {
+            "error": {
+                "code": "FA005"
+            }
+        }
+        return error_json
 
     logger.debug('Successfully removed unread label')
-    return {}
+    return {"unread_message_removed": True}
 
 
-@api_error_handler
 def send_message(encoded_jwt, message_json):
     logger.debug('Attempting to send message')
     headers = {"Authorization": encoded_jwt}
@@ -109,7 +112,15 @@ def send_message(encoded_jwt, message_json):
 
     if response.status_code == 400:
         logger.debug('Form submitted with errors')
-        raise ApiError('FA006', data={"form_errors": json.loads(response.text)})
+        error_json = {
+            "error": {
+                "code": "FA006",
+                "data": {
+                    "form_errors": json.loads(response.text)
+                }
+            }
+        }
+        return error_json
     elif response.status_code != 201:
         logger.error('Failed to create message')
         raise ApiError('FA007')
@@ -119,7 +130,6 @@ def send_message(encoded_jwt, message_json):
     return message
 
 
-@api_error_handler
 def save_draft(encoded_jwt, message_json):
     logger.debug('Attempting to send message')
     headers = {"Authorization": encoded_jwt}
@@ -134,7 +144,15 @@ def save_draft(encoded_jwt, message_json):
 
     if response.status_code == 400:
         logger.debug('Form submitted with errors')
-        raise ApiError('FA006', data={"form_errors": json.loads(response.text)})
+        error_json = {
+            "error": {
+                "code": "FA006",
+                "data": {
+                    "form_errors": json.loads(response.text)
+                }
+            }
+        }
+        return error_json
     elif response.status_code != 201 and response.status_code != 200:
         logger.error('Failed to save draft')
         raise ApiError('FA008')

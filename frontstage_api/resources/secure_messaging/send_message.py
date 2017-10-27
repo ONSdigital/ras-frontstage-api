@@ -8,6 +8,7 @@ from frontstage_api import api
 from frontstage_api.controllers import case_controller, party_controller, secure_messaging_controllers
 from frontstage_api.decorators.jwt_decorators import get_jwt
 
+
 logger = wrap_logger(logging.getLogger(__name__))
 
 
@@ -23,16 +24,11 @@ class SendMessage(Resource):
 
         # Retrieving business party, case and survey id's
         party = party_controller.get_party_by_respondent_id(party_id)
-        if party.get('error'):
-            return party
         associations = party.get('associations')
         if associations:
             business_party_id = associations[0].get('partyId')
             survey_id = associations[0].get('enrolments')[0].get('surveyId')
-
         case = case_controller.get_case_by_party_id(party_id)
-        if not isinstance(case, list):
-            return case
         case_id = case[0].get('id')
 
         # Creating message json block to send to secure messaging

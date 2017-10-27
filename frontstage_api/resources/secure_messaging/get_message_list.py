@@ -21,10 +21,6 @@ class GetMessagesList(Resource):
         label = request.args.get('label')
 
         messages = secure_messaging_controllers.get_messages_list(encoded_jwt, label)
-        # If the messages were returned with errors return the error message
-        if messages.get('error'):
-            return make_response(jsonify(messages), 200)
-
         unread_message_total = secure_messaging_controllers.get_unread_message_total(encoded_jwt)
         messages = {**messages, **unread_message_total}
 

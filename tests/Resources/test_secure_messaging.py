@@ -86,7 +86,7 @@ class TestSecureMessaging(unittest.TestCase):
         response = self.app.get("/messages_list?label=INBOX", headers=headers)
 
         self.assertEqual(response.status_code, 200)
-        self.assertTrue('"unread_messages_total": "error"'.format(url_get_messages_list_INBOX).encode() in response.data)
+        self.assertTrue('"unread_messages_total": "error"'.encode() in response.data)
 
     @requests_mock.mock()
     def test_get_messages_list_fail(self, mock_request):

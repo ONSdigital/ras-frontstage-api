@@ -20,3 +20,4 @@ import frontstage_api.resources.info  # NOQA # pylint: disable=wrong-import-posi
 from frontstage_api.resources.secure_messaging.get_message import GetMessageView  # NOQA # pylint: disable=wrong-import-position
 from frontstage_api.resources.secure_messaging.get_message_list import GetMessagesList  # NOQA # pylint: disable=wrong-import-position
 from frontstage_api.resources.secure_messaging.send_message import SendMessage  # NOQA # pylint: disable=wrong-import-position
+from frontstage_api.resources.sign_in.sign_in import SignIn  # NOQA # pylint: disable=wrong-import-position

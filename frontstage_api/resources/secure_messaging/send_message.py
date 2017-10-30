@@ -47,8 +47,14 @@ class SendMessage(Resource):
             message = secure_messaging_controllers.save_draft(encoded_jwt, message_json)
 
         # If the form was submitted with errors and is part of an existing thread, return the last message from thread
-        if message.get('error', {}).get('code') == 'FA006' and message_json.get('thread_id'):
-            thread_message = secure_messaging_controllers.get_thread_message(encoded_jwt, message_json['thread_id'], party_id)
-            message['error']['data'] = {**message['error']['data'], "thread_message": thread_message}
+        if message.get('form_errors'):
+            if message_json.get('thread_id'):
+                thread_message = secure_messaging_controllers.get_thread_message(encoded_jwt, message_json['thread_id'], party_id)
+                message = {**message, "thread_message": thread_message}
+            message = {
+                'error': {
+                    'data': message
+                }
+            }
 
         return make_response(jsonify(message), 200)

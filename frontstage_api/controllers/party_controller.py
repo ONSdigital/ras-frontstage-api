@@ -16,7 +16,7 @@ def get_party_by_respondent_id(party_id):
     url = app.config['PARTY_BY_RESPONDENT_ID'].format(party_id)
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
-    if response.status_code != 404:
+    if response.status_code != 200:
         logger.error('Failed to retrieve party', party_id=party_id)
         raise ApiError(url, response.status_code)
 

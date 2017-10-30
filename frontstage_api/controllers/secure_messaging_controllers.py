@@ -108,7 +108,8 @@ def send_message(encoded_jwt, message_json):
 
     if response.status_code == 400:
         logger.debug('Form submitted with errors')
-        raise ApiError(url, response.status_code, data=json.loads(response.text))
+        form_errors = json.loads(response.text)
+        return {"form_errors": form_errors}
     elif response.status_code != 201:
         logger.error('Failed to send message')
         raise ApiError(url, response.status_code)

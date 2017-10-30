@@ -35,7 +35,7 @@ def get_unread_message_total(encoded_jwt):
     # If request failed or if status code is not 200 return empty unread message total
     if not response or response.status_code != 200:
         logger.debug('Failed to retrieve the unread message total')
-        unread_message_total = None
+        unread_message_total = 'error'
     else:
         logger.debug('Successfully retrieved the unread message total')
         unread_message_total = json.loads(response.text).get('total')
@@ -133,7 +133,8 @@ def save_draft(encoded_jwt, message_json):
 
     if response.status_code == 400:
         logger.debug('Form submitted with errors')
-        raise ApiError(url, response.status_code, data=json.loads(response.text))
+        form_errors = json.loads(response.text)
+        return {"form_errors": form_errors}
     elif response.status_code != 201 and response.status_code != 200:
         logger.error('Failed to save draft')
         raise ApiError(url, response.status_code)

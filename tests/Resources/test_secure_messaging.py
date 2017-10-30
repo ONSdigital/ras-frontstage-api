@@ -74,8 +74,19 @@ class TestSecureMessaging(unittest.TestCase):
 
         response = self.app.get("/messages_list?label=INBOX", headers=headers)
 
+        self.assertEqual(response.status_code, 502)
+        self.assertTrue('"url": "{}"'.format(url_get_messages_list_INBOX).encode() in response.data)
+
+    @requests_mock.mock()
+    def test_get_messages_list_unread_total_connection_error(self, mock_request):
+        mock_request.get(url_get_messages_list_INBOX, json=messages_list_inbox)
+        mock_request.get(url_get_unread_messages_total, exc=requests.exceptions.ConnectionError)
+        headers = {'authorization': encoded_jwt}
+
+        response = self.app.get("/messages_list?label=INBOX", headers=headers)
+
         self.assertEqual(response.status_code, 200)
-        self.assertTrue('"code": "FA001"'.encode() in response.data)
+        self.assertTrue('"unread_messages_total": "error"'.format(url_get_messages_list_INBOX).encode() in response.data)
 
     @requests_mock.mock()
     def test_get_messages_list_fail(self, mock_request):
@@ -84,8 +95,8 @@ class TestSecureMessaging(unittest.TestCase):
 
         response = self.app.get("/messages_list?label=INBOX", headers=headers)
 
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue('"code": "FA001"'.encode() in response.data)
+        self.assertEqual(response.status_code, 502)
+        self.assertTrue('"status_code": 500'.encode() in response.data)
 
     @requests_mock.mock()
     def test_get_messages_list_invalid_method(self, mock_request):
@@ -116,7 +127,7 @@ class TestSecureMessaging(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue('The European languages are members of the same family'.encode() in response.data)
-        self.assertTrue('"code": "FA002"'.encode() in response.data)
+        self.assertTrue('"unread_messages_total": "error"'.encode() in response.data)
 
     @requests_mock.mock()
     def test_get_message(self, mock_request):
@@ -137,8 +148,8 @@ class TestSecureMessaging(unittest.TestCase):
 
         response = self.app.get(message_url, headers=headers)
 
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue('"code": "FA003"'.encode() in response.data)
+        self.assertEqual(response.status_code, 502)
+        self.assertTrue('"status_code": 500'.encode() in response.data)
 
     @requests_mock.mock()
     def test_get_message_draft_no_thread(self, mock_request):
@@ -185,8 +196,8 @@ class TestSecureMessaging(unittest.TestCase):
 
         response = self.app.get(message_url, headers=headers)
 
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue('"code": "FA004"'.encode() in response.data)
+        self.assertEqual(response.status_code, 502)
+        self.assertTrue('"status_code": 500'.encode() in response.data)
 
     @requests_mock.mock()
     def test_get_message_unread(self, mock_request):
@@ -210,7 +221,7 @@ class TestSecureMessaging(unittest.TestCase):
         response = self.app.get(message_url, headers=headers)
 
         self.assertEqual(response.status_code, 200)
-        self.assertTrue('"code": "FA005"'.encode() in response.data)
+        self.assertTrue('"unread_message_removed": false'.encode() in response.data)
 
     @requests_mock.mock()
     def test_post_send_message(self, mock_request):
@@ -232,18 +243,8 @@ class TestSecureMessaging(unittest.TestCase):
 
         response = self.app.post('/send_message?is_draft=False', data=json.dumps(self.posted_message), headers=headers)
 
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue('"code": "FA101"'.encode() in response.data)
-
-    @requests_mock.mock()
-    def test_post_send_message_party_not_found(self, mock_request):
-        mock_request.get(url_get_party_from_id, status_code=404)
-        headers = {'authorization': encoded_jwt}
-
-        response = self.app.post('/send_message?is_draft=False', data=json.dumps(self.posted_message), headers=headers)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue('"code": "FA100"'.encode() in response.data)
+        self.assertEqual(response.status_code, 502)
+        self.assertTrue('"status_code": 500'.encode() in response.data)
 
     @requests_mock.mock()
     def test_post_send_message_case_fail(self, mock_request):
@@ -253,19 +254,8 @@ class TestSecureMessaging(unittest.TestCase):
 
         response = self.app.post('/send_message?is_draft=False', data=json.dumps(self.posted_message), headers=headers)
 
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue('"code": "FA201"'.encode() in response.data)
-
-    @requests_mock.mock()
-    def test_post_send_message_case_not_found(self, mock_request):
-        mock_request.get(url_get_party_from_id, json=party)
-        mock_request.get(url_get_case_from_party_id, status_code=204)
-        headers = {'authorization': encoded_jwt}
-
-        response = self.app.post('/send_message?is_draft=False', data=json.dumps(self.posted_message), headers=headers)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue('"code": "FA200"'.encode() in response.data)
+        self.assertEqual(response.status_code, 502)
+        self.assertTrue('"status_code": 500'.encode() in response.data)
 
     @requests_mock.mock()
     def test_post_send_message_fail(self, mock_request):
@@ -276,8 +266,8 @@ class TestSecureMessaging(unittest.TestCase):
 
         response = self.app.post('/send_message?is_draft=False', data=json.dumps(self.posted_message), headers=headers)
 
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue('"code": "FA007"'.encode() in response.data)
+        self.assertEqual(response.status_code, 502)
+        self.assertTrue('"status_code": 500'.encode() in response.data)
 
     @requests_mock.mock()
     def test_post_send_message_form_errors(self, mock_request):
@@ -291,7 +281,6 @@ class TestSecureMessaging(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue('"form_errors"'.encode() in response.data)
-        self.assertTrue('"code": "FA006"'.encode() in response.data)
 
     @requests_mock.mock()
     def test_post_send_message_form_errors_existing_thread(self, mock_request):
@@ -308,7 +297,6 @@ class TestSecureMessaging(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue('"body": "sending"'.encode() in response.data)
         self.assertTrue('"form_errors"'.encode() in response.data)
-        self.assertTrue('"code": "FA006"'.encode() in response.data)
 
     @requests_mock.mock()
     def test_post_save_draft(self, mock_request):
@@ -333,8 +321,8 @@ class TestSecureMessaging(unittest.TestCase):
 
         response = self.app.post('/send_message?is_draft=True', data=json.dumps(self.posted_message), headers=headers)
 
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue('"code": "FA008"'.encode() in response.data)
+        self.assertEqual(response.status_code, 502)
+        self.assertTrue('"status_code": 500'.encode() in response.data)
 
     @requests_mock.mock()
     def test_post_save_draft_form_errors(self, mock_request):
@@ -349,7 +337,6 @@ class TestSecureMessaging(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue('"form_errors"'.encode() in response.data)
-        self.assertTrue('"code": "FA006"'.encode() in response.data)
 
     @requests_mock.mock()
     def test_post_modify_draft(self, mock_request):

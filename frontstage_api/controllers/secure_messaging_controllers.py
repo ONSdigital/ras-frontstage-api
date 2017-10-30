@@ -54,7 +54,7 @@ def get_message(encoded_jwt, message_id, label):
         logger.error('Error retrieving the messages', status_code=response.status_code, message_id=message_id, label=label)
         raise ApiError(url, response.status_code)
 
-    logger.debug('Successfully retrieved the messages list', message_id=message_id, label=label)
+    logger.debug('Successfully retrieved message', message_id=message_id, label=label)
     return json.loads(response.text)
 
 

@@ -221,7 +221,7 @@ class TestSecureMessaging(unittest.TestCase):
         response = self.app.get(message_url, headers=headers)
 
         self.assertEqual(response.status_code, 200)
-        self.assertTrue('"unread_message_removed": false'.encode() in response.data)
+        self.assertTrue('"unread_label_removed": false'.encode() in response.data)
 
     @requests_mock.mock()
     def test_post_send_message(self, mock_request):

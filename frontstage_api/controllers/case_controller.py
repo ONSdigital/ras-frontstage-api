@@ -16,12 +16,9 @@ def get_case_by_party_id(party_id):
     url = app.config['RM_CASE_GET_BY_PARTY'].format(party_id)
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
-    if response.status_code == 204:
-        logger.warning('No case found for party id', party_id=party_id)
-        raise ApiError('FA200')
-    elif response.status_code != 200:
+    if response.status_code != 204:
         logger.error('Failed to retrieve case', party_id=party_id)
-        raise ApiError('FA201')
+        raise ApiError(url, response.status_code)
 
     logger.debug('Successfully retrieved case', party_id=party_id)
     return json.loads(response.text)

@@ -10,7 +10,7 @@ from frontstage_api.exceptions.exceptions import ApiError, InvalidRequestMethod
 logger = wrap_logger(logging.getLogger(__name__))
 
 
-def request_handler(method, url, auth=None, headers=None, json=None, error_code=None):
+def request_handler(method, url, auth=None, headers=None, json=None, fail=True):
     try:
         if method == 'GET':
             response = requests.get(url, auth=auth, headers=headers)
@@ -23,6 +23,10 @@ def request_handler(method, url, auth=None, headers=None, json=None, error_code=
             raise InvalidRequestMethod(method, url)
     except ConnectionError as e:
         logger.error('Failed to connect to external service', method=method, url=url, exception=str(e))
-        raise ApiError(error_code)
+        # If specified not to fail on this request just return False
+        if fail:
+            raise ApiError(url)
+        else:
+            return False
 
     return response

@@ -15,11 +15,11 @@ def get_messages_list(encoded_jwt, label):
     logger.debug('Attempting to retrieve the messages list', label=label)
     url = '{}&label={}'.format(app.config['MESSAGES_LIST_URL'], label)
     headers = {"Authorization": encoded_jwt}
-    response = request_handler('GET', url, headers=headers, error_code='FA001')
+    response = request_handler('GET', url, headers=headers)
 
     if response.status_code != 200:
         logger.error('Error retrieving the messages list', label=label, status_code=response.status_code)
-        raise ApiError('FA001')
+        raise ApiError(url, response.status_code)
 
     logger.debug('Successfully retrieved the messages list', label=label)
     messages_json = {"messages": json.loads(response.text)}
@@ -30,18 +30,17 @@ def get_unread_message_total(encoded_jwt):
     logger.debug('Attempting to retrieve the unread message total')
     url = app.config['UNREAD_MESSAGES_TOTAL_URL']
     headers = {"Authorization": encoded_jwt}
-    response = request_handler('GET', url, headers=headers, error_code='FA002')
+    response = request_handler('GET', url, headers=headers, fail=False)
 
-    if response.status_code != 200:
-        error_json = {
-            "error": {
-                "code": "FA002"
-            }
-        }
-        return error_json
+    # If request failed or if status code is not 200 return empty unread message total
+    if not response or response.status_code != 200:
+        logger.debug('Failed to retrieve the unread message total')
+        unread_message_total = None
+    else:
+        logger.debug('Successfully retrieved the unread message total')
+        unread_message_total = json.loads(response.text).get('total')
 
-    logger.debug('Successfully retrieved the unread message total')
-    return {"unread_messages_total": json.loads(response.text).get('total')}
+    return {"unread_messages_total": unread_message_total}
 
 
 def get_message(encoded_jwt, message_id, label):
@@ -49,11 +48,11 @@ def get_message(encoded_jwt, message_id, label):
     url = app.config['DRAFT_URL'] if label == 'DRAFT' else app.config['MESSAGE_URL']
     url = '{}/{}'.format(url, message_id)
     headers = {"Authorization": encoded_jwt}
-    response = request_handler('GET', url, headers=headers, error_code='FA003')
+    response = request_handler('GET', url, headers=headers)
 
     if response.status_code != 200:
         logger.error('Error retrieving the messages', status_code=response.status_code, message_id=message_id, label=label)
-        raise ApiError('FA003')
+        raise ApiError(url, response.status_code)
 
     logger.debug('Successfully retrieved the messages list', message_id=message_id, label=label)
     return json.loads(response.text)
@@ -64,11 +63,11 @@ def get_thread_message(encoded_jwt, thread_id, party_id):
     method = 'GET'
     url = '{}/{}'.format(app.config['THREAD_URL'], thread_id)
     headers = {"Authorization": encoded_jwt}
-    response = request_handler(method, url, headers=headers, error_code='FA004')
+    response = request_handler(method, url, headers=headers)
 
     if response.status_code != 200:
         logger.error('Error retrieving the thread message', status_code=response.status_code, thread_id=thread_id, party_id=party_id)
-        raise ApiError('FA004')
+        raise ApiError(url, response.status_code)
 
     # Look for the last message in the thread not from the given party id
     thread = json.loads(response.text)
@@ -89,41 +88,30 @@ def remove_unread_label(encoded_jwt, message_id):
     url = app.config['REMOVE_UNREAD_LABEL_URL'].format(message_id)
     headers = {"Authorization": encoded_jwt}
     data = {"label": 'UNREAD', "action": 'remove'}
-    response = request_handler('PUT', url, headers=headers, json=data, error_code='FA005')
+    response = request_handler('PUT', url, headers=headers, json=data, fail=False)
 
-    if response.status_code != 200:
+    if not response or response.status_code != 200:
         logger.error('Error removing unread message label', status_code=response.status_code, message_id=message_id)
-        error_json = {
-            "error": {
-                "code": "FA005"
-            }
-        }
-        return error_json
+        unread_message_removed = False
+    else:
+        logger.debug('Successfully removed unread label')
+        unread_message_removed = True
 
-    logger.debug('Successfully removed unread label')
-    return {"unread_message_removed": True}
+    return {"unread_message_removed": unread_message_removed}
 
 
 def send_message(encoded_jwt, message_json):
     logger.debug('Attempting to send message')
     headers = {"Authorization": encoded_jwt}
     url = app.config['SEND_MESSAGE_URL']
-    response = request_handler('POST', url, headers=headers, json=message_json, error_code='FA007')
+    response = request_handler('POST', url, headers=headers, json=message_json)
 
     if response.status_code == 400:
         logger.debug('Form submitted with errors')
-        error_json = {
-            "error": {
-                "code": "FA006",
-                "data": {
-                    "form_errors": json.loads(response.text)
-                }
-            }
-        }
-        return error_json
+        raise ApiError(url, response.status_code, data=json.loads(response.text))
     elif response.status_code != 201:
-        logger.error('Failed to create message')
-        raise ApiError('FA007')
+        logger.error('Failed to send message')
+        raise ApiError(url, response.status_code)
 
     message = json.loads(response.text)
     logger.info('Secure Message sent successfully', message_id=message['msg_id'])
@@ -137,25 +125,17 @@ def save_draft(encoded_jwt, message_json):
     # If message already exists modify, otherwise save a new draft
     if message_json.get('msg_id'):
         url = app.config['DRAFT_MODIFY_URL'].format(message_json['msg_id'])
-        response = request_handler('PUT', url, headers=headers, json=message_json, error_code='FA007')
+        response = request_handler('PUT', url, headers=headers, json=message_json)
     else:
         url = app.config['DRAFT_SAVE_URL']
-        response = request_handler('POST', url, headers=headers, json=message_json, error_code='FA007')
+        response = request_handler('POST', url, headers=headers, json=message_json)
 
     if response.status_code == 400:
         logger.debug('Form submitted with errors')
-        error_json = {
-            "error": {
-                "code": "FA006",
-                "data": {
-                    "form_errors": json.loads(response.text)
-                }
-            }
-        }
-        return error_json
+        raise ApiError(url, response.status_code, data=json.loads(response.text))
     elif response.status_code != 201 and response.status_code != 200:
         logger.error('Failed to save draft')
-        raise ApiError('FA008')
+        raise ApiError(url, response.status_code)
 
     message = json.loads(response.text)
     logger.info('Secure Message sent successfully', message_id=message['msg_id'])

@@ -15,12 +15,13 @@ logger = wrap_logger(logging.getLogger(__name__))
 def api_error_method(error):
     error_json = {
         "error": {
-            "code": error.error_code,
+            "url": error.url,
+            "status_code": error.status_code,
             "data": error.data
         }
     }
-    logger.error('Error during api call', error_code=error.error_code)
-    return jsonify(error_json)
+    logger.error('Error during api call', url=error.url, status_code=error.status_code)
+    return jsonify(error_json), 502
 
 
 @app.errorhandler(InvalidRequestMethod)

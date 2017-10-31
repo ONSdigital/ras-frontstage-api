@@ -16,6 +16,7 @@ class SignIn(Resource):
 
     @staticmethod
     def post():
+        logger.info('Attempting to retrieved sign-in details')
         message_json = request.get_json(force=True)
         username = message_json['username']
         password = message_json['password']
@@ -24,5 +25,5 @@ class SignIn(Resource):
         party_id = party_controller.get_party_by_email(username).get('id')
 
         response_json = {**oauth2_token, "party_id": party_id}
-
+        logger.info('Successfully retrieved sign-in details')
         return make_response(jsonify(response_json), 200)

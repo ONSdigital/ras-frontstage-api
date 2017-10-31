@@ -54,7 +54,7 @@ def get_message(encoded_jwt, message_id, label):
         logger.error('Error retrieving the messages', status_code=response.status_code, message_id=message_id, label=label)
         raise ApiError(url, response.status_code)
 
-    logger.debug('Successfully retrieved the messages list', message_id=message_id, label=label)
+    logger.debug('Successfully retrieved message', message_id=message_id, label=label)
     return json.loads(response.text)
 
 
@@ -92,12 +92,12 @@ def remove_unread_label(encoded_jwt, message_id):
 
     if not response or response.status_code != 200:
         logger.error('Error removing unread message label', status_code=response.status_code, message_id=message_id)
-        unread_message_removed = False
+        unread_label_removed = False
     else:
         logger.debug('Successfully removed unread label')
-        unread_message_removed = True
+        unread_label_removed = True
 
-    return {"unread_message_removed": unread_message_removed}
+    return {"unread_label_removed": unread_label_removed}
 
 
 def send_message(encoded_jwt, message_json):

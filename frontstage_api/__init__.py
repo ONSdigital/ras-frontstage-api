@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask
+from flask_httpauth import HTTPBasicAuth
 from flask_restplus import Api
 
 from logger_config import logger_initial_config
@@ -13,6 +14,16 @@ app_config = 'config.{}'.format(os.environ.get('APP_SETTINGS', 'Config'))
 app.config.from_object(app_config)
 
 logger_initial_config(service_name='ras-frontstage-api', log_level=app.config['LOGGING_LEVEL'])
+
+auth = HTTPBasicAuth()
+
+
+@auth.get_password
+def get_pw(username):
+    config_username = app.config['SECURITY_USER_NAME']
+    config_password = app.config['SECURITY_USER_PASSWORD']
+    if username == config_username:
+        return config_password
 
 
 import frontstage_api.error_handlers  # NOQA # pylint: disable=wrong-import-position

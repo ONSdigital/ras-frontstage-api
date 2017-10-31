@@ -1,25 +1,30 @@
 import logging
 
+from flask import jsonify
 from structlog import wrap_logger
 
-from frontstage_api import api
-from frontstage_api.exceptions.exceptions import FailedRequest, InvalidRequestMethod, NoJWTError, UnexpectedStatusCode
+from frontstage_api import api, app
+from frontstage_api.exceptions.exceptions import ApiError, InvalidRequestMethod, NoJWTError
 
 
 logger = wrap_logger(logging.getLogger(__name__))
 
 
-@api.errorhandler(FailedRequest)
-def failed_request(error):
-    message_json = {
-        'message': 'External request failed',
-        'url': error.url,
-        'method': error.method,
-        'exception': error.exception
+@app.errorhandler(ApiError)
+@api.errorhandler(ApiError)
+def api_error_method(error):
+    error_json = {
+        "error": {
+            "url": error.url,
+            "status_code": error.status_code,
+            "data": error.data
+        }
     }
-    return message_json, 500
+    logger.error('Error during api call', url=error.url, status_code=error.status_code)
+    return jsonify(error_json), 502
 
 
+@app.errorhandler(InvalidRequestMethod)
 @api.errorhandler(InvalidRequestMethod)
 def invalid_request_method(error):
     message_json = {
@@ -31,19 +36,7 @@ def invalid_request_method(error):
     return message_json, 500
 
 
+@app.errorhandler(NoJWTError)
 @api.errorhandler(NoJWTError)
 def no_jwt_in_header(error):  # NOQA # pylint: disable=unused-argument
     return {'message': 'No JWT provided in request header'}, 401
-
-
-@api.errorhandler(UnexpectedStatusCode)
-def unexpected_status_code(error):
-    message_json = {
-        'message': 'Unexpected status code received from service',
-        'method': error.method,
-        'url': error.url,
-        'status_code': error.status_code,
-        'content': error.content
-    }
-    logger.error('Unexpected status code returned from service', method=error.method, url=error.url, status_code=error.status_code)
-    return message_json, error.status_code

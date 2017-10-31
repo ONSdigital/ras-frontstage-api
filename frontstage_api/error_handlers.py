@@ -20,8 +20,9 @@ def api_error_method(error):
             "data": error.data
         }
     }
+    status_code = error.status_code if error.status_code else 500
     logger.error('Error during api call', url=error.url, status_code=error.status_code)
-    return jsonify(error_json), 502
+    return jsonify(error_json), status_code
 
 
 @app.errorhandler(InvalidRequestMethod)

@@ -10,12 +10,12 @@ from frontstage_api.exceptions.exceptions import ApiError, InvalidRequestMethod
 logger = wrap_logger(logging.getLogger(__name__))
 
 
-def request_handler(method, url, auth=None, headers=None, json=None, fail=True):
+def request_handler(method, url, auth=None, headers=None, json=None, data=None, fail=True):
     try:
         if method == 'GET':
             response = requests.get(url, auth=auth, headers=headers)
         elif method == 'POST':
-            response = requests.post(url, auth=auth, headers=headers, json=json)
+            response = requests.post(url, auth=auth, headers=headers, json=json, data=data)
         elif method == 'PUT':
             response = requests.put(url, auth=auth, headers=headers, json=json)
         else:

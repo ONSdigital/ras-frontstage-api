@@ -56,5 +56,6 @@ class SendMessage(Resource):
                     'data': message
                 }
             }
+            return make_response(jsonify(message), 400)
 
         return make_response(jsonify(message), 200)

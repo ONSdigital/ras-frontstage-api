@@ -25,7 +25,7 @@ def sign_in(username, password):
         'Accept': 'application/json',
         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
     }
-    response = request_handler('POST', url, headers=headers, auth=app.config['BASIC_AUTH'], json=data)
+    response = request_handler('POST', url, headers=headers, auth=app.config['DJANGO_BASIC_AUTH'], data=data)
 
     if response.status_code == 401:
         logger.debug('Authentication error in oauth2 service')

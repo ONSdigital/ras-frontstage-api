@@ -55,9 +55,11 @@ class Config(object):
 class DevelopmentConfig(Config):
     DEBUG = os.getenv('DEBUG', True)
     LOGGING_LEVEL = os.getenv('LOGGING_LEVEL', 'DEBUG')
+    SECURITY_USER_NAME = os.getenv('SECURITY_USER_NAME', 'test_user')
+    SECURITY_USER_PASSWORD = os.getenv('SECURITY_USER_PASSWORD', 'test_password')
 
 
-class TestingConfig(Config):
+class TestingConfig(DevelopmentConfig):
     DEBUG = True
     TESTING = True
     LOGGING_LEVEL = os.getenv('LOGGING_LEVEL', 'DEBUG')

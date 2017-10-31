@@ -17,7 +17,6 @@ class SendMessage(Resource):
     method_decorators = [get_jwt(request)]
 
     @staticmethod
-    @auth.login_required
     def post(encoded_jwt):
         message_json = request.get_json(force=True)
         party_id = message_json['msg_from']

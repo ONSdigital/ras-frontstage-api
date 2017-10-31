@@ -17,7 +17,6 @@ class GetMessagesList(Resource):
     method_decorators = [get_jwt(request)]
 
     @staticmethod
-    @auth.login_required
     def get(encoded_jwt):
         label = request.args.get('label')
 

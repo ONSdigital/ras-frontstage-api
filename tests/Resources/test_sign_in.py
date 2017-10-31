@@ -49,7 +49,7 @@ class TestSignIn(unittest.TestCase):
 
         response = self.app.post('/sign-in', data=json.dumps(self.posted_form))
 
-        self.assertEqual(response.status_code, 502)
+        self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
 
     @requests_mock.mock()
@@ -58,7 +58,7 @@ class TestSignIn(unittest.TestCase):
 
         response = self.app.post('/sign-in', data=json.dumps(self.posted_form))
 
-        self.assertEqual(response.status_code, 502)
+        self.assertEqual(response.status_code, 401)
         self.assertTrue('"detail": "test error"'.encode() in response.data)
 
     @requests_mock.mock()
@@ -68,5 +68,5 @@ class TestSignIn(unittest.TestCase):
 
         response = self.app.post('/sign-in', data=json.dumps(self.posted_form))
 
-        self.assertEqual(response.status_code, 502)
+        self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)

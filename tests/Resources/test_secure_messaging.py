@@ -74,7 +74,7 @@ class TestSecureMessaging(unittest.TestCase):
 
         response = self.app.get("/messages_list?label=INBOX", headers=headers)
 
-        self.assertEqual(response.status_code, 502)
+        self.assertEqual(response.status_code, 500)
         self.assertTrue('"url": "{}"'.format(url_get_messages_list_INBOX).encode() in response.data)
 
     @requests_mock.mock()
@@ -95,7 +95,7 @@ class TestSecureMessaging(unittest.TestCase):
 
         response = self.app.get("/messages_list?label=INBOX", headers=headers)
 
-        self.assertEqual(response.status_code, 502)
+        self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
 
     @requests_mock.mock()
@@ -148,7 +148,7 @@ class TestSecureMessaging(unittest.TestCase):
 
         response = self.app.get(message_url, headers=headers)
 
-        self.assertEqual(response.status_code, 502)
+        self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
 
     @requests_mock.mock()
@@ -196,7 +196,7 @@ class TestSecureMessaging(unittest.TestCase):
 
         response = self.app.get(message_url, headers=headers)
 
-        self.assertEqual(response.status_code, 502)
+        self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
 
     @requests_mock.mock()
@@ -243,7 +243,7 @@ class TestSecureMessaging(unittest.TestCase):
 
         response = self.app.post('/send_message?is_draft=False', data=json.dumps(self.posted_message), headers=headers)
 
-        self.assertEqual(response.status_code, 502)
+        self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
 
     @requests_mock.mock()
@@ -254,7 +254,7 @@ class TestSecureMessaging(unittest.TestCase):
 
         response = self.app.post('/send_message?is_draft=False', data=json.dumps(self.posted_message), headers=headers)
 
-        self.assertEqual(response.status_code, 502)
+        self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
 
     @requests_mock.mock()
@@ -266,7 +266,7 @@ class TestSecureMessaging(unittest.TestCase):
 
         response = self.app.post('/send_message?is_draft=False', data=json.dumps(self.posted_message), headers=headers)
 
-        self.assertEqual(response.status_code, 502)
+        self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
 
     @requests_mock.mock()
@@ -279,7 +279,7 @@ class TestSecureMessaging(unittest.TestCase):
 
         response = self.app.post('/send_message?is_draft=False', data=json.dumps(self.posted_message), headers=headers)
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
         self.assertTrue('"form_errors"'.encode() in response.data)
 
     @requests_mock.mock()
@@ -294,7 +294,7 @@ class TestSecureMessaging(unittest.TestCase):
 
         response = self.app.post('/send_message?is_draft=False', data=json.dumps(self.posted_message), headers=headers)
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
         self.assertTrue('"body": "sending"'.encode() in response.data)
         self.assertTrue('"form_errors"'.encode() in response.data)
 
@@ -321,7 +321,7 @@ class TestSecureMessaging(unittest.TestCase):
 
         response = self.app.post('/send_message?is_draft=True', data=json.dumps(self.posted_message), headers=headers)
 
-        self.assertEqual(response.status_code, 502)
+        self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
 
     @requests_mock.mock()
@@ -335,7 +335,7 @@ class TestSecureMessaging(unittest.TestCase):
 
         response = self.app.post('/send_message?is_draft=True', data=json.dumps(self.posted_message), headers=headers)
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
         self.assertTrue('"form_errors"'.encode() in response.data)
 
     @requests_mock.mock()

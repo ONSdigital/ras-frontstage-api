@@ -1,3 +1,4 @@
+import base64
 import json
 import unittest
 
@@ -16,6 +17,9 @@ class TestSignIn(unittest.TestCase):
 
     def setUp(self):
         self.app = app.test_client()
+        self.headers = {
+            'Authorization': 'Basic {}'.format(base64.b64encode(bytes("{}:{}".format(app.config['SECURITY_USER_NAME'], app.config['SECURITY_USER_PASSWORD']), 'ascii')).decode("ascii"))
+        }
         self.posted_form = {
             'username': 'test',
             'password': 'test'
@@ -37,7 +41,7 @@ class TestSignIn(unittest.TestCase):
         mock_request.post(url_get_token, status_code=201, json=self.oauth2_response)
         mock_request.get(url_get_party_by_email, status_code=200, json=party)
 
-        response = self.app.post('/sign-in', data=json.dumps(self.posted_form))
+        response = self.app.post('/sign-in', headers=self.headers, data=json.dumps(self.posted_form))
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue('"party_id": "07d672bc-497b-448f-a406-a20a7e6013d7"'.encode() in response.data)
@@ -47,7 +51,7 @@ class TestSignIn(unittest.TestCase):
     def test_sign_in_oauth_fail(self, mock_request):
         mock_request.post(url_get_token, status_code=500)
 
-        response = self.app.post('/sign-in', data=json.dumps(self.posted_form))
+        response = self.app.post('/sign-in', headers=self.headers, data=json.dumps(self.posted_form))
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
@@ -56,7 +60,7 @@ class TestSignIn(unittest.TestCase):
     def test_sign_in_oauth_401_error(self, mock_request):
         mock_request.post(url_get_token, status_code=401, json=self.oauth2_error)
 
-        response = self.app.post('/sign-in', data=json.dumps(self.posted_form))
+        response = self.app.post('/sign-in', headers=self.headers, data=json.dumps(self.posted_form))
 
         self.assertEqual(response.status_code, 401)
         self.assertTrue('"detail": "test error"'.encode() in response.data)
@@ -66,7 +70,13 @@ class TestSignIn(unittest.TestCase):
         mock_request.post(url_get_token, status_code=201, json=self.oauth2_response)
         mock_request.get(url_get_party_by_email, status_code=500)
 
-        response = self.app.post('/sign-in', data=json.dumps(self.posted_form))
+        response = self.app.post('/sign-in', headers=self.headers, data=json.dumps(self.posted_form))
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
+
+    # Test posting to endpoint without basic auth in header
+    def test_sign_in_no_basic_auth(self):
+        response = self.app.post('/sign-in', data=json.dumps(self.posted_form))
+
+        self.assertEqual(response.status_code, 401)

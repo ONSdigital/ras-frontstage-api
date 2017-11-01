@@ -74,3 +74,9 @@ class TestSignIn(unittest.TestCase):
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
+
+    # Test posting to endpoint without basic auth in header
+    def test_sign_in_no_basic_auth(self):
+        response = self.app.post('/sign-in', data=json.dumps(self.posted_form))
+
+        self.assertEqual(response.status_code, 401)

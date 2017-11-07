@@ -1,6 +1,0 @@
-Flask==0.12
-flask_httpauth==3.2.3
-flask-restplus==0.10.1
-gunicorn==19.7.1
-requests==2.11.1
-structlog==17.2.0

@@ -8,36 +8,32 @@ API to handle interfacing between the Frontstage and internal micro-services
 ## Setup
 Created using python 3.6
 
-Create a new virtual environment for python3
+Install dependencies using [pipenv](https://docs.pipenv.org/index.html)
 ```
-mkvirtualenv --python=</path/to/python3.6> <your env name>
-```
-
-Install dependencies using pip
-```
-pip install -r requirements.txt
+pip install -U pipenv
+pipenv install
 ```
 
 Start server
 ```
-python run.py
+pipenv run python run.py
 ```
 
 ## Run Tests
 
-Install test dependencies using pip
+Install test dependencies using pipenv
 ```
-pip install -r test-requirements.txt
+pipenv install --dev
 ```
 
-Run tests
+Run tests within pipenv-managed virtualenv
 ```
-py.test tests/
+APP_SETTINGS=TestingConfig pipenv run py.test tests/
 ```
 
 Run tests with coverage
 ```
-py.test tests/ --cov=frontstage_api
+APP_SETTINGS=TestingConfig pipenv run py.test tests/ --cov=frontstage_api
 ```
 
 ## Configuration

@@ -50,6 +50,45 @@ def get_party_by_email(email):
     return json.loads(response.text)
 
 
+def verify_token(token):
+    logger.debug('Verifying token party')
+    url = app.config['RAS_PARTY_VERIFY_PASSWORD_TOKEN'].format(token)
+    response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
+
+    if response.status_code != 200:
+        logger.error('Failed to verify token')
+        raise ApiError(url, response.status_code)
+
+    logger.debug('Successfully verified token')
+    return json.loads(response.text)
+
+
+def reset_password_request(username):
+    logger.debug('Sending reset password request party')
+    post_data = {"email_address": username}
+    url = app.config['RAS_PARTY_RESET_PASSWORD_REQUEST'].format(username)
+    response = request_handler('POST', url, auth=app.config['BASIC_AUTH'], json=post_data)
+
+    if response.status_code != 200:
+        logger.error('Failed to send reset password request party')
+        raise ApiError(url, response.status_code)
+
+    logger.debug('Successfully sent reset password request party')
+
+
+def change_password(password, token):
+    logger.debug('Changing password party')
+    post_data = {"new_password": password}
+    url = app.config['RAS_PARTY_CHANGE_PASSWORD'].format(token)
+    response = request_handler('PUT', url, auth=app.config['BASIC_AUTH'], json=post_data)
+
+    if response.status_code != 200:
+        logger.error('Failed to change password party')
+        raise ApiError(url, response.status_code)
+
+    logger.debug('Successfully changed password party')
+
+
 def create_account(registration_data):
     logger.debug('Creating account')
     url = app.config['RAS_PARTY_POST_RESPONDENTS']

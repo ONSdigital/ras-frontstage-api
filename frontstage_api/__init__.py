@@ -32,6 +32,9 @@ from frontstage_api.resources.secure_messaging.get_message import GetMessageView
 from frontstage_api.resources.secure_messaging.get_message_list import GetMessagesList  # NOQA # pylint: disable=wrong-import-position
 from frontstage_api.resources.secure_messaging.send_message import SendMessage  # NOQA # pylint: disable=wrong-import-position
 from frontstage_api.resources.sign_in.sign_in import SignIn  # NOQA # pylint: disable=wrong-import-position
+from frontstage_api.resources.passwords.request_password_change import RequestPasswordChange  # NOQA # pylint: disable=wrong-import-position
+from frontstage_api.resources.passwords.verify_password_token import VerifyPasswordToken  # NOQA # pylint: disable=wrong-import-position
+from frontstage_api.resources.passwords.change_password import ChangePassword  # NOQA # pylint: disable=wrong-import-position
 from frontstage_api.resources.register.validate_enrolment import ValidateEnrolment  # NOQA # pylint: disable=wrong-import-position
 from frontstage_api.resources.register.confirm_organisation_survey import ConfirmOrganisationSurvey  # NOQA # pylint: disable=wrong-import-position
 from frontstage_api.resources.register.create_account import CreateAccount  # NOQA # pylint: disable=wrong-import-position

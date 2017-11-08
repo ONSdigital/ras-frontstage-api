@@ -4,7 +4,7 @@ from flask import jsonify, make_response, request
 from flask_restplus import Resource
 from structlog import wrap_logger
 
-from frontstage_api import api
+from frontstage_api import api, auth
 from frontstage_api.controllers import secure_messaging_controllers
 from frontstage_api.decorators.jwt_decorators import get_jwt
 
@@ -17,6 +17,7 @@ class GetMessagesList(Resource):
     method_decorators = [get_jwt(request)]
 
     @staticmethod
+    @auth.login_required
     def get(encoded_jwt):
         label = request.args.get('label')
 

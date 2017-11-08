@@ -13,7 +13,20 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 def get_party_by_respondent_id(party_id):
     logger.debug('Retrieving party', party_id=party_id)
-    url = app.config['PARTY_BY_RESPONDENT_ID'].format(party_id)
+    url = app.config['RAS_PARTY_GET_BY_RESPONDENT_ID'].format(party_id)
+    response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
+
+    if response.status_code != 200:
+        logger.error('Failed to retrieve party', party_id=party_id)
+        raise ApiError(url, response.status_code)
+
+    logger.debug('Successfully retrieved party', party_id=party_id)
+    return json.loads(response.text)
+
+
+def get_party_by_business_id(party_id):
+    logger.debug('Retrieving party', party_id=party_id)
+    url = app.config['RAS_PARTY_GET_BY_BUSINESS_ID'].format(party_id)
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
     if response.status_code != 200:
@@ -35,3 +48,29 @@ def get_party_by_email(email):
 
     logger.debug('Successfully retrieved party')
     return json.loads(response.text)
+
+
+def create_account(registration_data):
+    logger.debug('Creating account')
+    url = app.config['RAS_PARTY_POST_RESPONDENTS']
+    registration_data['status'] = 'CREATED'
+    response = request_handler('POST', url, auth=app.config['BASIC_AUTH'], json=registration_data)
+
+    if response.status_code == 400:
+        logger.debug('Email has already been used')
+        raise ApiError(url, response.status_code)
+    elif response.status_code != 200:
+        logger.error('Failed to create account')
+        raise ApiError(url, response.status_code)
+
+
+def verify_email(token):
+    logger.debug('Verifying email address', token=token)
+    url = app.config['RAS_PARTY_VERIFY_EMAIL'].format(token)
+    response = request_handler('PUT', url, auth=app.config['BASIC_AUTH'])
+
+    if response.status_code != 200:
+        logger.error('Failed to verify email address', token=token)
+        raise ApiError(url, response.status_code)
+
+    logger.debug('Successfully verified email address', token=token)

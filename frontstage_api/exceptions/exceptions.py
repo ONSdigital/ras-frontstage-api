@@ -7,6 +7,13 @@ class ApiError(Exception):
         self.data = data
 
 
+class InvalidCaseCategory(Exception):
+
+    def __init__(self, category):
+        super().__init__()
+        self.category = category
+
+
 class InvalidRequestMethod(Exception):
 
     def __init__(self, method, url):

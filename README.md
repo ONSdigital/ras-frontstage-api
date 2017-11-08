@@ -39,16 +39,20 @@ APP_SETTINGS=TestingConfig pipenv run py.test tests/ --cov=frontstage_api
 ## Configuration
 
 Environment variables available for configuration are listed below:
+Defaults in brackets are only set when APP_SETTINGS is set to DevelopmentConfig, this is done automatically when using run.py script to start
 
 | Environment Variable            | Description                                     | Default
 |---------------------------------|-------------------------------------------------|-------------------------------
 | NAME                            | Name of application                             | 'ras-frontstage-api'
-| VERSION                         | Version number of application                   | '0.0.1' (manually update as application updates)
-| APP_SETTINGS                    | Which config to use                             | 'Config' (DevelopmentConfig is set in run.py)
+| VERSION                         | Version number of application                   | '0.0.1'
+| APP_SETTINGS                    | Which config to use                             | 'Config'
 | PORT                            | Which port application runs on                  | '8083'
-| LOGGING_LEVEL                   | Level which the application logs at             | 'INFO' ('DEBUG' for DevelopmentConfig)
+| LOGGING_LEVEL                   | Level which the application logs at             | 'INFO' ('DEBUG')
 | MESSAGE_LIMIT                   | Maximum number of messages to return from messaging service | 1000
-
+| SECURITY_USER_NAME              | Username for basic auth                         | None ('test_user')
+| SECURITY_USER_PASSWORD          | Password for basic auth                         | None ('test_password')
+| DJANGO_CLIENT_ID                | Username for authroisation to django server     | None ('test@test.test')
+| DJANGO_CLIENT_SECRET            | Password for authroisation to django server     | None ('testtest')
 
 For each external application which frontstage-api communicates with there are 3 environment variables e.g. for the RAS Secure Messaging service:
 
@@ -63,3 +67,9 @@ The services these variables exist for are listed below with the beginnings of t
 | Service                         | Start of variables          | Github
 |---------------------------------|-----------------------------|-----------------------------
 | Secure message service          | RAS_SECURE_MESSAGE_SERVICE  | https://github.com/ONSdigital/ras-secure-message
+| Case service                    | RM_CASE_SERVICE             | https://github.com/ONSdigital/rm-case-service
+| IAC service                     | RM_IAC_SERVICE              | https://github.com/ONSdigital/iac-service
+| Collection exercise service     | RM_COLLECTION_EXERCISE      | https://github.com/ONSdigital/rm-collection-exercise-service
+| Survey service                  | RM_SURVEY_SERVICE           | https://github.com/ONSdigital/rm-survey-service
+| Party service                   | RAS_PARTY_SERVICE           | https://github.com/ONSdigital/ras-party
+| Oauth2 service                  | RAS_OAUTH_SERVICE           | https://github.com/ONSdigital/django-oauth2-test

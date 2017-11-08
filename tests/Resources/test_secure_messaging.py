@@ -1,3 +1,4 @@
+import base64
 import json
 import unittest
 
@@ -26,12 +27,12 @@ with open('tests/test_data/secure_messaging/thread.json') as json_data:
 with open('tests/test_data/secure_messaging/thread_no_party.json') as json_data:
     thread_no_party = json.load(json_data)
 url_remove_unread_label = app.config['REMOVE_UNREAD_LABEL_URL'].format('dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b')
-url_get_party_from_id = app.config['PARTY_BY_RESPONDENT_ID'].format('07d672bc-497b-448f-a406-a20a7e6013d7')
+url_get_party_from_id = app.config['RAS_PARTY_GET_BY_RESPONDENT_ID'].format('07d672bc-497b-448f-a406-a20a7e6013d7')
 with open('tests/test_data/party/party.json') as json_data:
     party = json.load(json_data)
 url_get_case_from_party_id = app.config['RM_CASE_GET_BY_PARTY'].format('07d672bc-497b-448f-a406-a20a7e6013d7')
 with open('tests/test_data/case/case.json') as json_data:
-    case = json.load(json_data)
+    case = [json.load(json_data)]
 url_send_message = app.config['SEND_MESSAGE_URL']
 url_save_draft = app.config['DRAFT_SAVE_URL']
 url_modify_draft = app.config['DRAFT_MODIFY_URL'].format('msg_id')
@@ -43,6 +44,10 @@ class TestSecureMessaging(unittest.TestCase):
 
     def setUp(self):
         self.app = app.test_client()
+        self.headers = {
+            'jwt': encoded_jwt,
+            'Authorization': 'Basic {}'.format(base64.b64encode(bytes("{}:{}".format(app.config['SECURITY_USER_NAME'], app.config['SECURITY_USER_PASSWORD']), 'ascii')).decode("ascii"))
+        }
         self.posted_message = {
             'msg_from': '07d672bc-497b-448f-a406-a20a7e6013d7',
             'subject': 'test-subject',
@@ -54,7 +59,6 @@ class TestSecureMessaging(unittest.TestCase):
             'status': '201',
             'thread_id': '8caeff79-6067-4f2a-96e0-08617fdeb496'
         }
-        self.headers = {'jwt': encoded_jwt}
 
     @requests_mock.mock()
     def test_get_messages_list(self, mock_request):

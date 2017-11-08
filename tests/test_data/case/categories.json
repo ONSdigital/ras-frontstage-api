@@ -1,0 +1,9 @@
+[
+  {
+    "name": "ACCESS_CODE_AUTHENTICATION_ATTEMPT",
+    "shortDescription": "Access code authentication attempted",
+    "longDescription": "Access code authentication attempted",
+    "role": "collect-csos, collect-admins",
+    "group": "general"
+  }
+]

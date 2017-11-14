@@ -1,7 +1,7 @@
 import logging
 
 from flask import jsonify, make_response, request
-from flask_restplus import Resource
+from flask_restplus import fields, Resource
 from structlog import wrap_logger
 
 from frontstage_api import api, auth
@@ -11,6 +11,13 @@ from frontstage_api.decorators.jwt_decorators import get_jwt
 
 logger = wrap_logger(logging.getLogger(__name__))
 
+message_details = api.model('MessageDetails', {
+        'msg_from': fields.String(required=True),
+        'subject': fields.String(required=True),
+        'body': fields.String(required=True),
+        'thread_id': fields.String(),
+})
+
 
 @api.route('/send-message')
 class SendMessage(Resource):
@@ -18,10 +25,13 @@ class SendMessage(Resource):
 
     @staticmethod
     @auth.login_required
+    @api.expect(message_details, validate=True)
+    @api.header('jwt', 'JWT to pass to secure messaging service', required=True)
     def post(encoded_jwt):
         message_json = request.get_json(force=True)
         party_id = message_json['msg_from']
         is_draft = request.args.get('is_draft')
+        logger.info('Attempting to send message', party_id=party_id)
 
         # Retrieving business party, case and survey id's
         party = party_controller.get_party_by_respondent_id(party_id)
@@ -59,4 +69,5 @@ class SendMessage(Resource):
             }
             return make_response(jsonify(message), 400)
 
+        logger.info('Successfully sent message', party_id=party_id, message_id=message['msg_id'])
         return make_response(jsonify(message), 200)

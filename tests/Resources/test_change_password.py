@@ -19,9 +19,8 @@ class TestChangePassword(unittest.TestCase):
             ).decode("ascii")),
             'Content-Type': 'application/json',
         }
-        self.posted_form = {
-            'username': 'test'
-        }
+        self.posted_form = dict(token='nekoT', new_password='new_password')
+
         self.oauth2_response = {
             'id': 1,
             'access_token': '99a81f9c-e827-448b-8fa7-d563b76137ca',
@@ -38,8 +37,7 @@ class TestChangePassword(unittest.TestCase):
     def test_change_password_successful(self, mock_request):
         mock_request.put(url_change_password.format('nekoT'), status_code=200)
 
-        payload = dict(token='nekoT', new_password='new_password')
-        response = self.app.put('/change-password', headers=self.headers, data=json.dumps(payload))
+        response = self.app.put('/change-password', headers=self.headers, data=json.dumps(self.posted_form))
 
         self.assertEqual(response.status_code, 200)
 
@@ -47,8 +45,7 @@ class TestChangePassword(unittest.TestCase):
     def test_change_password_party_fail(self, mock_request):
         mock_request.put(url_change_password.format('nekoT'), status_code=500)
 
-        payload = dict(token='nekoT', new_password='new_password')
-        response = self.app.put('/change-password', headers=self.headers, data=json.dumps(payload))
+        response = self.app.put('/change-password', headers=self.headers, data=json.dumps(self.posted_form))
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
@@ -57,8 +54,7 @@ class TestChangePassword(unittest.TestCase):
     def test_change_password_token_expired(self, mock_request):
         mock_request.put(url_change_password.format('nekoT'), status_code=409)
 
-        payload = dict(token='nekoT', new_password='new_password')
-        response = self.app.put('/change-password', headers=self.headers, data=json.dumps(payload))
+        response = self.app.put('/change-password', headers=self.headers, data=json.dumps(self.posted_form))
 
         self.assertEqual(response.status_code, 409)
         self.assertTrue('"status_code": 409'.encode() in response.data)
@@ -67,14 +63,14 @@ class TestChangePassword(unittest.TestCase):
     def test_change_password_invalid(self, mock_request):
         mock_request.put(url_change_password.format('nekoT'), status_code=404)
 
-        payload = dict(token='nekoT', new_password='new_password')
-        response = self.app.put('/change-password', headers=self.headers, data=json.dumps(payload))
+        response = self.app.put('/change-password', headers=self.headers, data=json.dumps(self.posted_form))
 
         self.assertEqual(response.status_code, 404)
         self.assertTrue('"status_code": 404'.encode() in response.data)
 
     # Test posting to endpoint without basic auth in header
     def test_password_change_no_basic_auth(self):
-        response = self.app.put('/change-password', data=json.dumps(self.posted_form))
+        del self.headers['Authorization']
+        response = self.app.put('/change-password', headers=self.headers, data=json.dumps(self.posted_form))
 
         self.assertEqual(response.status_code, 401)

@@ -49,6 +49,11 @@ class TestAccessCase(unittest.TestCase):
         self.assertTrue('case'.encode() in response.data)
         self.assertTrue('"collection_instrument_size": 5'.encode() in response.data)
 
+    def test_access_case_missing_args(self):
+        response = self.app.get('/access-case', headers=self.headers)
+
+        self.assertEqual(response.status_code, 400)
+
     @requests_mock.mock()
     def test_access_case_no_permission(self, mock_request):
         mock_request.get(url_get_case, json=case)
@@ -67,3 +72,11 @@ class TestAccessCase(unittest.TestCase):
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
+
+    # Test get request to endpoint without basic auth in header
+    def test_get_message_no_basic_auth(self):
+        del self.headers['Authorization']
+
+        response = self.app.get(self.test_url, headers=self.headers)
+
+        self.assertEqual(response.status_code, 401)

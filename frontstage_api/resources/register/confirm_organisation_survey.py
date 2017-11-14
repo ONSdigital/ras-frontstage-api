@@ -1,7 +1,7 @@
 import logging
 
 from flask import jsonify, make_response, request
-from flask_restplus import Resource
+from flask_restplus import Resource, fields
 from structlog import wrap_logger
 
 from frontstage_api import api, auth
@@ -10,15 +10,20 @@ from frontstage_api.controllers import case_controller, collection_exercise_cont
 
 logger = wrap_logger(logging.getLogger(__name__))
 
+enrolment_details = api.model('EnrolmentDetails', {
+    'enrolment_code': fields.String(required=True),
+})
+
 
 @api.route('/confirm-organisation-survey')
 class ConfirmOrganisationSurvey(Resource):
 
     @staticmethod
     @auth.login_required
+    @api.expect(enrolment_details, validate=True)
     def post():
         logger.info('Attempting to retrieve organisation and survey data')
-        enrolment_code = request.get_json(force=True).get('enrolment_code')
+        enrolment_code = request.get_json().get('enrolment_code')
 
         # Verify enrolment code is active
         iac = iac_controller.get_iac_from_enrolment(enrolment_code)

@@ -1,7 +1,7 @@
 import logging
 
 from flask import request
-from flask_restplus import Resource
+from flask_restplus import Resource, reqparse
 from structlog import wrap_logger
 
 from frontstage_api import api, auth
@@ -11,12 +11,17 @@ from frontstage_api.exceptions.exceptions import InvalidSurveyList
 
 logger = wrap_logger(logging.getLogger(__name__))
 
+parser = reqparse.RequestParser()
+parser.add_argument('case_id', location='args', required=True)
+parser.add_argument('party_id', location='args', required=True)
+
 
 @api.route('/surveys-list')
 class GetSurveysList(Resource):
 
     @staticmethod
     @auth.login_required
+    @api.expect(parser)
     def get():
         party_id = request.args['party_id']
         survey_list = request.args['list']

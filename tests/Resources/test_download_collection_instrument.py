@@ -26,6 +26,7 @@ class TestDownloadCollectionInstrument(unittest.TestCase):
                 bytes("{}:{}".format(app.config['SECURITY_USER_NAME'], app.config['SECURITY_USER_PASSWORD']),
                       'ascii')).decode("ascii"))
         }
+        self.test_url = '/download-ci?case_id=abc670a5-67c6-4d96-9164-13b4017b8704&party_id=07d672bc-497b-448f-a406-a20a7e6013d7'
 
     @requests_mock.mock()
     def test_download_collection_instrument(self, mock_request):
@@ -34,10 +35,14 @@ class TestDownloadCollectionInstrument(unittest.TestCase):
         mock_request.get(url_get_case_categories, json=categories)
         mock_request.post(url_post_case_event, status_code=201)
 
-        test_url = '/download-ci?case_id=abc670a5-67c6-4d96-9164-13b4017b8704&party_id=07d672bc-497b-448f-a406-a20a7e6013d7'
-        response = self.app.get(test_url, headers=self.headers)
+        response = self.app.get(self.test_url, headers=self.headers)
 
         self.assertEqual(response.status_code, 200)
+
+    def test_download_collection_instrument_missing_args(self):
+        response = self.app.get('/download-ci', headers=self.headers)
+
+        self.assertEqual(response.status_code, 400)
 
     @requests_mock.mock()
     def test_download_collection_instrument_fail(self, mock_request):
@@ -46,8 +51,15 @@ class TestDownloadCollectionInstrument(unittest.TestCase):
         mock_request.get(url_get_case_categories, json=categories)
         mock_request.post(url_post_case_event, status_code=201)
 
-        test_url = '/download-ci?case_id=abc670a5-67c6-4d96-9164-13b4017b8704&party_id=07d672bc-497b-448f-a406-a20a7e6013d7'
-        response = self.app.get(test_url, headers=self.headers)
+        response = self.app.get(self.test_url, headers=self.headers)
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
+
+    # Test get request to endpoint without basic auth in header
+    def test_get_message_no_basic_auth(self):
+        del self.headers['Authorization']
+
+        response = self.app.get(self.test_url, headers=self.headers)
+
+        self.assertEqual(response.status_code, 401)

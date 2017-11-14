@@ -33,6 +33,7 @@ class TestRegister(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
         self.headers = {
+            'Content-Type': 'application/json',
             'Authorization': 'Basic {}'.format(base64.b64encode(
                 bytes("{}:{}".format(app.config['SECURITY_USER_NAME'], app.config['SECURITY_USER_PASSWORD']), 'ascii')
             ).decode("ascii"))
@@ -54,7 +55,8 @@ class TestRegister(unittest.TestCase):
             "password": "password",
             "telephone": "0202020202",
             "firstName": "Andrew",
-            "lastName": "Millar"
+            "lastName": "Millar",
+            "status": "CREATED"
         }
 
     @requests_mock.mock()

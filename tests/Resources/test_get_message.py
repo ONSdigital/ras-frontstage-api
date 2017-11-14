@@ -31,6 +31,7 @@ class TestGetMessage(unittest.TestCase):
 
         self.headers = {
             'jwt': encoded_jwt,
+            'Content-Type': 'application/json',
             'Authorization': 'Basic {}'.format(base64.b64encode(
                 bytes("{}:{}".format(app.config['SECURITY_USER_NAME'], app.config['SECURITY_USER_PASSWORD']),
                       'ascii')).decode("ascii"))
@@ -124,8 +125,9 @@ class TestGetMessage(unittest.TestCase):
 
     # Test get request to endpoint without basic auth in header
     def test_get_message_no_basic_auth(self):
+        del self.headers['Authorization']
         message_url = "/message?message_id=dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b&label=UNREAD&party_id=1f5e1d68-2a4c-4698-8086-e23c0b98923f"
 
-        response = self.app.get(message_url)
+        response = self.app.get(message_url, headers=self.headers)
 
         self.assertEqual(response.status_code, 401)

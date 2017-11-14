@@ -1,7 +1,7 @@
 import logging
 
 from flask import jsonify, make_response, request
-from flask_restplus import Resource
+from flask_restplus import fields, Resource
 from structlog import wrap_logger
 
 from frontstage_api import api, auth
@@ -10,12 +10,18 @@ from frontstage_api.controllers import django_controller, party_controller
 
 logger = wrap_logger(logging.getLogger(__name__))
 
+sign_in_details = api.model('SignInDetails', {
+        'username': fields.String(required=True, description='username'),
+        'password': fields.String(required=True, description='password')
+})
+
 
 @api.route('/sign-in')
 class SignIn(Resource):
 
     @staticmethod
     @auth.login_required
+    @api.expect(sign_in_details, validate=True)
     def post():
         logger.info('Attempting to retrieved sign-in details')
         message_json = request.get_json(force=True)

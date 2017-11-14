@@ -85,6 +85,7 @@ class TestRequestPasswordChange(unittest.TestCase):
 
     # Test posting to endpoint without basic auth in header
     def test_request_password_change_no_basic_auth(self):
-        response = self.app.post('/request-password-change', data=json.dumps(self.posted_form))
+        del self.headers['Authorization']
+        response = self.app.post('/request-password-change', headers=self.headers, data=json.dumps(self.posted_form))
 
         self.assertEqual(response.status_code, 401)

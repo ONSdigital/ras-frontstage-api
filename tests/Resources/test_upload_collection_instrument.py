@@ -41,6 +41,19 @@ class TestUploadCollectionInstrument(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
 
+    def test_upload_collection_instrument_missing_args(self):
+        response = self.app.post('/upload-ci?case_id=abc670a5-67c6-4d96-9164-13b4017b8704', headers=self.headers, data=self.ci_data)
+
+        self.assertEqual(response.status_code, 400)
+
+    @requests_mock.mock()
+    def test_upload_collection_instrument_missing_file(self, mock_request):
+        mock_request.get(url_get_case, json=case)
+
+        response = self.app.post(self.test_url, headers=self.headers)
+
+        self.assertEqual(response.status_code, 400)
+
     def test_upload_collection_instrument_file_too_large(self):
         file_data = 'a' * 21 * 1024 * 1024
         over_size_file = dict(file=(io.BytesIO(file_data.encode()), "testfile.xlsx"))
@@ -73,3 +86,11 @@ class TestUploadCollectionInstrument(unittest.TestCase):
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
+
+    # Test get request to endpoint without basic auth in header
+    def test_get_message_no_basic_auth(self):
+        del self.headers['Authorization']
+
+        response = self.app.post(self.test_url, headers=self.headers, data=self.ci_data)
+
+        self.assertEqual(response.status_code, 401)

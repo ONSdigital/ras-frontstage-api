@@ -42,6 +42,7 @@ class TestSendMessage(unittest.TestCase):
         }
         self.headers = {
             'jwt': encoded_jwt,
+            'Content-Type': 'application/json',
             'Authorization': 'Basic {}'.format(base64.b64encode(
                 bytes("{}:{}".format(app.config['SECURITY_USER_NAME'], app.config['SECURITY_USER_PASSWORD']),
                       'ascii')).decode("ascii"))
@@ -163,6 +164,9 @@ class TestSendMessage(unittest.TestCase):
 
     # Test posting to endpoint without basic auth in header
     def test_request_password_change_no_basic_auth(self):
-        response = self.app.post('/send-message?is_draft=True')
+        del self.headers['Authorization']
+        response = self.app.post('/send-message?is_draft=True',
+                                 headers=self.headers,
+                                 data=json.dumps(self.posted_message))
 
         self.assertEqual(response.status_code, 401)

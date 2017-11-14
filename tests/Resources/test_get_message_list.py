@@ -26,6 +26,7 @@ class TestGetMessageList(unittest.TestCase):
         self.app = app.test_client()
         self.headers = {
             'jwt': encoded_jwt,
+            'Content-Type': 'application/json',
             'Authorization': 'Basic {}'.format(base64.b64encode(
                 bytes("{}:{}".format(app.config['SECURITY_USER_NAME'], app.config['SECURITY_USER_PASSWORD']),
                       'ascii')).decode("ascii"))
@@ -101,6 +102,7 @@ class TestGetMessageList(unittest.TestCase):
 
     # Test get request to endpoint without basic auth in header
     def test_get_message_no_basic_auth(self):
-        response = self.app.get("/messages-list?label=INBOX")
+        del self.headers['Authorization']
+        response = self.app.get("/messages-list?label=INBOX", headers=self.headers)
 
         self.assertEqual(response.status_code, 401)

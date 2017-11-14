@@ -39,7 +39,7 @@ class TestRequestPasswordChange(unittest.TestCase):
         mock_request.post(url_get_token, status_code=201, json=self.oauth2_response)
         mock_request.post(url_reset_password_request, status_code=200)
 
-        response = self.app.post('/request_password_change', headers=self.headers, data=json.dumps(self.posted_form))
+        response = self.app.post('/request-password-change', headers=self.headers, data=json.dumps(self.posted_form))
 
         self.assertEqual(response.status_code, 200)
 
@@ -47,7 +47,7 @@ class TestRequestPasswordChange(unittest.TestCase):
     def test_request_password_change_oauth_fail(self, mock_request):
         mock_request.post(url_get_token, status_code=500)
 
-        response = self.app.post('/request_password_change', headers=self.headers, data=json.dumps(self.posted_form))
+        response = self.app.post('/request-password-change', headers=self.headers, data=json.dumps(self.posted_form))
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
@@ -56,7 +56,7 @@ class TestRequestPasswordChange(unittest.TestCase):
     def test_request_password_change_oauth_oauth_401_error(self, mock_request):
         mock_request.post(url_get_token, status_code=401, json=self.oauth2_error)
 
-        response = self.app.post('/request_password_change', headers=self.headers, data=json.dumps(self.posted_form))
+        response = self.app.post('/request-password-change', headers=self.headers, data=json.dumps(self.posted_form))
 
         self.assertEqual(response.status_code, 401)
         self.assertTrue('"detail": "test error"'.encode() in response.data)
@@ -66,7 +66,7 @@ class TestRequestPasswordChange(unittest.TestCase):
         mock_request.post(url_get_token, status_code=201, json=self.oauth2_response)
         mock_request.post(url_reset_password_request, status_code=500)
 
-        response = self.app.post('/request_password_change', headers=self.headers, data=json.dumps(self.posted_form))
+        response = self.app.post('/request-password-change', headers=self.headers, data=json.dumps(self.posted_form))
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
@@ -76,13 +76,13 @@ class TestRequestPasswordChange(unittest.TestCase):
         mock_request.post(url_get_token, status_code=201, json=self.oauth2_response)
         mock_request.post(url_reset_password_request, status_code=404)
 
-        response = self.app.post('/request_password_change', headers=self.headers, data=json.dumps(self.posted_form))
+        response = self.app.post('/request-password-change', headers=self.headers, data=json.dumps(self.posted_form))
 
         self.assertEqual(response.status_code, 404)
         self.assertTrue('"status_code": 404'.encode() in response.data)
 
     # Test posting to endpoint without basic auth in header
     def test_request_password_change_no_basic_auth(self):
-        response = self.app.post('/request_password_change', data=json.dumps(self.posted_form))
+        response = self.app.post('/request-password-change', data=json.dumps(self.posted_form))
 
         self.assertEqual(response.status_code, 401)

@@ -53,7 +53,7 @@ class TestSendMessage(unittest.TestCase):
         mock_request.get(url_get_case_from_party_id, json=case)
         mock_request.post(url_send_message, status_code=201, json=self.sent_message_response)
 
-        response = self.app.post('/send_message?is_draft=False', data=json.dumps(self.posted_message), headers=self.headers)
+        response = self.app.post('/send-message?is_draft=False', data=json.dumps(self.posted_message), headers=self.headers)
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue('"status": "201"'.encode() in response.data)
@@ -62,7 +62,7 @@ class TestSendMessage(unittest.TestCase):
     def test_post_send_message_party_fail(self, mock_request):
         mock_request.get(url_get_party_from_id, status_code=500)
 
-        response = self.app.post('/send_message?is_draft=False', data=json.dumps(self.posted_message), headers=self.headers)
+        response = self.app.post('/send-message?is_draft=False', data=json.dumps(self.posted_message), headers=self.headers)
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
@@ -72,7 +72,7 @@ class TestSendMessage(unittest.TestCase):
         mock_request.get(url_get_party_from_id, json=party)
         mock_request.get(url_get_case_from_party_id, status_code=500)
 
-        response = self.app.post('/send_message?is_draft=False', data=json.dumps(self.posted_message), headers=self.headers)
+        response = self.app.post('/send-message?is_draft=False', data=json.dumps(self.posted_message), headers=self.headers)
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
@@ -83,7 +83,7 @@ class TestSendMessage(unittest.TestCase):
         mock_request.get(url_get_case_from_party_id, json=case)
         mock_request.post(url_send_message, status_code=500)
 
-        response = self.app.post('/send_message?is_draft=False', data=json.dumps(self.posted_message), headers=self.headers)
+        response = self.app.post('/send-message?is_draft=False', data=json.dumps(self.posted_message), headers=self.headers)
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
@@ -95,7 +95,7 @@ class TestSendMessage(unittest.TestCase):
         form_errors = {'body': ['Body field length must not be greater than 10000']}
         mock_request.post(url_send_message, status_code=400, json=form_errors)
 
-        response = self.app.post('/send_message?is_draft=False', data=json.dumps(self.posted_message), headers=self.headers)
+        response = self.app.post('/send-message?is_draft=False', data=json.dumps(self.posted_message), headers=self.headers)
 
         self.assertEqual(response.status_code, 400)
         self.assertTrue('"form_errors"'.encode() in response.data)
@@ -109,7 +109,7 @@ class TestSendMessage(unittest.TestCase):
         mock_request.get(url_get_thread, json=thread)
         self.posted_message['thread_id'] = 'dfcb2b2c-a1d8-4d86-a974-7ffe05a3141c'
 
-        response = self.app.post('/send_message?is_draft=False', data=json.dumps(self.posted_message), headers=self.headers)
+        response = self.app.post('/send-message?is_draft=False', data=json.dumps(self.posted_message), headers=self.headers)
 
         self.assertEqual(response.status_code, 400)
         self.assertTrue('"body": "sending"'.encode() in response.data)
@@ -121,7 +121,7 @@ class TestSendMessage(unittest.TestCase):
         mock_request.get(url_get_case_from_party_id, json=case)
         mock_request.post(url_save_draft, status_code=201, json=self.sent_message_response)
 
-        response = self.app.post('/send_message?is_draft=True', data=json.dumps(self.posted_message), headers=self.headers)
+        response = self.app.post('/send-message?is_draft=True', data=json.dumps(self.posted_message), headers=self.headers)
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue('"status": "201"'.encode() in response.data)
@@ -132,7 +132,7 @@ class TestSendMessage(unittest.TestCase):
         mock_request.get(url_get_case_from_party_id, json=case)
         mock_request.post(url_save_draft, status_code=500)
 
-        response = self.app.post('/send_message?is_draft=True', data=json.dumps(self.posted_message), headers=self.headers)
+        response = self.app.post('/send-message?is_draft=True', data=json.dumps(self.posted_message), headers=self.headers)
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
@@ -144,7 +144,7 @@ class TestSendMessage(unittest.TestCase):
         form_errors = {'body': ['Body field length must not be greater than 10000']}
         mock_request.post(url_save_draft, status_code=400, json=form_errors)
 
-        response = self.app.post('/send_message?is_draft=True', data=json.dumps(self.posted_message), headers=self.headers)
+        response = self.app.post('/send-message?is_draft=True', data=json.dumps(self.posted_message), headers=self.headers)
 
         self.assertEqual(response.status_code, 400)
         self.assertTrue('"form_errors"'.encode() in response.data)
@@ -156,13 +156,13 @@ class TestSendMessage(unittest.TestCase):
         mock_request.put(url_modify_draft, status_code=200, json=self.sent_message_response)
         self.posted_message['msg_id'] = 'msg_id'
 
-        response = self.app.post('/send_message?is_draft=True', data=json.dumps(self.posted_message), headers=self.headers)
+        response = self.app.post('/send-message?is_draft=True', data=json.dumps(self.posted_message), headers=self.headers)
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue('"status": "201"'.encode() in response.data)
 
     # Test posting to endpoint without basic auth in header
     def test_request_password_change_no_basic_auth(self):
-        response = self.app.post('/send_message?is_draft=True')
+        response = self.app.post('/send-message?is_draft=True')
 
         self.assertEqual(response.status_code, 401)

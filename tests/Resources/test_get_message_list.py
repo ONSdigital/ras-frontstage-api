@@ -36,7 +36,7 @@ class TestGetMessageList(unittest.TestCase):
         mock_request.get(url_get_messages_list_INBOX, json=messages_list_inbox)
         mock_request.get(url_get_unread_messages_total, json={"total": "10"})
 
-        response = self.app.get("/messages_list?label=INBOX", headers=self.headers)
+        response = self.app.get("/messages-list?label=INBOX", headers=self.headers)
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue('The European languages are members of the same family'.encode() in response.data)
@@ -46,7 +46,7 @@ class TestGetMessageList(unittest.TestCase):
     def test_get_messages_list_connection_error(self, mock_request):
         mock_request.get(url_get_messages_list_INBOX, exc=requests.exceptions.ConnectionError)
 
-        response = self.app.get("/messages_list?label=INBOX", headers=self.headers)
+        response = self.app.get("/messages-list?label=INBOX", headers=self.headers)
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"url": "{}"'.format(url_get_messages_list_INBOX).encode() in response.data)
@@ -56,7 +56,7 @@ class TestGetMessageList(unittest.TestCase):
         mock_request.get(url_get_messages_list_INBOX, json=messages_list_inbox)
         mock_request.get(url_get_unread_messages_total, exc=requests.exceptions.ConnectionError)
 
-        response = self.app.get("/messages_list?label=INBOX", headers=self.headers)
+        response = self.app.get("/messages-list?label=INBOX", headers=self.headers)
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue('"unread_messages_total": "error"'.encode() in response.data)
@@ -65,7 +65,7 @@ class TestGetMessageList(unittest.TestCase):
     def test_get_messages_list_fail(self, mock_request):
         mock_request.get(url_get_messages_list_INBOX, status_code=500)
 
-        response = self.app.get("/messages_list?label=INBOX", headers=self.headers)
+        response = self.app.get("/messages-list?label=INBOX", headers=self.headers)
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
@@ -74,7 +74,7 @@ class TestGetMessageList(unittest.TestCase):
     def test_get_messages_list_invalid_method(self, mock_request):
         mock_request.get(url_get_messages_list_INBOX, exc=InvalidRequestMethod('GOT', 'http://fakeurl.com'))
 
-        response = self.app.get("/messages_list?label=INBOX", headers=self.headers)
+        response = self.app.get("/messages-list?label=INBOX", headers=self.headers)
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('Invalid request method'.encode() in response.data)
@@ -83,7 +83,7 @@ class TestGetMessageList(unittest.TestCase):
     def test_get_messages_list_no_jwt(self, mock_request):
         mock_request.get(url_get_messages_list_INBOX, json=messages_list_inbox)
 
-        response = self.app.get("/messages_list?label=INBOX")
+        response = self.app.get("/messages-list?label=INBOX")
 
         self.assertEqual(response.status_code, 401)
         self.assertTrue('No JWT provided in request header'.encode() in response.data)
@@ -93,7 +93,7 @@ class TestGetMessageList(unittest.TestCase):
         mock_request.get(url_get_messages_list_INBOX, json=messages_list_inbox)
         mock_request.get(url_get_unread_messages_total, status_code=500)
 
-        response = self.app.get("/messages_list?label=INBOX", headers=self.headers)
+        response = self.app.get("/messages-list?label=INBOX", headers=self.headers)
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue('The European languages are members of the same family'.encode() in response.data)
@@ -101,6 +101,6 @@ class TestGetMessageList(unittest.TestCase):
 
     # Test get request to endpoint without basic auth in header
     def test_get_message_no_basic_auth(self):
-        response = self.app.get("/messages_list?label=INBOX")
+        response = self.app.get("/messages-list?label=INBOX")
 
         self.assertEqual(response.status_code, 401)

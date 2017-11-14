@@ -12,7 +12,7 @@ from frontstage_api.controllers import party_controller
 logger = wrap_logger(logging.getLogger(__name__))
 
 
-@api.route('/verify_password_token')
+@api.route('/verify-password-token')
 class VerifyPasswordToken(Resource):
 
     @staticmethod

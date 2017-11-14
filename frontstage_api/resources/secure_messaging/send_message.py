@@ -12,7 +12,7 @@ from frontstage_api.decorators.jwt_decorators import get_jwt
 logger = wrap_logger(logging.getLogger(__name__))
 
 
-@api.route('/send_message')
+@api.route('/send-message')
 class SendMessage(Resource):
     method_decorators = [get_jwt(request)]
 

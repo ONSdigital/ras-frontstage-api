@@ -5,5 +5,33 @@
     "longDescription": "Access code authentication attempted",
     "role": "collect-csos, collect-admins",
     "group": "general"
+  },
+    {
+    "name": "SUCCESSFUL_RESPONSE_UPLOAD",
+    "shortDescription": "Access code authentication attempted",
+    "longDescription": "Access code authentication attempted",
+    "role": "collect-csos, collect-admins",
+    "group": "general"
+  },
+    {
+    "name": "UNSUCCESSFUL_RESPONSE_UPLOAD",
+    "shortDescription": "Access code authentication attempted",
+    "longDescription": "Access code authentication attempted",
+    "role": "collect-csos, collect-admins",
+    "group": "general"
+  },
+    {
+    "name": "COLLECTION_INSTRUMENT_DOWNLOADED",
+    "shortDescription": "Access code authentication attempted",
+    "longDescription": "Access code authentication attempted",
+    "role": "collect-csos, collect-admins",
+    "group": "general"
+  },
+    {
+    "name": "COLLECTION_INSTRUMENT_ERROR",
+    "shortDescription": "Access code authentication attempted",
+    "longDescription": "Access code authentication attempted",
+    "role": "collect-csos, collect-admins",
+    "group": "general"
   }
 ]

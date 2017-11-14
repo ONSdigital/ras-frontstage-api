@@ -39,3 +39,7 @@ from frontstage_api.resources.register.validate_enrolment import ValidateEnrolme
 from frontstage_api.resources.register.confirm_organisation_survey import ConfirmOrganisationSurvey  # NOQA # pylint: disable=wrong-import-position
 from frontstage_api.resources.register.create_account import CreateAccount  # NOQA # pylint: disable=wrong-import-position
 from frontstage_api.resources.register.verify_email import VerifyEmail  # NOQA # pylint: disable=wrong-import-position
+from frontstage_api.resources.surveys.get_surveys_list import GetSurveysList  # NOQA # pylint: disable=wrong-import-position
+from frontstage_api.resources.surveys.access_case import GetAccessCase  # NOQA # pylint: disable=wrong-import-position
+from frontstage_api.resources.surveys.download_collection_instrument import DownloadCollectionInstrument  # NOQA # pylint: disable=wrong-import-position
+from frontstage_api.resources.surveys.upload_collection_instrument import UploadCollectionInstrument  # NOQA # pylint: disable=wrong-import-position

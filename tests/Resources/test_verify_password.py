@@ -37,7 +37,7 @@ class TestVerifyPasswordToken(unittest.TestCase):
         mock_request.get(url_verify_token.format('nekoT'), status_code=200, json={"status": "OKs"})
 
         params = dict(token='nekoT')
-        response = self.app.get('/verify_password_token', headers=self.headers, query_string=params)
+        response = self.app.get('/verify-password-token', headers=self.headers, query_string=params)
 
         self.assertEqual(response.status_code, 200)
 
@@ -46,7 +46,7 @@ class TestVerifyPasswordToken(unittest.TestCase):
         mock_request.get(url_verify_token.format('nekoT'), status_code=500)
 
         params = dict(token='nekoT')
-        response = self.app.get('/verify_password_token', headers=self.headers, query_string=params)
+        response = self.app.get('/verify-password-token', headers=self.headers, query_string=params)
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
@@ -56,7 +56,7 @@ class TestVerifyPasswordToken(unittest.TestCase):
         mock_request.get(url_verify_token.format('nekoT'), status_code=409)
 
         params = dict(token='nekoT')
-        response = self.app.get('/verify_password_token', headers=self.headers, query_string=params)
+        response = self.app.get('/verify-password-token', headers=self.headers, query_string=params)
 
         self.assertEqual(response.status_code, 409)
         self.assertTrue('"status_code": 409'.encode() in response.data)
@@ -66,13 +66,13 @@ class TestVerifyPasswordToken(unittest.TestCase):
         mock_request.get(url_verify_token.format('nekoT'), status_code=404)
 
         params = dict(token='nekoT')
-        response = self.app.get('/verify_password_token', headers=self.headers, query_string=params)
+        response = self.app.get('/verify-password-token', headers=self.headers, query_string=params)
 
         self.assertEqual(response.status_code, 404)
         self.assertTrue('"status_code": 404'.encode() in response.data)
 
     # Test posting to endpoint without basic auth in header
     def test_verify_password_token_no_basic_auth(self):
-        response = self.app.get('/verify_password_token', data=json.dumps(self.posted_form))
+        response = self.app.get('/verify-password-token', data=json.dumps(self.posted_form))
 
         self.assertEqual(response.status_code, 401)

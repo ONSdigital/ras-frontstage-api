@@ -12,7 +12,7 @@ from frontstage_api.controllers import party_controller
 logger = wrap_logger(logging.getLogger(__name__))
 
 
-@api.route('/change_password')
+@api.route('/change-password')
 class ChangePassword(Resource):
 
     @staticmethod

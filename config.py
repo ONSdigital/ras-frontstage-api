@@ -14,11 +14,13 @@ class Config(object):
     DJANGO_CLIENT_ID = os.getenv('DJANGO_CLIENT_ID')
     DJANGO_CLIENT_SECRET = os.getenv('DJANGO_CLIENT_SECRET')
     DJANGO_BASIC_AUTH = (DJANGO_CLIENT_ID, DJANGO_CLIENT_SECRET)
+    MAX_UPLOAD_LENGTH = os.getenv('MAX_UPLOAD_LENGTH',  20 * 1024 * 1024)
 
     RM_CASE_SERVICE_HOST = os.getenv('RM_CASE_SERVICE_HOST', 'localhost')
     RM_CASE_SERVICE_PORT = os.getenv('RM_CASE_SERVICE_PORT', 8171)
     RM_CASE_SERVICE_PROTOCOL = os.getenv('RM_CASE_SERVICE_PROTOCOL', 'http')
     RM_CASE_SERVICE = '{}://{}:{}/'.format(RM_CASE_SERVICE_PROTOCOL, RM_CASE_SERVICE_HOST, RM_CASE_SERVICE_PORT)
+    RM_CASE_GET_BY_ID = '{}cases/{}'.format(RM_CASE_SERVICE, '{}')
     RM_CASE_GET_BY_PARTY = '{}cases/partyid/{}'.format(RM_CASE_SERVICE, '{}')
     RM_CASE_GET_BY_IAC = '{}cases/iac/{}'.format(RM_CASE_SERVICE, '{}')
     RM_CASE_GET_CATEGORIES = '{}categories'.format(RM_CASE_SERVICE)
@@ -79,6 +81,16 @@ class Config(object):
     RM_SURVEY_SERVICE_PROTOCOL = os.getenv('RM_SURVEY_SERVICE_PROTOCOL', 'http')
     RM_SURVEY_SERVICE = '{}://{}:{}/'.format(RM_SURVEY_SERVICE_PROTOCOL, RM_SURVEY_SERVICE_HOST, RM_SURVEY_SERVICE_PORT)
     RM_SURVEY_GET = '{}surveys/{}'.format(RM_SURVEY_SERVICE, '{}')
+
+    RAS_COLLECTION_INSTRUMENT_SERVICE_HOST = os.getenv('RAS_COLLECTION_INSTRUMENT_SERVICE_HOST', 'localhost')
+    RAS_COLLECTION_INSTRUMENT_SERVICE_PORT = os.getenv('RAS_COLLECTION_INSTRUMENT_SERVICE_PORT', 8002)
+    RAS_COLLECTION_INSTRUMENT_SERVICE_PROTOCOL = os.getenv('RAS_COLLECTION_INSTRUMENT_SERVICE_PROTOCOL', 'http')
+    RAS_COLLECTION_INSTRUMENT_SERVICE = '{}://{}:{}/'.format(RAS_COLLECTION_INSTRUMENT_SERVICE_PROTOCOL,
+                                                             RAS_COLLECTION_INSTRUMENT_SERVICE_HOST,
+                                                             RAS_COLLECTION_INSTRUMENT_SERVICE_PORT)
+    RAS_CI_SIZE = '{}collection-instrument-api/1.0.2/instrument_size/{}'.format(RAS_COLLECTION_INSTRUMENT_SERVICE, '{}')
+    RAS_CI_DOWNLOAD = '{}collection-instrument-api/1.0.2/download/{}'.format(RAS_COLLECTION_INSTRUMENT_SERVICE, '{}')
+    RAS_CI_UPLOAD = '{}collection-instrument-api/1.0.2/survey_responses/{}'.format(RAS_COLLECTION_INSTRUMENT_SERVICE, '{}')
 
 
 class DevelopmentConfig(Config):

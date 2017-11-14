@@ -129,4 +129,3 @@ class TestGetMessage(unittest.TestCase):
         response = self.app.get(message_url)
 
         self.assertEqual(response.status_code, 401)
-

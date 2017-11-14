@@ -33,7 +33,9 @@ class TestRegister(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
         self.headers = {
-            'Authorization': 'Basic {}'.format(base64.b64encode(bytes("{}:{}".format(app.config['SECURITY_USER_NAME'], app.config['SECURITY_USER_PASSWORD']), 'ascii')).decode("ascii"))
+            'Authorization': 'Basic {}'.format(base64.b64encode(
+                bytes("{}:{}".format(app.config['SECURITY_USER_NAME'], app.config['SECURITY_USER_PASSWORD']), 'ascii')
+            ).decode("ascii"))
         }
         self.enrolment_json = {
             'enrolment_code': 'test_enrolment',

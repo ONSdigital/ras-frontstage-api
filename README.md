@@ -36,6 +36,11 @@ Run tests with coverage
 APP_SETTINGS=TestingConfig pipenv run py.test tests/ --cov=frontstage_api
 ```
 
+Run flake8 check
+```
+pipenv check --style .
+```
+
 ## Configuration
 
 Environment variables available for configuration are listed below:

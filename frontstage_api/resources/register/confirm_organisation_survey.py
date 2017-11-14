@@ -42,4 +42,3 @@ class ConfirmOrganisationSurvey(Resource):
         }
         logger.info('Successfully retrieved organisation and survey data')
         return make_response(jsonify(response_json), 200)
-

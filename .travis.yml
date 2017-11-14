@@ -17,6 +17,7 @@ install:
 
 script:
     - pipenv run py.test tests/ --cov=frontstage_api
+    - pipenv check --style .
 
 after_success:
     - pipenv run codecov

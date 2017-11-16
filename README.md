@@ -74,7 +74,8 @@ The services these variables exist for are listed below with the beginnings of t
 | Secure message service          | RAS_SECURE_MESSAGE_SERVICE  | https://github.com/ONSdigital/ras-secure-message
 | Case service                    | RM_CASE_SERVICE             | https://github.com/ONSdigital/rm-case-service
 | IAC service                     | RM_IAC_SERVICE              | https://github.com/ONSdigital/iac-service
-| Collection exercise service     | RM_COLLECTION_EXERCISE      | https://github.com/ONSdigital/rm-collection-exercise-service
+| Collection exercise service     | RM_COLLECTION_EXERCISE_SERVICE      | https://github.com/ONSdigital/rm-collection-exercise-service
 | Survey service                  | RM_SURVEY_SERVICE           | https://github.com/ONSdigital/rm-survey-service
 | Party service                   | RAS_PARTY_SERVICE           | https://github.com/ONSdigital/ras-party
 | Oauth2 service                  | RAS_OAUTH_SERVICE           | https://github.com/ONSdigital/django-oauth2-test
+| Collection instrument service   | RAS_COLLECTION_INSTRUMENT_SERVICE | https://github.com/ONSdigital/ras-collection-instrument

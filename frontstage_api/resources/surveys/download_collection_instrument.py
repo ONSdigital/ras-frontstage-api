@@ -4,7 +4,7 @@ from flask import request, Response
 from flask_restplus import Resource, reqparse
 from structlog import wrap_logger
 
-from frontstage_api import api, auth
+from frontstage_api import auth, surveys_api
 from frontstage_api.controllers import case_controller, collection_instrument_controller
 
 
@@ -15,12 +15,12 @@ parser.add_argument('case_id', location='args', required=True)
 parser.add_argument('party_id', location='args', required=True)
 
 
-@api.route('/download-ci')
+@surveys_api.route('/download-ci')
 class DownloadCollectionInstrument(Resource):
 
     @staticmethod
     @auth.login_required
-    @api.expect(parser)
+    @surveys_api.expect(parser)
     def get():
         party_id = request.args['party_id']
         case_id = request.args['case_id']

@@ -33,7 +33,7 @@ class TestGetSurveysList(unittest.TestCase):
                 bytes("{}:{}".format(app.config['SECURITY_USER_NAME'], app.config['SECURITY_USER_PASSWORD']),
                       'ascii')).decode("ascii"))
         }
-        self.test_todo_url = '/surveys-list?list=todo&party_id=07d672bc-497b-448f-a406-a20a7e6013d7'
+        self.test_todo_url = '/surveys/surveys-list?list=todo&party_id=07d672bc-497b-448f-a406-a20a7e6013d7'
 
     @requests_mock.mock()
     def test_get_surveys_list_todo(self, mock_request):
@@ -58,7 +58,7 @@ class TestGetSurveysList(unittest.TestCase):
         mock_request.get(url_get_survey, json=survey)
         mock_request.get(url_get_collection_instrument_size, json={'size': 5})
 
-        response = self.app.get('/surveys-list?list=history&party_id=07d672bc-497b-448f-a406-a20a7e6013d7', headers=self.headers)
+        response = self.app.get('/surveys/surveys-list?list=history&party_id=07d672bc-497b-448f-a406-a20a7e6013d7', headers=self.headers)
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue('case'.encode() in response.data)
@@ -66,7 +66,7 @@ class TestGetSurveysList(unittest.TestCase):
         self.assertTrue('business_party'.encode() in response.data)
 
     def test_get_surveys_list_todo_missing_args(self):
-        response = self.app.get('/surveys-list?list=todo', headers=self.headers)
+        response = self.app.get('/surveys/surveys-list?list=todo', headers=self.headers)
 
         self.assertEqual(response.status_code, 400)
 
@@ -74,7 +74,7 @@ class TestGetSurveysList(unittest.TestCase):
     def test_get_surveys_list_invalid_surveys_list(self, mock_request):
         mock_request.get(url_get_case_by_party, json=case)
 
-        response = self.app.get('/surveys-list?list=wronglist&party_id=07d672bc-497b-448f-a406-a20a7e6013d7', headers=self.headers)
+        response = self.app.get('/surveys/surveys-list?list=wronglist&party_id=07d672bc-497b-448f-a406-a20a7e6013d7', headers=self.headers)
 
         self.assertEqual(response.status_code, 400)
         self.assertTrue('"message": "Invalid survey list name"'.encode() in response.data)

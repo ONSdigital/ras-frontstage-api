@@ -5,7 +5,7 @@ from flask import request
 from flask_restplus import Resource, reqparse
 from structlog import wrap_logger
 
-from frontstage_api import api, auth
+from frontstage_api import auth, passwords_api
 from frontstage_api.controllers import party_controller
 
 
@@ -15,12 +15,12 @@ parser = reqparse.RequestParser()
 parser.add_argument('token', location='args', required=True)
 
 
-@api.route('/verify-password-token')
+@passwords_api.route('/verify-password-token')
 class VerifyPasswordToken(Resource):
 
     @staticmethod
     @auth.login_required
-    @api.expect(parser)
+    @passwords_api.expect(parser)
     def get():
         logger.info('Attempting verify password token')
         token = request.args.get('token')

@@ -26,7 +26,7 @@ class TestDownloadCollectionInstrument(unittest.TestCase):
                 bytes("{}:{}".format(app.config['SECURITY_USER_NAME'], app.config['SECURITY_USER_PASSWORD']),
                       'ascii')).decode("ascii"))
         }
-        self.test_url = '/download-ci?case_id=abc670a5-67c6-4d96-9164-13b4017b8704&party_id=07d672bc-497b-448f-a406-a20a7e6013d7'
+        self.test_url = '/surveys/download-ci?case_id=abc670a5-67c6-4d96-9164-13b4017b8704&party_id=07d672bc-497b-448f-a406-a20a7e6013d7'
 
     @requests_mock.mock()
     def test_download_collection_instrument(self, mock_request):
@@ -40,7 +40,7 @@ class TestDownloadCollectionInstrument(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_download_collection_instrument_missing_args(self):
-        response = self.app.get('/download-ci', headers=self.headers)
+        response = self.app.get('/surveys/download-ci', headers=self.headers)
 
         self.assertEqual(response.status_code, 400)
 

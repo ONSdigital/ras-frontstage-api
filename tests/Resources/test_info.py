@@ -3,7 +3,7 @@ import unittest
 from frontstage_api import app
 
 
-class TestSecureMessaging(unittest.TestCase):
+class TestInfo(unittest.TestCase):
 
     def setUp(self):
         self.app = app.test_client()

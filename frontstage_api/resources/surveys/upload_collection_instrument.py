@@ -3,10 +3,10 @@ import logging
 from flask import request, Response
 from flask_restplus import Resource, reqparse
 from structlog import wrap_logger
-from frontstage_api import api, app, auth
+
+from frontstage_api import app, auth, surveys_api
 from frontstage_api.controllers import case_controller, collection_instrument_controller
 from frontstage_api.exceptions.exceptions import FileTooLarge
-
 
 logger = wrap_logger(logging.getLogger(__name__))
 
@@ -16,12 +16,12 @@ parser.add_argument('party_id', location='args', required=True)
 parser.add_argument('file', location='files', required=True)
 
 
-@api.route('/upload-ci')
+@surveys_api.route('/upload-ci')
 class UploadCollectionInstrument(Resource):
 
     @staticmethod
     @auth.login_required
-    @api.expect(parser)
+    @surveys_api.expect(parser)
     def post():
         case_id = request.args['case_id']
         party_id = request.args['party_id']

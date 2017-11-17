@@ -4,23 +4,23 @@ from flask import jsonify, make_response, request
 from flask_restplus import Resource, fields
 from structlog import wrap_logger
 
-from frontstage_api import api, auth
+from frontstage_api import auth, register_api
 from frontstage_api.controllers import case_controller, collection_exercise_controller, iac_controller, party_controller, survey_controller
 
 
 logger = wrap_logger(logging.getLogger(__name__))
 
-enrolment_details = api.model('EnrolmentDetails', {
+enrolment_details = register_api.model('EnrolmentDetails', {
     'enrolment_code': fields.String(required=True),
 })
 
 
-@api.route('/confirm-organisation-survey')
+@register_api.route('/confirm-organisation-survey')
 class ConfirmOrganisationSurvey(Resource):
 
     @staticmethod
     @auth.login_required
-    @api.expect(enrolment_details, validate=True)
+    @register_api.expect(enrolment_details, validate=True)
     def post():
         logger.info('Attempting to retrieve organisation and survey data')
         enrolment_code = request.get_json().get('enrolment_code')

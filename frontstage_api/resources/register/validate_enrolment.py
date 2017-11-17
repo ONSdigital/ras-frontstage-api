@@ -4,24 +4,24 @@ from flask import jsonify, make_response, request
 from flask_restplus import Resource, fields
 from structlog import wrap_logger
 
-from frontstage_api import api, auth
+from frontstage_api import auth, register_api
 from frontstage_api.controllers import case_controller, iac_controller
 
 
 logger = wrap_logger(logging.getLogger(__name__))
 
-validate_enrolment_details = api.model('ValidateEnrolmentDetails', {
+validate_enrolment_details = register_api.model('ValidateEnrolmentDetails', {
     'enrolment_code': fields.String(required=True),
     'initial': fields.Boolean(required=False)
 })
 
 
-@api.route('/validate-enrolment')
+@register_api.route('/validate-enrolment')
 class ValidateEnrolment(Resource):
 
     @staticmethod
     @auth.login_required
-    @api.expect(validate_enrolment_details, validate=True)
+    @register_api.expect(validate_enrolment_details, validate=True)
     def post():
         logger.info('Attempting to validate enrolment code')
         request_json = request.get_json(force=True)

@@ -66,7 +66,7 @@ class TestRegister(unittest.TestCase):
         mock_request.get(url_get_case_categories, json=categories)
         mock_request.post(url_post_case_event, status_code=201)
 
-        response = self.app.post('/validate-enrolment', headers=self.headers, data=json.dumps(self.enrolment_json))
+        response = self.app.post('/register/validate-enrolment', headers=self.headers, data=json.dumps(self.enrolment_json))
 
         self.assertEqual(response.status_code, 200)
 
@@ -75,7 +75,7 @@ class TestRegister(unittest.TestCase):
         self.iac_response['active'] = False
         mock_request.get(url_get_iac, json=self.iac_response)
 
-        response = self.app.post('/validate-enrolment', headers=self.headers, data=json.dumps(self.enrolment_json))
+        response = self.app.post('/register/validate-enrolment', headers=self.headers, data=json.dumps(self.enrolment_json))
 
         self.assertEqual(response.status_code, 401)
         self.assertTrue('"active": false'.encode() in response.data)
@@ -84,7 +84,7 @@ class TestRegister(unittest.TestCase):
     def test_validate_enrolment_iac_fail(self, mock_request):
         mock_request.get(url_get_iac, status_code=500)
 
-        response = self.app.post('/validate-enrolment', headers=self.headers, data=json.dumps(self.enrolment_json))
+        response = self.app.post('/register/validate-enrolment', headers=self.headers, data=json.dumps(self.enrolment_json))
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
@@ -93,7 +93,7 @@ class TestRegister(unittest.TestCase):
     def test_validate_enrolment_iac_404(self, mock_request):
         mock_request.get(url_get_iac, status_code=404)
 
-        response = self.app.post('/validate-enrolment', headers=self.headers, data=json.dumps(self.enrolment_json))
+        response = self.app.post('/register/validate-enrolment', headers=self.headers, data=json.dumps(self.enrolment_json))
 
         self.assertEqual(response.status_code, 404)
         self.assertTrue('"status_code": 404'.encode() in response.data)
@@ -103,7 +103,7 @@ class TestRegister(unittest.TestCase):
         mock_request.get(url_get_iac, json=self.iac_response)
         mock_request.get(url_get_case_by_enrolment, status_code=500)
 
-        response = self.app.post('/validate-enrolment', headers=self.headers, data=json.dumps(self.enrolment_json))
+        response = self.app.post('/register/validate-enrolment', headers=self.headers, data=json.dumps(self.enrolment_json))
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
@@ -114,7 +114,7 @@ class TestRegister(unittest.TestCase):
         mock_request.get(url_get_case_by_enrolment, json=case)
         mock_request.get(url_get_case_categories, status_code=500)
 
-        response = self.app.post('/validate-enrolment', headers=self.headers, data=json.dumps(self.enrolment_json))
+        response = self.app.post('/register/validate-enrolment', headers=self.headers, data=json.dumps(self.enrolment_json))
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
@@ -125,7 +125,7 @@ class TestRegister(unittest.TestCase):
         mock_request.get(url_get_case_by_enrolment, json=case)
         mock_request.get(url_get_case_categories, json=[])
 
-        response = self.app.post('/validate-enrolment', headers=self.headers, data=json.dumps(self.enrolment_json))
+        response = self.app.post('/register/validate-enrolment', headers=self.headers, data=json.dumps(self.enrolment_json))
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"message": "Invalid case category"'.encode() in response.data)
@@ -137,7 +137,7 @@ class TestRegister(unittest.TestCase):
         mock_request.get(url_get_case_categories, json=categories)
         mock_request.post(url_post_case_event, status_code=500)
 
-        response = self.app.post('/validate-enrolment', headers=self.headers, data=json.dumps(self.enrolment_json))
+        response = self.app.post('/register/validate-enrolment', headers=self.headers, data=json.dumps(self.enrolment_json))
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
@@ -150,7 +150,7 @@ class TestRegister(unittest.TestCase):
         mock_request.get(url_get_collection_exercise, json=collection_exercise)
         mock_request.get(url_get_survey, json=survey)
 
-        response = self.app.post('/confirm-organisation-survey', headers=self.headers, data=json.dumps({'enrolment_code': 'test_enrolment'}))
+        response = self.app.post('/register/confirm-organisation-survey', headers=self.headers, data=json.dumps({'enrolment_code': 'test_enrolment'}))
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue('"organisation_name": "Bolts and Ratchets Ltd"'.encode() in response.data)
@@ -160,7 +160,7 @@ class TestRegister(unittest.TestCase):
     def test_confirm_organisation_survey_iac_fail(self, mock_request):
         mock_request.get(url_get_iac, status_code=500)
 
-        response = self.app.post('/confirm-organisation-survey', headers=self.headers, data=json.dumps({'enrolment_code': 'test_enrolment'}))
+        response = self.app.post('/register/confirm-organisation-survey', headers=self.headers, data=json.dumps({'enrolment_code': 'test_enrolment'}))
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
@@ -170,7 +170,7 @@ class TestRegister(unittest.TestCase):
         self.iac_response['active'] = False
         mock_request.get(url_get_iac, json=self.iac_response)
 
-        response = self.app.post('/confirm-organisation-survey', headers=self.headers, data=json.dumps({'enrolment_code': 'test_enrolment'}))
+        response = self.app.post('/register/confirm-organisation-survey', headers=self.headers, data=json.dumps({'enrolment_code': 'test_enrolment'}))
 
         self.assertEqual(response.status_code, 401)
         self.assertTrue('"active": false'.encode() in response.data)
@@ -181,7 +181,7 @@ class TestRegister(unittest.TestCase):
         mock_request.get(url_get_case_by_enrolment, json=case)
         mock_request.get(url_get_business_party, status_code=500)
 
-        response = self.app.post('/confirm-organisation-survey', headers=self.headers, data=json.dumps({'enrolment_code': 'test_enrolment'}))
+        response = self.app.post('/register/confirm-organisation-survey', headers=self.headers, data=json.dumps({'enrolment_code': 'test_enrolment'}))
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
@@ -193,7 +193,7 @@ class TestRegister(unittest.TestCase):
         mock_request.get(url_get_business_party, json=business_party)
         mock_request.get(url_get_collection_exercise, status_code=500)
 
-        response = self.app.post('/confirm-organisation-survey', headers=self.headers, data=json.dumps({'enrolment_code': 'test_enrolment'}))
+        response = self.app.post('/register/confirm-organisation-survey', headers=self.headers, data=json.dumps({'enrolment_code': 'test_enrolment'}))
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
@@ -206,7 +206,7 @@ class TestRegister(unittest.TestCase):
         mock_request.get(url_get_collection_exercise, json=collection_exercise)
         mock_request.get(url_get_survey, status_code=500)
 
-        response = self.app.post('/confirm-organisation-survey', headers=self.headers, data=json.dumps({'enrolment_code': 'test_enrolment'}))
+        response = self.app.post('/register/confirm-organisation-survey', headers=self.headers, data=json.dumps({'enrolment_code': 'test_enrolment'}))
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
@@ -216,7 +216,7 @@ class TestRegister(unittest.TestCase):
         mock_request.get(url_get_iac, json=self.iac_response)
         mock_request.post(url_create_account)
 
-        response = self.app.post('/create-account', headers=self.headers, data=json.dumps(self.registration_form))
+        response = self.app.post('/register/create-account', headers=self.headers, data=json.dumps(self.registration_form))
 
         self.assertEqual(response.status_code, 201)
 
@@ -225,7 +225,7 @@ class TestRegister(unittest.TestCase):
         self.iac_response['active'] = False
         mock_request.get(url_get_iac, json=self.iac_response)
 
-        response = self.app.post('/create-account', headers=self.headers, data=json.dumps(self.registration_form))
+        response = self.app.post('/register/create-account', headers=self.headers, data=json.dumps(self.registration_form))
 
         self.assertEqual(response.status_code, 401)
         self.assertTrue('"active": false'.encode() in response.data)
@@ -235,7 +235,7 @@ class TestRegister(unittest.TestCase):
         mock_request.get(url_get_iac, json=self.iac_response)
         mock_request.post(url_create_account, status_code=500)
 
-        response = self.app.post('/create-account', headers=self.headers, data=json.dumps(self.registration_form))
+        response = self.app.post('/register/create-account', headers=self.headers, data=json.dumps(self.registration_form))
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
@@ -245,7 +245,7 @@ class TestRegister(unittest.TestCase):
         mock_request.get(url_get_iac, json=self.iac_response)
         mock_request.post(url_create_account, status_code=400)
 
-        response = self.app.post('/create-account', headers=self.headers, data=json.dumps(self.registration_form))
+        response = self.app.post('/register/create-account', headers=self.headers, data=json.dumps(self.registration_form))
 
         self.assertEqual(response.status_code, 400)
         self.assertTrue('"status_code": 400'.encode() in response.data)
@@ -254,7 +254,7 @@ class TestRegister(unittest.TestCase):
     def test_verify_email(self, mock_request):
         mock_request.put(url_verify_email, status_code=200)
 
-        response = self.app.put('/verify-email?token=test_token', headers=self.headers)
+        response = self.app.put('/register/verify-email?token=test_token', headers=self.headers)
 
         self.assertEqual(response.status_code, 200)
 
@@ -262,7 +262,7 @@ class TestRegister(unittest.TestCase):
     def test_verify_email_fail(self, mock_request):
         mock_request.put(url_verify_email, status_code=500)
 
-        response = self.app.put('/verify-email?token=test_token', headers=self.headers)
+        response = self.app.put('/register/verify-email?token=test_token', headers=self.headers)
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)

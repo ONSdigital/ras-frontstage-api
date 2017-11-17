@@ -40,7 +40,7 @@ class TestVerifyPasswordToken(unittest.TestCase):
     def test_verify_password_token_successful(self, mock_request):
         mock_request.get(url_verify_token.format('nekoT'), status_code=200, json={"status": "OKs"})
 
-        response = self.app.get('/verify-password-token', headers=self.headers, query_string=self.params)
+        response = self.app.get('/passwords/verify-password-token', headers=self.headers, query_string=self.params)
 
         self.assertEqual(response.status_code, 200)
 
@@ -48,7 +48,7 @@ class TestVerifyPasswordToken(unittest.TestCase):
     def test_verify_password_token_party_fail(self, mock_request):
         mock_request.get(url_verify_token.format('nekoT'), status_code=500)
 
-        response = self.app.get('/verify-password-token', headers=self.headers, query_string=self.params)
+        response = self.app.get('/passwords/verify-password-token', headers=self.headers, query_string=self.params)
 
         self.assertEqual(response.status_code, 500)
         self.assertTrue('"status_code": 500'.encode() in response.data)
@@ -57,7 +57,7 @@ class TestVerifyPasswordToken(unittest.TestCase):
     def test_verify_password_token_token_expired(self, mock_request):
         mock_request.get(url_verify_token.format('nekoT'), status_code=409)
 
-        response = self.app.get('/verify-password-token', headers=self.headers, query_string=self.params)
+        response = self.app.get('/passwords/verify-password-token', headers=self.headers, query_string=self.params)
 
         self.assertEqual(response.status_code, 409)
         self.assertTrue('"status_code": 409'.encode() in response.data)
@@ -66,7 +66,7 @@ class TestVerifyPasswordToken(unittest.TestCase):
     def test_verify_password_token_token_invalid(self, mock_request):
         mock_request.get(url_verify_token.format('nekoT'), status_code=404)
 
-        response = self.app.get('/verify-password-token', headers=self.headers, query_string=self.params)
+        response = self.app.get('/passwords/verify-password-token', headers=self.headers, query_string=self.params)
 
         self.assertEqual(response.status_code, 404)
         self.assertTrue('"status_code": 404'.encode() in response.data)
@@ -74,6 +74,6 @@ class TestVerifyPasswordToken(unittest.TestCase):
     # Test posting to endpoint without basic auth in header
     def test_verify_password_token_no_basic_auth(self):
         del self.headers['Authorization']
-        response = self.app.get('/verify-password-token', headers=self.headers, data=json.dumps(self.posted_form))
+        response = self.app.get('/passwords/verify-password-token', headers=self.headers, data=json.dumps(self.posted_form))
 
         self.assertEqual(response.status_code, 401)

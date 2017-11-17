@@ -4,7 +4,7 @@ from flask import jsonify, make_response, request
 from flask_restplus import reqparse, Resource
 from structlog import wrap_logger
 
-from frontstage_api import api, auth
+from frontstage_api import auth, secure_messaging_api
 from frontstage_api.controllers import secure_messaging_controllers
 from frontstage_api.decorators.jwt_decorators import get_jwt
 
@@ -15,14 +15,14 @@ parser = reqparse.RequestParser()
 parser.add_argument('label', location='args', required=True)
 
 
-@api.route('/messages-list')
+@secure_messaging_api.route('/messages-list')
 class GetMessagesList(Resource):
     method_decorators = [get_jwt(request)]
 
     @staticmethod
     @auth.login_required
-    @api.expect(parser)
-    @api.header('jwt', 'JWT to pass to secure messaging service', required=True)
+    @secure_messaging_api.expect(parser)
+    @secure_messaging_api.header('jwt', 'JWT to pass to secure messaging service', required=True)
     def get(encoded_jwt):
         label = request.args.get('label')
         logger.info('Attempting to retrieve message list', label=label)

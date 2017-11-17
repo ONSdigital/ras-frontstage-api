@@ -6,7 +6,7 @@ from flask import jsonify, make_response
 from flask_restplus import Resource
 from structlog import wrap_logger
 
-from frontstage_api import api, app
+from frontstage_api import app, api
 
 
 logger = wrap_logger(logging.getLogger(__name__))

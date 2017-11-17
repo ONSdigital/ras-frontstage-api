@@ -3,7 +3,7 @@ import logging
 from flask import jsonify
 from structlog import wrap_logger
 
-from frontstage_api import api, app
+from frontstage_api import app, api
 from frontstage_api.exceptions.exceptions import (ApiError, InvalidCaseCategory, InvalidSurveyList,
                                                   InvalidRequestMethod, NoJWTError, NoSurveyPermission, FileTooLarge)
 

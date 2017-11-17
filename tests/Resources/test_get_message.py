@@ -40,7 +40,7 @@ class TestGetMessage(unittest.TestCase):
     @requests_mock.mock()
     def test_get_message(self, mock_request):
         mock_request.get(url_get_message, json=message)
-        message_url = "/message?message_id=dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b&label=INBOX&party_id=1f5e1d68-2a4c-4698-8086-e23c0b98923f"
+        message_url = "/secure-messaging/message?message_id=dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b&label=INBOX&party_id=1f5e1d68-2a4c-4698-8086-e23c0b98923f"
 
         response = self.app.get(message_url, headers=self.headers)
 
@@ -50,7 +50,7 @@ class TestGetMessage(unittest.TestCase):
     @requests_mock.mock()
     def test_get_message_fail(self, mock_request):
         mock_request.get(url_get_message, status_code=500)
-        message_url = "/message?message_id=dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b&label=INBOX&party_id=1f5e1d68-2a4c-4698-8086-e23c0b98923f"
+        message_url = "/secure-messaging/message?message_id=dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b&label=INBOX&party_id=1f5e1d68-2a4c-4698-8086-e23c0b98923f"
 
         response = self.app.get(message_url, headers=self.headers)
 
@@ -60,7 +60,7 @@ class TestGetMessage(unittest.TestCase):
     @requests_mock.mock()
     def test_get_message_draft_no_thread(self, mock_request):
         mock_request.get(url_get_draft, json=draft)
-        message_url = "/message?message_id=dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b&label=DRAFT&party_id=1f5e1d68-2a4c-4698-8086-e23c0b98923f"
+        message_url = "/secure-messaging/message?message_id=dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b&label=DRAFT&party_id=1f5e1d68-2a4c-4698-8086-e23c0b98923f"
 
         response = self.app.get(message_url, headers=self.headers)
 
@@ -71,7 +71,7 @@ class TestGetMessage(unittest.TestCase):
     def test_get_message_draft_with_thread(self, mock_request):
         mock_request.get(url_get_draft, json=draft_with_thread)
         mock_request.get(url_get_thread, json=thread)
-        message_url = "/message?message_id=dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b&label=DRAFT&party_id=1f5e1d68-2a4c-4698-8086-e23c0b98923f"
+        message_url = "/secure-messaging/message?message_id=dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b&label=DRAFT&party_id=1f5e1d68-2a4c-4698-8086-e23c0b98923f"
 
         response = self.app.get(message_url, headers=self.headers)
 
@@ -83,7 +83,7 @@ class TestGetMessage(unittest.TestCase):
     def test_get_message_draft_thread_no_party(self, mock_request):
         mock_request.get(url_get_draft, json=draft_with_thread)
         mock_request.get(url_get_thread, json=thread_no_party)
-        message_url = "/message?message_id=dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b&label=DRAFT&party_id=1f5e1d68-2a4c-4698-8086-e23c0b98923f"
+        message_url = "/secure-messaging/message?message_id=dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b&label=DRAFT&party_id=1f5e1d68-2a4c-4698-8086-e23c0b98923f"
 
         response = self.app.get(message_url, headers=self.headers)
 
@@ -94,7 +94,7 @@ class TestGetMessage(unittest.TestCase):
     def test_get_message_draft_thread_fail(self, mock_request):
         mock_request.get(url_get_draft, json=draft_with_thread)
         mock_request.get(url_get_thread, status_code=500)
-        message_url = "/message?message_id=dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b&label=DRAFT&party_id=1f5e1d68-2a4c-4698-8086-e23c0b98923f"
+        message_url = "/secure-messaging/message?message_id=dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b&label=DRAFT&party_id=1f5e1d68-2a4c-4698-8086-e23c0b98923f"
 
         response = self.app.get(message_url, headers=self.headers)
 
@@ -105,7 +105,7 @@ class TestGetMessage(unittest.TestCase):
     def test_get_message_unread(self, mock_request):
         mock_request.get(url_get_message, json=message)
         mock_request.put(url_remove_unread_label)
-        message_url = "/message?message_id=dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b&label=UNREAD&party_id=1f5e1d68-2a4c-4698-8086-e23c0b98923f"
+        message_url = "/secure-messaging/message?message_id=dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b&label=UNREAD&party_id=1f5e1d68-2a4c-4698-8086-e23c0b98923f"
 
         response = self.app.get(message_url, headers=self.headers)
 
@@ -116,7 +116,7 @@ class TestGetMessage(unittest.TestCase):
     def test_get_message_remove_unread_fail(self, mock_request):
         mock_request.get(url_get_message, json=message)
         mock_request.put(url_remove_unread_label, status_code=500)
-        message_url = "/message?message_id=dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b&label=UNREAD&party_id=1f5e1d68-2a4c-4698-8086-e23c0b98923f"
+        message_url = "/secure-messaging/message?message_id=dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b&label=UNREAD&party_id=1f5e1d68-2a4c-4698-8086-e23c0b98923f"
 
         response = self.app.get(message_url, headers=self.headers)
 
@@ -126,7 +126,7 @@ class TestGetMessage(unittest.TestCase):
     # Test get request to endpoint without basic auth in header
     def test_get_message_no_basic_auth(self):
         del self.headers['Authorization']
-        message_url = "/message?message_id=dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b&label=UNREAD&party_id=1f5e1d68-2a4c-4698-8086-e23c0b98923f"
+        message_url = "/secure-messaging/message?message_id=dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b&label=UNREAD&party_id=1f5e1d68-2a4c-4698-8086-e23c0b98923f"
 
         response = self.app.get(message_url, headers=self.headers)
 

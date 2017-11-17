@@ -4,24 +4,24 @@ from flask import jsonify, make_response, request
 from flask_restplus import Resource, fields
 from structlog import wrap_logger
 
-from frontstage_api import api, auth
+from frontstage_api import auth, register_api
 from frontstage_api.controllers import iac_controller, party_controller
 
 
 logger = wrap_logger(logging.getLogger(__name__))
 
-registration_details = api.model('RegistrationDetails', {
+registration_details = register_api.model('RegistrationDetails', {
     'enrolmentCode': fields.String(required=True),
     'status': fields.String(required=True)
 })
 
 
-@api.route('/create-account')
+@register_api.route('/create-account')
 class CreateAccount(Resource):
 
     @staticmethod
     @auth.login_required
-    @api.expect(registration_details, validate=True)
+    @register_api.expect(registration_details, validate=True)
     def post():
         logger.info('Attempting to create account')
         registration_data = request.get_json()

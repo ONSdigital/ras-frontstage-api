@@ -12,7 +12,11 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 registration_details = register_api.model('RegistrationDetails', {
     'enrolmentCode': fields.String(required=True),
-    'status': fields.String(required=True)
+    'emailAddress': fields.String(required=True),
+    'firstName': fields.String(required=True),
+    'lastName': fields.String(required=True),
+    'password': fields.String(required=True),
+    'telephone': fields.String(required=True)
 })
 
 

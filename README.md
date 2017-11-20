@@ -41,6 +41,9 @@ Run flake8 check
 pipenv check --style .
 ```
 
+## Swagger
+A swagger UI definition of the API is automatically generated using Flask-RESTPlus and can be found at the root of the application, by default [localhost:8083]('http://localhost:8083')
+
 ## Configuration
 
 Environment variables available for configuration are listed below:

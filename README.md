@@ -26,14 +26,9 @@ Install test dependencies using pipenv
 pipenv install --dev
 ```
 
-Run tests within pipenv-managed virtualenv
-```
-APP_SETTINGS=TestingConfig pipenv run py.test tests/
-```
-
 Run tests with coverage
 ```
-APP_SETTINGS=TestingConfig pipenv run py.test tests/ --cov=frontstage_api
+pipenv run python run_tests.py
 ```
 
 Run flake8 check

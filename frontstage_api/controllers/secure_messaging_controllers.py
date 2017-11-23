@@ -18,8 +18,7 @@ def get_messages_list(encoded_jwt, label):
     response = request_handler('GET', url, headers=headers)
 
     if response.status_code != 200:
-        logger.error('Error retrieving the messages list', label=label, status_code=response.status_code)
-        raise ApiError(url, response.status_code)
+        raise ApiError(url=url, status_code=response.status_code, description='Error retrieving the messages list', label=label)
 
     logger.debug('Successfully retrieved the messages list', label=label)
     messages_json = {"messages": json.loads(response.text)}
@@ -51,8 +50,8 @@ def get_message(encoded_jwt, message_id, label):
     response = request_handler('GET', url, headers=headers)
 
     if response.status_code != 200:
-        logger.error('Error retrieving the messages', status_code=response.status_code, message_id=message_id, label=label)
-        raise ApiError(url, response.status_code)
+        raise ApiError(url=url, status_code=response.status_code, description='Error retrieving the messages',
+                       message_id=message_id, label=label)
 
     logger.debug('Successfully retrieved message', message_id=message_id, label=label)
     return json.loads(response.text)
@@ -66,8 +65,8 @@ def get_thread_message(encoded_jwt, thread_id, party_id):
     response = request_handler(method, url, headers=headers)
 
     if response.status_code != 200:
-        logger.error('Error retrieving the thread message', status_code=response.status_code, thread_id=thread_id, party_id=party_id)
-        raise ApiError(url, response.status_code)
+        raise ApiError(url=url, status_code=response.status_code, description='Error retrieving the thread message',
+                       thread_id=thread_id, party_id=party_id)
 
     # Look for the last message in the thread not from the given party id
     thread = json.loads(response.text)
@@ -111,8 +110,7 @@ def send_message(encoded_jwt, message_json):
         form_errors = json.loads(response.text)
         return {"form_errors": form_errors}
     elif response.status_code != 201:
-        logger.error('Failed to send message')
-        raise ApiError(url, response.status_code)
+        raise ApiError(url=url, status_code=response.status_code, description='Failed to send message')
 
     message = json.loads(response.text)
     logger.info('Secure Message sent successfully', message_id=message['msg_id'])
@@ -136,8 +134,7 @@ def save_draft(encoded_jwt, message_json):
         form_errors = json.loads(response.text)
         return {"form_errors": form_errors}
     elif response.status_code != 201 and response.status_code != 200:
-        logger.error('Failed to save draft')
-        raise ApiError(url, response.status_code)
+        raise ApiError(url=url, status_code=response.status_code, description='Failed to save draft')
 
     message = json.loads(response.text)
     logger.info('Secure Message sent successfully', message_id=message['msg_id'])

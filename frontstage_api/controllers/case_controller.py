@@ -19,8 +19,8 @@ def get_case_by_case_id(case_id):
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
     if response.status_code != 200:
-        logger.error('Failed to retrieve case', case_id=case_id)
-        raise ApiError(url, response.status_code)
+        raise ApiError(url=url, status_code=response.status_code, description='Failed to retrieve case',
+                       case_id=case_id)
 
     logger.debug('Successfully retrieved case', case_id=case_id)
     return json.loads(response.text)
@@ -34,8 +34,8 @@ def get_case_by_party_id(party_id, case_events=False):
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
     if response.status_code != 200:
-        logger.error('Failed to retrieve case', party_id=party_id)
-        raise ApiError(url, response.status_code)
+        raise ApiError(url=url, status_code=response.status_code, description='Failed to retrieve case',
+                       party_id=party_id)
 
     logger.debug('Successfully retrieved case', party_id=party_id)
     return json.loads(response.text)
@@ -47,8 +47,8 @@ def get_case_by_enrolment_code(enrolment_code):
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
     if response.status_code != 200:
-        logger.error('Failed to retrieve case', enrolment_code=enrolment_code)
-        raise ApiError(url, response.status_code)
+        raise ApiError(url=url, status_code=response.status_code, description='Failed to retrieve case',
+                       enrolment_code=enrolment_code)
 
     logger.debug('Successfully retrieved case', enrolment_code=enrolment_code)
     return json.loads(response.text)
@@ -60,8 +60,7 @@ def get_case_categories():
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
     if response.status_code != 200:
-        logger.error('Failed to retrieve case categories')
-        raise ApiError(url, response.status_code)
+        raise ApiError(url=url, status_code=response.status_code, description='Failed to retrieve case categories')
 
     logger.debug('Successfully retrieved case categories')
     return json.loads(response.text)
@@ -88,8 +87,8 @@ def post_case_event(case_id, party_id, category, description):
     response = request_handler('POST', url, auth=app.config['BASIC_AUTH'], json=message)
 
     if response.status_code != 201:
-        logger.error('Failed to post to case service', case_id=case_id)
-        raise ApiError(url, response.status_code)
+        raise ApiError(url=url, status_code=response.status_code, description='Failed to post to case service',
+                       case_id=case_id)
     logger.debug('Successfully posted case event', case_id=case_id)
 
 

@@ -18,11 +18,15 @@ def api_error_method(error):
         "error": {
             "url": error.url,
             "status_code": error.status_code,
-            "data": error.data
+            "data": error.data,
+            "description": error.description
         }
     }
     status_code = error.status_code if error.status_code else 500
-    logger.error('Error during api call', url=error.url, status_code=error.status_code)
+    if status_code == 500:
+        logger.error(error.description, url=error.url, status=error.status_code, **error.kwargs)
+    else:
+        logger.info(error.description, url=error.url, status=error.status_code, **error.kwargs)
     return jsonify(error_json), status_code
 
 
@@ -44,7 +48,7 @@ def invalid_survey_list(error):
         'message': 'Invalid survey list name',
         'survey_list': error.survey_list
     }
-    logger.error('Invalid survey list name', survey_list=error.survey_list)
+    logger.info('Invalid survey list name', survey_list=error.survey_list)
     return message_json, 400
 
 
@@ -82,7 +86,7 @@ def no_jwt_in_header(error):  # NOQA # pylint: disable=unused-argument
 @app.errorhandler(FileTooLarge)
 @api.errorhandler(FileTooLarge)
 def file_too_large(error):
-    logger.error('File submitted', case_id=error.case_id, party_id=error.party_id)
+    logger.info('File submitted too large', case_id=error.case_id, party_id=error.party_id, file_size=error.file_size)
     error_json = {
         "error": {
             "data": {

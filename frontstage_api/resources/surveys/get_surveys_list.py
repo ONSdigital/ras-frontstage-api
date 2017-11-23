@@ -12,7 +12,7 @@ from frontstage_api.exceptions.exceptions import InvalidSurveyList
 logger = wrap_logger(logging.getLogger(__name__))
 
 parser = reqparse.RequestParser()
-parser.add_argument('case_id', location='args', required=True)
+parser.add_argument('list', location='args', required=True)
 parser.add_argument('party_id', location='args', required=True)
 
 

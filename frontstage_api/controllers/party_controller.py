@@ -18,7 +18,7 @@ def get_party_by_respondent_id(party_id):
 
     if response.status_code != 200:
         logger.error('Failed to retrieve party', party_id=party_id)
-        raise ApiError(url, response.status_code)
+        raise ApiError(url=url, status_code=response.status_code)
 
     logger.debug('Successfully retrieved party', party_id=party_id)
     return json.loads(response.text)
@@ -31,7 +31,7 @@ def get_party_by_business_id(party_id):
 
     if response.status_code != 200:
         logger.error('Failed to retrieve party', party_id=party_id)
-        raise ApiError(url, response.status_code)
+        raise ApiError(url=url, status_code=response.status_code)
 
     logger.debug('Successfully retrieved party', party_id=party_id)
     return json.loads(response.text)
@@ -44,7 +44,7 @@ def get_party_by_email(email):
 
     if response.status_code != 200:
         logger.error('Failed to retrieve party')
-        raise ApiError(url, response.status_code)
+        raise ApiError(url=url, status_code=response.status_code)
 
     logger.debug('Successfully retrieved party')
     return json.loads(response.text)
@@ -57,7 +57,7 @@ def verify_token(token):
 
     if response.status_code != 200:
         logger.error('Failed to verify token')
-        raise ApiError(url, response.status_code)
+        raise ApiError(url=url, status_code=response.status_code)
 
     logger.debug('Successfully verified token')
     return json.loads(response.text)
@@ -71,7 +71,7 @@ def reset_password_request(username):
 
     if response.status_code != 200:
         logger.error('Failed to send reset password request party')
-        raise ApiError(url, response.status_code)
+        raise ApiError(url=url, status_code=response.status_code)
 
     logger.debug('Successfully sent reset password request party')
 
@@ -83,8 +83,7 @@ def change_password(password, token):
     response = request_handler('PUT', url, auth=app.config['BASIC_AUTH'], json=post_data)
 
     if response.status_code != 200:
-        logger.error('Failed to change password party')
-        raise ApiError(url, response.status_code)
+        raise ApiError(url=url, status_code=response.status_code, description='Failed to change password party')
 
     logger.debug('Successfully changed password party')
 
@@ -97,10 +96,10 @@ def create_account(registration_data):
 
     if response.status_code == 400:
         logger.debug('Email has already been used')
-        raise ApiError(url, response.status_code)
+        raise ApiError(url=url, status_code=response.status_code)
     elif response.status_code != 200:
         logger.error('Failed to create account')
-        raise ApiError(url, response.status_code)
+        raise ApiError(url=url, status_code=response.status_code)
 
 
 def verify_email(token):
@@ -110,6 +109,6 @@ def verify_email(token):
 
     if response.status_code != 200:
         logger.error('Failed to verify email address', token=token)
-        raise ApiError(url, response.status_code)
+        raise ApiError(url=url, status_code=response.status_code)
 
     logger.debug('Successfully verified email address', token=token)

@@ -1,10 +1,12 @@
 class ApiError(Exception):
 
-    def __init__(self, url, status_code=None, data=None):
+    def __init__(self, url, status_code=None, data=None, description=None, **kwargs):
         super().__init__()
         self.url = url
         self.status_code = status_code
         self.data = data
+        self.description = description if description else 'Error during api call'
+        self.kwargs = kwargs
 
 
 class InvalidCaseCategory(Exception):
@@ -43,7 +45,8 @@ class NoJWTError(Exception):
 
 
 class FileTooLarge(Exception):
-    def __init__(self, case_id, party_id):
+    def __init__(self, case_id, party_id, file_size):
         super().__init__()
         self.case_id = case_id
         self.party_id = party_id
+        self.file_size = file_size

@@ -73,7 +73,7 @@ class TestUploadCollectionInstrument(unittest.TestCase):
         response = self.app.post(self.test_url, headers=self.headers, data=self.ci_data)
 
         self.assertEqual(response.status_code, 400)
-        self.assertTrue('"message": "FAILED"'.encode() in response.data)
+        self.assertIn('"message": "FAILED"'.encode(), response.data)
 
     @requests_mock.mock()
     def test_upload_collection_instrument_fail(self, mock_request):

@@ -38,8 +38,9 @@ def download_collection_instrument(collection_instrument_id, case_id, party_id):
                                     description='Instrument {} downloaded by {} for case {}'.format(collection_instrument_id, party_id, case_id))
 
     if response.status_code != 200:
-        logger.error('Failed to download collection instrument', collection_instrument_id=collection_instrument_id)
-        raise ApiError(url, response.status_code)
+        raise ApiError(url=url, status_code=response.status_code,
+                       description='Failed to download collection instrument',
+                       collection_instrument_id=collection_instrument_id)
 
     logger.debug('Successfully downloaded collection instrument', collection_instrument_id=collection_instrument_id)
     return response.content, response.headers.items()
@@ -58,14 +59,14 @@ def upload_collection_instrument(upload_file, case_id, party_id):
                                     description='Survey response for case {} uploaded by {}'.format(case_id, party_id))
 
     if response.status_code == 400:
-        logger.debug('Invalid file uploaded', case_id=case_id)
         data = {
             'message': response.text
         }
-        raise ApiError(url, response.status_code, data)
+        raise ApiError(url=url, status_code=response.status_code, data=data, description='Invalid file uploaded',
+                       case_id=case_id)
 
     if response.status_code != 200:
-        logger.error('Failed to upload collection instrument', case_id=case_id)
-        raise ApiError(url, response.status_code)
+        raise ApiError(url=url, status_code=response.status_code, description='Failed to upload collection instrument',
+                       case_id=case_id)
 
     logger.debug('Successfully uploaded collection instrument', case_id=case_id)

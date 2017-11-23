@@ -28,12 +28,10 @@ def sign_in(username, password):
     response = request_handler('POST', url, headers=headers, auth=app.config['DJANGO_BASIC_AUTH'], data=data)
 
     if response.status_code == 401:
-        logger.debug('Authentication error in oauth2 service')
         oauth2_error = json.loads(response.text)
-        raise ApiError(url, response.status_code, oauth2_error)
+        raise ApiError(url=url, status_code=response.status_code, data=oauth2_error, description='Authentication error in oauth2 service')
     elif response.status_code != 201:
-        logger.error('Failed to retrieve OAuth2 token')
-        raise ApiError(url, response.status_code)
+        raise ApiError(url=url, status_code=response.status_code, description='Failed to retrieve OAuth2 token')
 
     oauth2_token = json.loads(response.text)
     logger.debug('Successfully retrieved OAuth2 token')
@@ -57,11 +55,9 @@ def check_account_valid(username):
     response = request_handler('POST', url, headers=headers, auth=app.config['DJANGO_BASIC_AUTH'], data=data)
 
     if response.status_code == 401:
-        logger.debug('Authentication error in oauth2 service')
         oauth2_error = json.loads(response.text)
-        raise ApiError(url, response.status_code, oauth2_error)
+        raise ApiError(url=url, status_code=response.status_code, data=oauth2_error, description='Authentication error in oauth2 service')
     elif response.status_code != 201:
-        logger.error('Failed to retrieve OAuth2 token')
-        raise ApiError(url, response.status_code)
+        raise ApiError(url=url, status_code=response.status_code, description='Failed to retrieve OAuth2 token')
 
     logger.debug('Successfully checked account state, account is valid')

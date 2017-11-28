@@ -19,6 +19,13 @@ Start server
 pipenv run python run.py
 ```
 
+or
+
+```bash
+docker build . -t ras-frontstage-api
+docker run -p 8080:8080 ras-frontstage-api
+```
+
 ## Run Tests
 
 Install test dependencies using pipenv

@@ -48,7 +48,7 @@ class TestChangePassword(unittest.TestCase):
         response = self.app.put('/passwords/change-password', headers=self.headers, data=json.dumps(self.posted_form))
 
         self.assertEqual(response.status_code, 500)
-        self.assertTrue('"status_code": 500'.encode() in response.data)
+        self.assertIn('"status_code": 500'.encode(), response.data)
 
     @requests_mock.mock()
     def test_change_password_token_expired(self, mock_request):
@@ -57,7 +57,7 @@ class TestChangePassword(unittest.TestCase):
         response = self.app.put('/passwords/change-password', headers=self.headers, data=json.dumps(self.posted_form))
 
         self.assertEqual(response.status_code, 409)
-        self.assertTrue('"status_code": 409'.encode() in response.data)
+        self.assertIn('"status_code": 409'.encode(), response.data)
 
     @requests_mock.mock()
     def test_change_password_invalid(self, mock_request):
@@ -66,7 +66,7 @@ class TestChangePassword(unittest.TestCase):
         response = self.app.put('/passwords/change-password', headers=self.headers, data=json.dumps(self.posted_form))
 
         self.assertEqual(response.status_code, 404)
-        self.assertTrue('"status_code": 404'.encode() in response.data)
+        self.assertIn('"status_code": 404'.encode(), response.data)
 
     # Test posting to endpoint without basic auth in header
     def test_password_change_no_basic_auth(self):

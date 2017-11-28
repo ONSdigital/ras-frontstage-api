@@ -28,7 +28,7 @@ class UploadCollectionInstrument(Resource):
         logger.info('Attempting to upload collection instrument', case_id=case_id, party_id=party_id)
 
         if request.content_length > app.config['MAX_UPLOAD_LENGTH']:
-            raise FileTooLarge(case_id, party_id)
+            raise FileTooLarge(case_id, party_id, request.content_length)
 
         # Check if respondent has permission to upload for this case
         case = case_controller.get_case_by_case_id(case_id)

@@ -92,6 +92,7 @@ class Config(object):
     RAS_CI_DOWNLOAD = '{}collection-instrument-api/1.0.2/download/{}'.format(RAS_COLLECTION_INSTRUMENT_SERVICE, '{}')
     RAS_CI_UPLOAD = '{}survey_response-api/v1/survey_responses/{}'.format(RAS_COLLECTION_INSTRUMENT_SERVICE, '{}')
 
+
 class DevelopmentConfig(Config):
     DEBUG = os.getenv('DEBUG', True)
     LOGGING_LEVEL = os.getenv('LOGGING_LEVEL', 'DEBUG')

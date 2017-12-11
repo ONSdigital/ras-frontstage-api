@@ -41,7 +41,7 @@ class TestGetSurveysList(unittest.TestCase):
         mock_request.get(url_get_collection_exercise, json=collection_exercise)
         mock_request.get(url_get_business_party, json=business_party)
         mock_request.get(url_get_survey, json=survey)
-        mock_request.get(url_get_collection_instrument_size, json={'size': 5})
+        mock_request.get(url_get_collection_instrument_size, text="5\n")
 
         response = self.app.get(self.test_todo_url, headers=self.headers)
 
@@ -56,7 +56,7 @@ class TestGetSurveysList(unittest.TestCase):
         mock_request.get(url_get_collection_exercise, json=collection_exercise)
         mock_request.get(url_get_business_party, json=business_party)
         mock_request.get(url_get_survey, json=survey)
-        mock_request.get(url_get_collection_instrument_size, json={'size': 5})
+        mock_request.get(url_get_collection_instrument_size, text="5\n")
 
         response = self.app.get('/surveys/surveys-list?list=history&party_id=07d672bc-497b-448f-a406-a20a7e6013d7', headers=self.headers)
 

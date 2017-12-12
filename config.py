@@ -90,7 +90,7 @@ class Config(object):
                                                              RAS_COLLECTION_INSTRUMENT_SERVICE_PORT)
     RAS_CI_SIZE = '{}collection-instrument-api/1.0.2/instrument_size/{}'.format(RAS_COLLECTION_INSTRUMENT_SERVICE, '{}')
     RAS_CI_DOWNLOAD = '{}collection-instrument-api/1.0.2/download/{}'.format(RAS_COLLECTION_INSTRUMENT_SERVICE, '{}')
-    RAS_CI_UPLOAD = '{}collection-instrument-api/1.0.2/survey_responses/{}'.format(RAS_COLLECTION_INSTRUMENT_SERVICE, '{}')
+    RAS_CI_UPLOAD = '{}survey_response-api/v1/survey_responses/{}'.format(RAS_COLLECTION_INSTRUMENT_SERVICE, '{}')
 
 
 class DevelopmentConfig(Config):

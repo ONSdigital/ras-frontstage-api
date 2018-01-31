@@ -112,3 +112,15 @@ def verify_email(token):
         raise ApiError(url=url, status_code=response.status_code)
 
     logger.debug('Successfully verified email address', token=token)
+
+
+def add_survey(party_id, enrolment_code):
+    logger.debug('Adding a survey')
+    url = app.config['RAS_PARTY_ADD_SURVEY']
+    request_json = {"party_id": party_id, "enrolment_code": enrolment_code}
+    response = request_handler('POST', url, auth=app.config['BASIC_AUTH'], json=request_json)
+
+    if response.status_code != 200:
+        raise ApiError(url=url, status_code=response.status_code, description='Failed to add a survey')
+
+    logger.debug('Successfully added a survey')

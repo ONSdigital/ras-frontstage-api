@@ -55,6 +55,7 @@ class Config(object):
     RAS_PARTY_GET_BY_BUSINESS_ID = '{}party-api/v1/businesses/id/{}'.format(RAS_PARTY_SERVICE, '{}')
     RAS_PARTY_POST_RESPONDENTS = '{}party-api/v1/respondents'.format(RAS_PARTY_SERVICE)
     RAS_PARTY_VERIFY_EMAIL = '{}party-api/v1/emailverification/{}'.format(RAS_PARTY_SERVICE, '{}')
+    RAS_PARTY_ADD_SURVEY = '{}party-api/v1/respondents/add_survey'.format(RAS_PARTY_SERVICE)
 
     RAS_OAUTH_SERVICE_HOST = os.getenv('RAS_OAUTH_SERVICE_HOST', 'localhost')
     RAS_OAUTH_SERVICE_PORT = os.getenv('RAS_OAUTH_SERVICE_PORT', 8040)

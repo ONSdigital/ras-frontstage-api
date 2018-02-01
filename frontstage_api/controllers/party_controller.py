@@ -24,9 +24,11 @@ def get_party_by_respondent_id(party_id):
     return json.loads(response.text)
 
 
-def get_party_by_business_id(party_id):
+def get_party_by_business_id(party_id, collection_exercise_id=None):
     logger.debug('Retrieving party', party_id=party_id)
     url = app.config['RAS_PARTY_GET_BY_BUSINESS_ID'].format(party_id)
+    if collection_exercise_id:
+        url += f"?collection_exercise_id={collection_exercise_id}"
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
     if response.status_code != 200:

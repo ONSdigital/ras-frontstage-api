@@ -107,7 +107,8 @@ def build_full_case_data(case):
     collection_exercise_formatted = format_collection_exercise_dates(collection_exercise)
 
     business_party_id = case['caseGroup']['partyId']
-    business_party = party_controller.get_party_by_business_id(business_party_id)
+    business_party = party_controller.get_party_by_business_id(business_party_id,
+                                                               collection_exercise_id=collection_exercise_id)
     survey_id = collection_exercise['surveyId']
     survey = survey_controller.get_survey(survey_id)
     collection_instrument_size = collection_instrument_controller.get_collection_instrument_size(case['collectionInstrumentId'])

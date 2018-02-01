@@ -14,6 +14,7 @@
     "id": "5b511f56-ff8b-43e0-90de-5094f71dd7bf",
     "partyId": "1216a88f-ee2a-420c-9e6a-ee34893c29cf",
     "sampleUnitRef": "49900000004",
+    "caseGroupStatus": "INPROGRESS",
     "sampleUnitType": "B"
   },
   "responses": [],

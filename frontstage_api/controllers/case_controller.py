@@ -127,17 +127,16 @@ def build_full_case_data(case):
 
 def calculate_case_status(case):
     logger.debug('Getting the status of case')
-    case_events = case.get('caseEvents')
-    status = None
-    if case_events:
-        for event in case_events:
-            if event['category'] == 'SUCCESSFUL_RESPONSE_UPLOAD':
-                status = 'Complete'
-                break
-            elif event['category'] == 'COLLECTION_INSTRUMENT_DOWNLOADED':
-                status = 'Downloaded'
+    status = 'Not Started'
+    case_group_status = case.get('caseGroup', {}).get('caseGroupStatus')
+
+    if case_group_status == 'COMPLETE':
+        status = 'Complete'
+    elif case_group_status == 'INPROGRESS':
+        status = 'Downloaded'
+
     logger.debug('Retrieved the status of case', status=status)
-    return status if status else 'Not Started'
+    return status
 
 
 def format_collection_exercise_dates(collection_exercise):

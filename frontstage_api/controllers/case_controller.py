@@ -111,7 +111,8 @@ def build_full_case_data(case):
                                                                collection_exercise_id=collection_exercise_id)
     survey_id = collection_exercise['surveyId']
     survey = survey_controller.get_survey(survey_id)
-    collection_instrument_size = collection_instrument_controller.get_collection_instrument_size(case['collectionInstrumentId'])
+    collection_instrument_size = collection_instrument_controller\
+        .get_collection_instrument_size(case['collectionInstrumentId'])
     status = calculate_case_status(case)
     survey_data = {
         "case": case,

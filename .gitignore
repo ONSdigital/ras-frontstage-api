@@ -98,3 +98,6 @@ ENV/
 
 # Test generated files
 git_info
+
+# Redis files
+dump.rdb

@@ -100,34 +100,34 @@ pipeline {
             steps {
                 sh "cf login -a https://${env.CLOUDFOUNDRY_API} --skip-ssl-validation -u ${CF_USER_USR} -p ${CF_USER_PSW} -o rmras -s ci"
                 sh 'cf push --no-start ras-frontstage-api-ci'
-                sh "cf set-env ras-frontstage-api-dev SECURITY_USER_NAME ${env.DEV_SECURITY_USR}"
-                sh "cf set-env ras-frontstage-api-dev SECURITY_USER_PASSWORD ${env.DEV_SECURITY_PSW}"
-                sh "cf set-env ras-frontstage-api-dev DJANGO_CLIENT_ID ons@ons.gov"
-                sh "cf set-env ras-frontstage-api-dev DJANGO_CLIENT_SECRET password"
+                sh "cf set-env ras-frontstage-api-ci SECURITY_USER_NAME ${env.DEV_SECURITY_USR}"
+                sh "cf set-env ras-frontstage-api-ci SECURITY_USER_PASSWORD ${env.DEV_SECURITY_PSW}"
+                sh "cf set-env ras-frontstage-api-ci DJANGO_CLIENT_ID ons@ons.gov"
+                sh "cf set-env ras-frontstage-api-ci DJANGO_CLIENT_SECRET password"
 
-                sh "cf set-env ras-frontstage-api-dev RAS_SECURE_MESSAGE_SERVICE_HOST ras-secure-messaging-dev.${env.CF_DOMAIN}"
-                sh "cf set-env ras-frontstage-api-dev RAS_SECURE_MESSAGE_SERVICE_PORT 80"
+                sh "cf set-env ras-frontstage-api-ci RAS_SECURE_MESSAGE_SERVICE_HOST ras-secure-messaging-ci.${env.CF_DOMAIN}"
+                sh "cf set-env ras-frontstage-api-ci RAS_SECURE_MESSAGE_SERVICE_PORT 80"
 
-                sh "cf set-env ras-frontstage-api-dev RM_CASE_SERVICE_HOST casesvc-dev.${env.CF_DOMAIN}"
-                sh "cf set-env ras-frontstage-api-dev RM_CASE_SERVICE_PORT 80"
+                sh "cf set-env ras-frontstage-api-ci RM_CASE_SERVICE_HOST casesvc-ci.${env.CF_DOMAIN}"
+                sh "cf set-env ras-frontstage-api-ci RM_CASE_SERVICE_PORT 80"
 
-                sh "cf set-env ras-frontstage-api-dev RAS_PARTY_SERVICE_HOST ras-party-service-dev.${env.CF_DOMAIN}"
-                sh "cf set-env ras-frontstage-api-dev RAS_PARTY_SERVICE_PORT 80"
+                sh "cf set-env ras-frontstage-api-ci RAS_PARTY_SERVICE_HOST ras-party-service-ci.${env.CF_DOMAIN}"
+                sh "cf set-env ras-frontstage-api-ci RAS_PARTY_SERVICE_PORT 80"
 
-                sh "cf set-env ras-frontstage-api-dev RAS_OAUTH_SERVICE_HOST ras-django-dev.${env.CF_DOMAIN}"
-                sh "cf set-env ras-frontstage-api-dev RAS_OAUTH_SERVICE_PORT 80"
+                sh "cf set-env ras-frontstage-api-ci RAS_OAUTH_SERVICE_HOST ras-django-ci.${env.CF_DOMAIN}"
+                sh "cf set-env ras-frontstage-api-ci RAS_OAUTH_SERVICE_PORT 80"
 
-                sh "cf set-env ras-frontstage-api-dev RM_COLLECTION_EXERCISE_SERVICE_HOST collectionexercisesvc-dev.${env.CF_DOMAIN}"
-                sh "cf set-env ras-frontstage-api-dev RM_COLLECTION_EXERCISE_SERVICE_PORT 80"
+                sh "cf set-env ras-frontstage-api-ci RM_COLLECTION_EXERCISE_SERVICE_HOST collectionexercisesvc-ci.${env.CF_DOMAIN}"
+                sh "cf set-env ras-frontstage-api-ci RM_COLLECTION_EXERCISE_SERVICE_PORT 80"
 
-                sh "cf set-env ras-frontstage-api-dev RM_SURVEY_SERVICE_HOST surveysvc-dev.${env.CF_DOMAIN}"
-                sh "cf set-env ras-frontstage-api-dev RM_SURVEY_SERVICE_PORT 80"
+                sh "cf set-env ras-frontstage-api-ci RM_SURVEY_SERVICE_HOST surveysvc-ci.${env.CF_DOMAIN}"
+                sh "cf set-env ras-frontstage-api-ci RM_SURVEY_SERVICE_PORT 80"
 
-                sh "cf set-env ras-frontstage-api-dev RM_IAC_SERVICE_HOST iacsvc-dev.${env.CF_DOMAIN}"
-                sh "cf set-env ras-frontstage-api-dev RM_IAC_SERVICE_PORT 80"
+                sh "cf set-env ras-frontstage-api-ci RM_IAC_SERVICE_HOST iacsvc-ci.${env.CF_DOMAIN}"
+                sh "cf set-env ras-frontstage-api-ci RM_IAC_SERVICE_PORT 80"
 
-                sh "cf set-env ras-frontstage-api-dev RAS_COLLECTION_INSTRUMENT_SERVICE_HOST ras-collection-instrument-dev.${env.CF_DOMAIN}"
-                sh "cf set-env ras-frontstage-api-dev RAS_COLLECTION_INSTRUMENT_SERVICE_PORT 80"
+                sh "cf set-env ras-frontstage-api-ci RAS_COLLECTION_INSTRUMENT_SERVICE_HOST ras-collection-instrument-ci.${env.CF_DOMAIN}"
+                sh "cf set-env ras-frontstage-api-ci RAS_COLLECTION_INSTRUMENT_SERVICE_PORT 80"
 
                 sh 'cf start ras-frontstage-api-ci'
             }
@@ -199,34 +199,34 @@ pipeline {
                 sh "cf login -a https://${env.CLOUDFOUNDRY_API} --skip-ssl-validation -u ${CF_USER_USR} -p ${CF_USER_PSW} -o rmras -s test"
                 sh 'cf push --no-start ras-frontstage-api-test'
                 sh 'cf set-env ras-frontstage-api-test ONS_ENV test'
-                sh "cf set-env ras-frontstage-api-dev SECURITY_USER_NAME ${env.DEV_SECURITY_USR}"
-                sh "cf set-env ras-frontstage-api-dev SECURITY_USER_PASSWORD ${env.DEV_SECURITY_PSW}"
-                sh "cf set-env ras-frontstage-api-dev DJANGO_CLIENT_ID ons@ons.gov"
-                sh "cf set-env ras-frontstage-api-dev DJANGO_CLIENT_SECRET password"
+                sh "cf set-env ras-frontstage-api-test SECURITY_USER_NAME ${env.DEV_SECURITY_USR}"
+                sh "cf set-env ras-frontstage-api-test SECURITY_USER_PASSWORD ${env.DEV_SECURITY_PSW}"
+                sh "cf set-env ras-frontstage-api-test DJANGO_CLIENT_ID ons@ons.gov"
+                sh "cf set-env ras-frontstage-api-test DJANGO_CLIENT_SECRET password"
 
-                sh "cf set-env ras-frontstage-api-dev RAS_SECURE_MESSAGE_SERVICE_HOST ras-secure-messaging-dev.${env.CF_DOMAIN}"
-                sh "cf set-env ras-frontstage-api-dev RAS_SECURE_MESSAGE_SERVICE_PORT 80"
+                sh "cf set-env ras-frontstage-api-test RAS_SECURE_MESSAGE_SERVICE_HOST ras-secure-messaging-test.${env.CF_DOMAIN}"
+                sh "cf set-env ras-frontstage-api-test RAS_SECURE_MESSAGE_SERVICE_PORT 80"
 
-                sh "cf set-env ras-frontstage-api-dev RM_CASE_SERVICE_HOST casesvc-dev.${env.CF_DOMAIN}"
-                sh "cf set-env ras-frontstage-api-dev RM_CASE_SERVICE_PORT 80"
+                sh "cf set-env ras-frontstage-api-test RM_CASE_SERVICE_HOST casesvc-test.${env.CF_DOMAIN}"
+                sh "cf set-env ras-frontstage-api-test RM_CASE_SERVICE_PORT 80"
 
-                sh "cf set-env ras-frontstage-api-dev RAS_PARTY_SERVICE_HOST ras-party-service-dev.${env.CF_DOMAIN}"
-                sh "cf set-env ras-frontstage-api-dev RAS_PARTY_SERVICE_PORT 80"
+                sh "cf set-env ras-frontstage-api-test RAS_PARTY_SERVICE_HOST ras-party-service-test.${env.CF_DOMAIN}"
+                sh "cf set-env ras-frontstage-api-test RAS_PARTY_SERVICE_PORT 80"
 
-                sh "cf set-env ras-frontstage-api-dev RAS_OAUTH_SERVICE_HOST ras-django-dev.${env.CF_DOMAIN}"
-                sh "cf set-env ras-frontstage-api-dev RAS_OAUTH_SERVICE_PORT 80"
+                sh "cf set-env ras-frontstage-api-test RAS_OAUTH_SERVICE_HOST ras-django-test.${env.CF_DOMAIN}"
+                sh "cf set-env ras-frontstage-api-test RAS_OAUTH_SERVICE_PORT 80"
 
-                sh "cf set-env ras-frontstage-api-dev RM_COLLECTION_EXERCISE_SERVICE_HOST collectionexercisesvc-dev.${env.CF_DOMAIN}"
-                sh "cf set-env ras-frontstage-api-dev RM_COLLECTION_EXERCISE_SERVICE_PORT 80"
+                sh "cf set-env ras-frontstage-api-test RM_COLLECTION_EXERCISE_SERVICE_HOST collectionexercisesvc-test.${env.CF_DOMAIN}"
+                sh "cf set-env ras-frontstage-api-test RM_COLLECTION_EXERCISE_SERVICE_PORT 80"
 
-                sh "cf set-env ras-frontstage-api-dev RM_SURVEY_SERVICE_HOST surveysvc-dev.${env.CF_DOMAIN}"
-                sh "cf set-env ras-frontstage-api-dev RM_SURVEY_SERVICE_PORT 80"
+                sh "cf set-env ras-frontstage-api-test RM_SURVEY_SERVICE_HOST surveysvc-test.${env.CF_DOMAIN}"
+                sh "cf set-env ras-frontstage-api-test RM_SURVEY_SERVICE_PORT 80"
 
-                sh "cf set-env ras-frontstage-api-dev RM_IAC_SERVICE_HOST iacsvc-dev.${env.CF_DOMAIN}"
-                sh "cf set-env ras-frontstage-api-dev RM_IAC_SERVICE_PORT 80"
+                sh "cf set-env ras-frontstage-api-test RM_IAC_SERVICE_HOST iacsvc-test.${env.CF_DOMAIN}"
+                sh "cf set-env ras-frontstage-api-test RM_IAC_SERVICE_PORT 80"
 
-                sh "cf set-env ras-frontstage-api-dev RAS_COLLECTION_INSTRUMENT_SERVICE_HOST ras-collection-instrument-dev.${env.CF_DOMAIN}"
-                sh "cf set-env ras-frontstage-api-dev RAS_COLLECTION_INSTRUMENT_SERVICE_PORT 80"
+                sh "cf set-env ras-frontstage-api-test RAS_COLLECTION_INSTRUMENT_SERVICE_HOST ras-collection-instrument-test.${env.CF_DOMAIN}"
+                sh "cf set-env ras-frontstage-api-test RAS_COLLECTION_INSTRUMENT_SERVICE_PORT 80"
                 
                 sh 'cf start ras-frontstage-api-test'
             }

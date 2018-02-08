@@ -15,6 +15,8 @@ with open('tests/test_data/case/completed_case.json') as json_data:
 url_get_collection_exercise = app.config['RM_COLLECTION_EXERCISE_GET'].format('14fb3e68-4dca-46db-bf49-04b84e07e77c')
 with open('tests/test_data/collection_exercise/collection_exercise.json') as json_data:
     collection_exercise = json.load(json_data)
+with open('tests/test_data/collection_exercise/collection_exercise_before_go_live.json') as json_data:
+    collection_exercise_before_go_live = json.load(json_data)
 url_get_business_party = app.config['RAS_PARTY_GET_BY_BUSINESS_ID'].format('1216a88f-ee2a-420c-9e6a-ee34893c29cf')
 with open('tests/test_data/party/business_party.json') as json_data:
     business_party = json.load(json_data)
@@ -49,6 +51,21 @@ class TestGetSurveysList(unittest.TestCase):
         self.assertTrue('case'.encode() in response.data)
         self.assertTrue('collection_exercise'.encode() in response.data)
         self.assertTrue('business_party'.encode() in response.data)
+
+    @requests_mock.mock()
+    def test_get_surveys_list_todo_before_go_live(self, mock_request):
+        mock_request.get(url_get_case_by_party, json=case)
+        mock_request.get(url_get_collection_exercise, json=collection_exercise_before_go_live)
+        mock_request.get(url_get_business_party, json=business_party)
+        mock_request.get(url_get_survey, json=survey)
+        mock_request.get(url_get_collection_instrument_size, text="5\n")
+
+        response = self.app.get(self.test_todo_url, headers=self.headers)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse('case'.encode() in response.data)
+        self.assertFalse('collection_exercise'.encode() in response.data)
+        self.assertFalse('business_party'.encode() in response.data)
 
     @requests_mock.mock()
     def test_get_surveys_list_history(self, mock_request):

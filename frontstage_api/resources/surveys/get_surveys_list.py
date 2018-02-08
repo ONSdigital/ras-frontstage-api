@@ -1,7 +1,9 @@
+from datetime import datetime, timezone
 import logging
 
 from flask import request
 from flask_restplus import Resource, reqparse
+from iso8601 import parse_date
 from structlog import wrap_logger
 
 from frontstage_api import auth, surveys_api
@@ -36,6 +38,8 @@ class GetSurveysList(Resource):
         else:
             raise InvalidSurveyList(survey_list)
         surveys_data = [case_controller.build_full_case_data(case=case) for case in filtered_cases]
+        now = datetime.now(timezone.utc)
+        live_cases = [survey for survey in surveys_data if parse_date(survey['collection_exercise']['scheduledStartDateTime']) < now]
 
         logger.info('Successfully retrieved surveys list', party_id=party_id, survey_list=survey_list)
-        return surveys_data
+        return live_cases

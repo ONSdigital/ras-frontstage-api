@@ -13,9 +13,13 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 message_details = secure_messaging_api.model('MessageDetails', {
         'msg_from': fields.String(required=True),
+        'msg_to': fields.String(required=True)
         'subject': fields.String(required=True),
         'body': fields.String(required=True),
         'thread_id': fields.String(),
+        'ru_ref': fields.String(),
+        'survey_id': fields.String(required=True),
+        'case_id': fields.String()
 })
 
 
@@ -32,25 +36,6 @@ class SendMessage(Resource):
         party_id = message_json['msg_from']
         is_draft = request.args.get('is_draft')
         logger.info('Attempting to send message', party_id=party_id)
-
-        # Retrieving business party, case and survey id's
-        party = party_controller.get_party_by_respondent_id(party_id)
-        associations = party.get('associations')
-        if associations:
-            business_party_id = associations[0].get('partyId')
-            survey_id = associations[0].get('enrolments')[0].get('surveyId')
-        case = case_controller.get_case_by_party_id(party_id)
-        case_id = case[0].get('id')
-
-        # Creating message json block to send to secure messaging
-        message_json = {
-            **message_json,
-            'msg_to': ['BRES'],
-            'msg_from': party_id,
-            'collection_case': case_id,
-            'ru_id': business_party_id,
-            'survey': survey_id
-        }
 
         if is_draft == 'False':
             message = secure_messaging_controllers.send_message(encoded_jwt, message_json)

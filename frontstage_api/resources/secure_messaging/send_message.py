@@ -5,7 +5,7 @@ from flask_restplus import fields, Resource
 from structlog import wrap_logger
 
 from frontstage_api import auth, secure_messaging_api
-from frontstage_api.controllers import case_controller, party_controller, secure_messaging_controllers
+from frontstage_api.controllers import secure_messaging_controllers
 from frontstage_api.decorators.jwt_decorators import get_jwt
 
 
@@ -13,7 +13,7 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 message_details = secure_messaging_api.model('MessageDetails', {
         'msg_from': fields.String(required=True),
-        'msg_to': fields.String(required=True)
+        'msg_to': fields.String(required=True),
         'subject': fields.String(required=True),
         'body': fields.String(required=True),
         'thread_id': fields.String(),

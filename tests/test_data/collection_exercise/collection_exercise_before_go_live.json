@@ -13,6 +13,7 @@
   "scheduledEndDateTime": null,
   "executedBy": "Fred Bloggs",
   "state": "EXECUTED",
+  "userDescription": "December 2017",
   "caseTypes": [
     {
       "sampleUnitType": "B",

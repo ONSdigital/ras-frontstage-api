@@ -50,3 +50,11 @@ class FileTooLarge(Exception):
         self.case_id = case_id
         self.party_id = party_id
         self.file_size = file_size
+
+
+class InvalidEqPayLoad(Exception):
+    def __init__(self, error):
+        super().__init__()
+        self.error = error
+
+

@@ -1,24 +1,12 @@
 import base64
 import json
+import requests_mock
 import unittest
 
-import requests_mock
-
 from frontstage_api import app
-
-url_post_add_survey = app.config['RAS_PARTY_ADD_SURVEY']
-url_get_case_by_party_no_events = app.config['RM_CASE_GET_BY_PARTY'].format('test_party')
-with open('tests/test_data/case/case_list.json') as json_data:
-    case_list = json.load(json_data)
-url_get_case_by_party = app.config['RM_CASE_GET_BY_PARTY'].format('07d672bc-497b-448f-a406-a20a7e6013d7') + '?caseevents=true'
-url_get_iac = app.config['RM_IAC_GET'].format('test_enrolment')
-url_get_case_by_enrolment = app.config['RM_CASE_GET_BY_IAC'].format('test_enrolment')
-with open('tests/test_data/case/case.json') as json_data:
-    case = json.load(json_data)
-url_get_case_categories = app.config['RM_CASE_GET_CATEGORIES']
-with open('tests/test_data/case/categories.json') as json_data:
-    categories = json.load(json_data)
-url_post_case_event = app.config['RM_CASE_POST_CASE_EVENT'].format('test_case_id')
+from tests.Resources.surveys.mocked_services import case, case_list, categories, \
+    url_get_case_by_enrolment, url_get_case_by_party, url_get_case_categories, \
+    url_get_case_by_party_no_events, url_get_iac, url_post_case_event, url_post_add_survey
 
 
 class TestAddSurvey(unittest.TestCase):

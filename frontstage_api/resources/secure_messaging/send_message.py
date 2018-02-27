@@ -13,13 +13,13 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 message_details = secure_messaging_api.model('MessageDetails', {
         'msg_from': fields.String(required=True),
-        'msg_to': fields.String(required=True),
+        'msg_to': fields.List(fields.String(), required=True),
         'subject': fields.String(required=True),
         'body': fields.String(required=True),
         'thread_id': fields.String(),
-        'ru_ref': fields.String(),
-        'survey_id': fields.String(required=True),
-        'case_id': fields.String()
+        'ru_id': fields.String(required=True),
+        'survey': fields.String(required=True),
+        'collection_case': fields.String(required=True)
 })
 
 

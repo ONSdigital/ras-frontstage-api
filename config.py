@@ -38,7 +38,7 @@ class Config(object):
     THREAD_URL = '{}thread'.format(RAS_SECURE_MESSAGE_SERVICE)
     MESSAGES_LIST_URL = '{}messages?limit={}'.format(RAS_SECURE_MESSAGE_SERVICE, MESSAGE_LIMIT)
     UNREAD_MESSAGES_TOTAL_URL = '{}labels?name=unread'.format(RAS_SECURE_MESSAGE_SERVICE)
-    SEND_MESSAGE_URL = '{}message/send'.format(RAS_SECURE_MESSAGE_SERVICE)
+    SEND_MESSAGE_URL = '{}v2/messages'.format(RAS_SECURE_MESSAGE_SERVICE)
     DRAFT_SAVE_URL = '{}draft/save'.format(RAS_SECURE_MESSAGE_SERVICE)
     DRAFT_MODIFY_URL = '{}draft/{}/modify'.format(RAS_SECURE_MESSAGE_SERVICE, '{}')
     REMOVE_UNREAD_LABEL_URL = '{}message/{}/modify'.format(RAS_SECURE_MESSAGE_SERVICE, '{}')

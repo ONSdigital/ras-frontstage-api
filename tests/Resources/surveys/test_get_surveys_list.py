@@ -6,8 +6,8 @@ from tests.Resources.surveys.basic_auth_header import basic_auth_header
 
 from tests.Resources.surveys.mocked_services import business_party, case, completed_case, \
     collection_exercise, collection_exercise_before_go_live, collection_instrument_seft, \
-    survey, url_get_business_party, url_get_case_by_party,url_get_collection_exercise, url_get_survey , \
-    url_get_collection_instrument
+    survey, go_live_event, go_live_event_before, url_get_business_party, url_get_case_by_party,\
+    url_get_collection_exercise, url_get_collection_exercise_go_live, url_get_survey, url_get_collection_instrument
 
 party_id = '07d672bc-497b-448f-a406-a20a7e6013d7'
 test_surveys_list_todo = '/surveys/surveys-list?list=todo&party_id={}'.format(party_id)
@@ -23,6 +23,7 @@ class TestGetSurveysList(unittest.TestCase):
     def test_get_surveys_list_todo(self, mock_request):
         mock_request.get(url_get_case_by_party, json=[case])
         mock_request.get(url_get_collection_exercise, json=collection_exercise)
+        mock_request.get(url_get_collection_exercise_go_live, json=go_live_event)
         mock_request.get(url_get_business_party, json=business_party)
         mock_request.get(url_get_survey, json=survey)
         mock_request.get(url_get_collection_instrument, json=collection_instrument_seft)
@@ -38,6 +39,7 @@ class TestGetSurveysList(unittest.TestCase):
     def test_get_surveys_list_todo_before_go_live(self, mock_request):
         mock_request.get(url_get_case_by_party, json=[case])
         mock_request.get(url_get_collection_exercise, json=collection_exercise_before_go_live)
+        mock_request.get(url_get_collection_exercise_go_live, json=go_live_event_before)
         mock_request.get(url_get_business_party, json=business_party)
         mock_request.get(url_get_survey, json=survey)
         mock_request.get(url_get_collection_instrument, json=collection_instrument_seft)
@@ -53,6 +55,7 @@ class TestGetSurveysList(unittest.TestCase):
     def test_get_surveys_list_history(self, mock_request):
         mock_request.get(url_get_case_by_party, json=completed_case)
         mock_request.get(url_get_collection_exercise, json=collection_exercise)
+        mock_request.get(url_get_collection_exercise_go_live, json=go_live_event)
         mock_request.get(url_get_business_party, json=business_party)
         mock_request.get(url_get_survey, json=survey)
         mock_request.get(url_get_collection_instrument, json=collection_instrument_seft)
@@ -98,9 +101,21 @@ class TestGetSurveysList(unittest.TestCase):
         self.assertTrue('"status_code": 500'.encode() in response.data)
 
     @requests_mock.mock()
+    def test_get_surveys_list_todo_collection_exercise_event_fail(self, mock_request):
+        mock_request.get(url_get_case_by_party, json=[case])
+        mock_request.get(url_get_collection_exercise, json=collection_exercise)
+        mock_request.get(url_get_collection_exercise_go_live, status_code=500)
+
+        response = self.app.get(test_surveys_list_todo, headers=self.headers)
+
+        self.assertEqual(response.status_code, 500)
+        self.assertTrue('"status_code": 500'.encode() in response.data)
+
+    @requests_mock.mock()
     def test_get_surveys_list_todo_party_fail(self, mock_request):
         mock_request.get(url_get_case_by_party, json=[case])
         mock_request.get(url_get_collection_exercise, json=collection_exercise)
+        mock_request.get(url_get_collection_exercise_go_live, json=go_live_event)
         mock_request.get(url_get_business_party, status_code=500)
 
         response = self.app.get(test_surveys_list_todo, headers=self.headers)
@@ -112,6 +127,7 @@ class TestGetSurveysList(unittest.TestCase):
     def test_get_surveys_list_todo_survey_fail(self, mock_request):
         mock_request.get(url_get_case_by_party, json=[case])
         mock_request.get(url_get_collection_exercise, json=collection_exercise)
+        mock_request.get(url_get_collection_exercise_go_live, json=go_live_event)
         mock_request.get(url_get_business_party, json=business_party)
         mock_request.get(url_get_survey, status_code=500)
 
@@ -124,6 +140,7 @@ class TestGetSurveysList(unittest.TestCase):
     def test_get_surveys_list_todo_collection_instrument_fail(self, mock_request):
         mock_request.get(url_get_case_by_party, json=[case])
         mock_request.get(url_get_collection_exercise, json=collection_exercise)
+        mock_request.get(url_get_collection_exercise_go_live, json=go_live_event)
         mock_request.get(url_get_business_party, json=business_party)
         mock_request.get(url_get_survey, json=survey)
         mock_request.get(url_get_collection_instrument, status_code=500)

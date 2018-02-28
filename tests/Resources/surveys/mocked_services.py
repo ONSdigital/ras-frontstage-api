@@ -1,6 +1,7 @@
 import json
 from frontstage_api import app
 
+
 with open('tests/test_data/party/business_party.json') as json_data:
     business_party = json.load(json_data)
 
@@ -31,6 +32,12 @@ with open('tests/test_data/collection_instrument/collection_instrument_seft.json
 with open('tests/test_data/case/completed_case.json') as json_data:
     completed_case = [json.load(json_data)]
 
+with open('tests/test_data/collection_exercise/go_live_event.json') as json_data:
+    go_live_event = json.load(json_data)
+
+with open('tests/test_data/collection_exercise/go_live_event_before.json') as json_data:
+    go_live_event_before = json.load(json_data)
+
 with open('tests/test_data/survey/survey.json') as json_data:
     survey = json.load(json_data)
 
@@ -43,7 +50,8 @@ url_get_case_by_party = app.config['RM_CASE_GET_BY_PARTY'].format('07d672bc-497b
 url_get_case_categories = app.config['RM_CASE_GET_CATEGORIES']
 url_get_collection_exercise = app.config['RM_COLLECTION_EXERCISE_GET'].format('14fb3e68-4dca-46db-bf49-04b84e07e77c')
 url_get_collection_exercise_events = app.config['RM_COLLECTION_EXERCISE_EVENTS'].format('14fb3e68-4dca-46db-bf49-04b84e07e77c')
-url_get_collection_instrument= app.config['RAS_CI_DETAILS'].format('68ad4018-2ddd-4894-89e7-33f0135887a2')
+url_get_collection_exercise_go_live = url = app.config['RM_COLLECTION_EXERCISE_EVENT'].format('14fb3e68-4dca-46db-bf49-04b84e07e77c', 'go_live')
+url_get_collection_instrument = app.config['RAS_CI_DETAILS'].format('68ad4018-2ddd-4894-89e7-33f0135887a2')
 url_get_iac = app.config['RM_IAC_GET'].format('test_enrolment')
 url_get_survey = app.config['RM_SURVEY_GET'].format('test_survey_id')
 url_post_add_survey = app.config['RAS_PARTY_ADD_SURVEY']

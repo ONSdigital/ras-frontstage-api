@@ -76,6 +76,7 @@ class Config(object):
                                                           RM_COLLECTION_EXERCISE_SERVICE_HOST,
                                                           RM_COLLECTION_EXERCISE_SERVICE_PORT)
     RM_COLLECTION_EXERCISE_GET = '{}collectionexercises/{}'.format(RM_COLLECTION_EXERCISE_SERVICE, '{}')
+    RM_COLLECTION_EXERCISE_EVENT = '{}collectionexercises/{}/events/{}'.format(RM_COLLECTION_EXERCISE_SERVICE, '{}', '{}')
     RM_COLLECTION_EXERCISE_EVENTS = '{}collectionexercises/{}/events'.format(RM_COLLECTION_EXERCISE_SERVICE, '{}')
 
     RM_SURVEY_SERVICE_HOST = os.getenv('RM_SURVEY_SERVICE_HOST', 'localhost')

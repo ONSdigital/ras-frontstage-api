@@ -105,6 +105,7 @@ def build_full_case_data(case):
     collection_exercise_id = case["caseGroup"]["collectionExerciseId"]
     collection_exercise = collection_exercise_controller.get_collection_exercise(collection_exercise_id)
     collection_exercise_formatted = format_collection_exercise_dates(collection_exercise)
+    collection_exercise_go_live = collection_exercise_controller.get_collection_exercise_event(collection_exercise_id, 'go_live')
 
     business_party_id = case['caseGroup']['partyId']
     business_party = party_controller.get_party_by_business_id(business_party_id,
@@ -124,6 +125,7 @@ def build_full_case_data(case):
         "status": status,
         "collection_instrument_type": collection_instrument['type'],
         "collection_instrument_size": collection_instrument['len'],
+        "go_live": collection_exercise_go_live
     }
     logger.debug('Successfully built case data', case_id=case['id'])
     return survey_data

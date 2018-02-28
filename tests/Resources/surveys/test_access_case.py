@@ -4,8 +4,8 @@ import unittest
 from frontstage_api import app
 from tests.Resources.surveys.basic_auth_header import basic_auth_header
 from tests.Resources.surveys.mocked_services import business_party, case, collection_exercise, \
-     collection_instrument_seft, survey, url_get_business_party, \
-     url_get_case, url_get_collection_exercise, url_get_collection_instrument, \
+     collection_instrument_seft, go_live_event, survey, url_get_business_party, \
+     url_get_case, url_get_collection_exercise, url_get_collection_exercise_go_live, url_get_collection_instrument, \
      url_get_survey
 
 
@@ -24,6 +24,7 @@ class TestAccessCase(unittest.TestCase):
     def test_access_case(self, mock_request):
         mock_request.get(url_get_case, json=case)
         mock_request.get(url_get_collection_exercise, json=collection_exercise)
+        mock_request.get(url_get_collection_exercise_go_live, json=go_live_event)
         mock_request.get(url_get_business_party, json=business_party)
         mock_request.get(url_get_survey, json=survey)
         mock_request.get(url_get_collection_instrument, json=collection_instrument_seft)

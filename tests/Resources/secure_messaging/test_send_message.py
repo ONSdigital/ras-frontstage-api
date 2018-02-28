@@ -31,9 +31,13 @@ class TestSendMessage(unittest.TestCase):
         self.app = app.test_client()
         self.posted_message = {
             'msg_from': '07d672bc-497b-448f-a406-a20a7e6013d7',
+            'msg_to': ['GROUP'],
             'subject': 'test-subject',
             'body': 'test-body',
-            'thread_id': ''
+            'thread_id': '',
+            'ru_id': 'testru',
+            'survey': 'testsurvey',
+            'collection_case': 'testcase'
         }
         self.sent_message_response = {
             'msg_id': '36f3133c-9ead-4168-a40e-f07947671b02',
@@ -66,7 +70,7 @@ class TestSendMessage(unittest.TestCase):
         response = self.app.post('/secure-messaging/send-message?is_draft=False', data=json.dumps(self.posted_message), headers=self.headers)
 
         self.assertEqual(response.status_code, 500)
-        self.assertTrue('"status_code": 500'.encode() in response.data)
+        self.assertTrue('Internal Server Error'.encode() in response.data)
 
     @requests_mock.mock()
     def test_post_send_message_case_fail(self, mock_request):
@@ -76,7 +80,7 @@ class TestSendMessage(unittest.TestCase):
         response = self.app.post('/secure-messaging/send-message?is_draft=False', data=json.dumps(self.posted_message), headers=self.headers)
 
         self.assertEqual(response.status_code, 500)
-        self.assertTrue('"status_code": 500'.encode() in response.data)
+        self.assertTrue('Internal Server Error'.encode() in response.data)
 
     @requests_mock.mock()
     def test_post_send_message_fail(self, mock_request):

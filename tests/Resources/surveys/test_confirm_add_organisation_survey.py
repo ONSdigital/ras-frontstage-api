@@ -1,27 +1,12 @@
 import base64
 import json
+import requests_mock
 import unittest
 
-import requests_mock
-
 from frontstage_api import app
-
-
-url_get_iac = app.config['RM_IAC_GET'].format('test_enrolment')
-url_get_case_by_enrolment = app.config['RM_CASE_GET_BY_IAC'].format('test_enrolment')
-with open('tests/test_data/case/case.json') as json_data:
-    case = json.load(json_data)
-with open('tests/test_data/case/categories.json') as json_data:
-    categories = json.load(json_data)
-url_get_business_party = app.config['RAS_PARTY_GET_BY_BUSINESS_ID'].format('1216a88f-ee2a-420c-9e6a-ee34893c29cf')
-with open('tests/test_data/party/business_party.json') as json_data:
-    business_party = json.load(json_data)
-url_get_collection_exercise = app.config['RM_COLLECTION_EXERCISE_GET'].format('14fb3e68-4dca-46db-bf49-04b84e07e77c')
-with open('tests/test_data/collection_exercise/collection_exercise.json') as json_data:
-    collection_exercise = json.load(json_data)
-url_get_survey = app.config['RM_SURVEY_GET'].format('test_survey_id')
-with open('tests/test_data/survey/survey.json') as json_data:
-    survey = json.load(json_data)
+from tests.Resources.surveys.mocked_services import business_party, case, collection_exercise, \
+     survey, url_get_business_party, url_get_case_by_enrolment, url_get_collection_exercise, \
+     url_get_iac, url_get_survey
 
 
 class TestAddSurvey(unittest.TestCase):

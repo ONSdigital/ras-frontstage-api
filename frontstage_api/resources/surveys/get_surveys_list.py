@@ -39,7 +39,7 @@ class GetSurveysList(Resource):
             raise InvalidSurveyList(survey_list)
         surveys_data = [case_controller.build_full_case_data(case=case) for case in filtered_cases]
         now = datetime.now(timezone.utc)
-        live_cases = [survey for survey in surveys_data if parse_date(survey['collection_exercise']['scheduledStartDateTime']) < now]
+        live_cases = [survey for survey in surveys_data if parse_date(survey['go_live']['timestamp']) < now]
 
         logger.info('Successfully retrieved surveys list', party_id=party_id, survey_list=survey_list)
         return live_cases

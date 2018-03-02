@@ -19,6 +19,7 @@ gunicorn = "==19.7.1"
 "iso8601" = "==0.1.12"
 requests = "==2.11.1"
 structlog = "==17.2.0"
+sdc-cryptography = "==0.2.0"
 arrow = "*"
 pytest = "*"
 

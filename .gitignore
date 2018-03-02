@@ -102,3 +102,6 @@ git_info
 
 # Redis files
 dump.rdb
+
+# pytest
+.pytest_cache/

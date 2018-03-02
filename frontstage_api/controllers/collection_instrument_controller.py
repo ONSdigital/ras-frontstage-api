@@ -1,4 +1,5 @@
 import logging
+import json
 
 from structlog import wrap_logger
 
@@ -11,21 +12,17 @@ from frontstage_api.exceptions.exceptions import ApiError
 logger = wrap_logger(logging.getLogger(__name__))
 
 
-def get_collection_instrument_size(collection_instrument_id):
-    logger.debug('Retrieving collection instrument size',
+def get_collection_instrument(collection_instrument_id):
+    logger.debug('Retrieving collection instrument',
                  collection_instrument_id=collection_instrument_id)
-    url = app.config['RAS_CI_SIZE'].format(collection_instrument_id)
+    url = app.config['RAS_CI_DETAILS'].format(collection_instrument_id)
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
     if response.status_code != 200:
-        logger.error('Failed to retrieve collection instrument size',
-                     collection_instrument_id=collection_instrument_id)
-        return 0
-    collection_instrument_size = int(response.text)
-
-    logger.debug('Successfully retrieved collection instrument size',
-                 collection_instrument_id=collection_instrument_id)
-    return collection_instrument_size
+        raise ApiError(url=url, status_code=response.status_code,
+                       description='Failed to retrieve collection instrument',
+                       collection_instrument_id=collection_instrument_id)
+    return response.json()
 
 
 def download_collection_instrument(collection_instrument_id, case_id, party_id):

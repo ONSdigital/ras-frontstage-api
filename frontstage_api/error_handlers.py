@@ -5,7 +5,8 @@ from structlog import wrap_logger
 
 from frontstage_api import app, api
 from frontstage_api.exceptions.exceptions import (ApiError, InvalidCaseCategory, InvalidSurveyList,
-                                                  InvalidRequestMethod, NoJWTError, NoSurveyPermission, FileTooLarge)
+                                                  InvalidRequestMethod, NoJWTError, NoSurveyPermission, FileTooLarge,
+                                                  InvalidEqPayLoad)
 
 
 logger = wrap_logger(logging.getLogger(__name__))
@@ -75,6 +76,13 @@ def no_survey_permission(error):
     }
     logger.warning('Party does not have permission to access case', party_id=error.party_id, case_id=error.case_id)
     return message_json, 403
+
+
+@app.errorhandler(InvalidEqPayLoad)
+@api.errorhandler(InvalidEqPayLoad)
+def invalid_eq_payload(error):
+    logger.warning(error.error)
+    return 'Unable to create eQ payload', 500
 
 
 @app.errorhandler(NoJWTError)

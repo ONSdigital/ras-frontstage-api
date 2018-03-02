@@ -76,6 +76,8 @@ class Config(object):
                                                           RM_COLLECTION_EXERCISE_SERVICE_HOST,
                                                           RM_COLLECTION_EXERCISE_SERVICE_PORT)
     RM_COLLECTION_EXERCISE_GET = '{}collectionexercises/{}'.format(RM_COLLECTION_EXERCISE_SERVICE, '{}')
+    RM_COLLECTION_EXERCISE_EVENT = '{}collectionexercises/{}/events/{}'.format(RM_COLLECTION_EXERCISE_SERVICE, '{}', '{}')
+    RM_COLLECTION_EXERCISE_EVENTS = '{}collectionexercises/{}/events'.format(RM_COLLECTION_EXERCISE_SERVICE, '{}')
 
     RM_SURVEY_SERVICE_HOST = os.getenv('RM_SURVEY_SERVICE_HOST', 'localhost')
     RM_SURVEY_SERVICE_PORT = os.getenv('RM_SURVEY_SERVICE_PORT', 8080)
@@ -92,6 +94,11 @@ class Config(object):
     RAS_CI_SIZE = '{}collection-instrument-api/1.0.2/instrument_size/{}'.format(RAS_COLLECTION_INSTRUMENT_SERVICE, '{}')
     RAS_CI_DOWNLOAD = '{}collection-instrument-api/1.0.2/download/{}'.format(RAS_COLLECTION_INSTRUMENT_SERVICE, '{}')
     RAS_CI_UPLOAD = '{}survey_response-api/v1/survey_responses/{}'.format(RAS_COLLECTION_INSTRUMENT_SERVICE, '{}')
+    RAS_CI_DETAILS = '{}collection-instrument-api/1.0.2/collectioninstrument/id/{}'\
+        .format(RAS_COLLECTION_INSTRUMENT_SERVICE, '{}')
+    JSON_SECRET_KEYS = os.getenv('JSON_SECRET_KEYS')
+    EQ_URL = os.getenv('EQ_URL')
+    ACCOUNT_SERVICE_URL = os.getenv('ACCOUNT_SERVICE_URL')
 
 
 class DevelopmentConfig(Config):
@@ -109,3 +116,6 @@ class TestingConfig(DevelopmentConfig):
     DEBUG = True
     TESTING = True
     LOGGING_LEVEL = os.getenv('LOGGING_LEVEL', 'DEBUG')
+    JSON_SECRET_KEYS = open("./tests/jwt-test-keys/test_key.json").read()
+    EQ_URL = 'https://eq-test/session?token='
+    ACCOUNT_SERVICE_URL ='http://frontstage-url/surveys'

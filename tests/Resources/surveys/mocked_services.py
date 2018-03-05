@@ -32,6 +32,9 @@ with open('tests/test_data/collection_instrument/collection_instrument_seft.json
 with open('tests/test_data/case/completed_case.json') as json_data:
     completed_case = [json.load(json_data)]
 
+with open('tests/test_data/case/completed_by_phone_case.json') as json_data:
+    completed_by_phone_case = [json.load(json_data)]
+
 with open('tests/test_data/collection_exercise/go_live_event.json') as json_data:
     go_live_event = json.load(json_data)
 

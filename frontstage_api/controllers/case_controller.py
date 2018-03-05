@@ -133,13 +133,13 @@ def build_full_case_data(case):
 
 def calculate_case_status(case):
     logger.debug('Getting the status of case')
-    status = 'Not Started'
     case_group_status = case.get('caseGroup', {}).get('caseGroupStatus')
 
-    if case_group_status == 'COMPLETE':
-        status = 'Complete'
-    elif case_group_status == 'INPROGRESS':
-        status = 'Downloaded'
+    status = {
+        'COMPLETE': 'Complete',
+        'COMPLETEDBYPHONE': 'Completed by phone',
+        'INPROGRESS': 'Downloaded'
+    }.get(case_group_status, 'Not Started')
 
     logger.debug('Retrieved the status of case', status=status)
     return status

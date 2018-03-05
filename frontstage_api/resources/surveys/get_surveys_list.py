@@ -34,7 +34,7 @@ class GetSurveysList(Resource):
         if survey_list == 'todo':
             filtered_cases = [case for case in cases if case_controller.calculate_case_status(case) in ['Not Started', 'Downloaded']]
         elif survey_list == 'history':
-            filtered_cases = [case for case in cases if case_controller.calculate_case_status(case) in ['Complete']]
+            filtered_cases = [case for case in cases if case_controller.calculate_case_status(case) in ['Complete', 'Completed by phone']]
         else:
             raise InvalidSurveyList(survey_list)
         surveys_data = [case_controller.build_full_case_data(case=case) for case in filtered_cases]

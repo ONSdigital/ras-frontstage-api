@@ -8,9 +8,9 @@ from frontstage_api.controllers.eq_payload import EqPayload
 from frontstage_api.exceptions.exceptions import ApiError, InvalidEqPayLoad
 
 from tests.Resources.surveys.mocked_services import case, collection_exercise, collection_exercise_events, \
-     business_party, survey, collection_instrument_eq,url_get_case, url_get_collection_exercise, \
+     business_party, survey, collection_instrument_eq, url_get_case, url_get_collection_exercise, \
      url_get_collection_exercise_events, url_get_business_party, url_get_survey, url_get_collection_instrument, \
-     collection_instrument_seft
+     collection_instrument_seft, url_post_case_event_uuid, url_get_case_categories, categories
 from tests.Resources.surveys.basic_auth_header import basic_auth_header
 
 
@@ -35,6 +35,8 @@ class TestGenerateEqURL(unittest.TestCase):
         mock_request.get(url_get_business_party, json=business_party)
         mock_request.get(url_get_survey, json=survey)
         mock_request.get(url_get_collection_instrument, json=collection_instrument_eq)
+        mock_request.get(url_get_case_categories, json=categories)
+        mock_request.post(url_post_case_event_uuid, status_code=201)
 
         # When the generate-eq-url is called
         response = self.app.get(test_generate_eq_url, headers=self.headers)
@@ -112,8 +114,8 @@ class TestGenerateEqURL(unittest.TestCase):
         # When format_string_long_date_time_to_short_date is called
         # Then an InvalidEqPayLoad is raised
         with self.assertRaises(InvalidEqPayLoad) as e:
-            EqPayload()._format_string_long_date_time_to_short_date(date)
-        self.assertEqual(e.exception.error, 'Unable to format invalid, expected format %Y-%m-%dT%H:%M:%S.%fZ')
+            EqPayload()._format_string_long_date_time_to_short_date(date[:10])
+        self.assertEqual(e.exception.error, 'Unable to format invalid, expected format %Y-%m-%d')
 
     def test_generate_eq_url_missing_event_date(self):
 

@@ -101,19 +101,19 @@ class EqPayload(object):
 
         for event in collex_events:
             if event['tag'] == search_param and event.get('timestamp'):
-                return self._format_string_long_date_time_to_short_date(event['timestamp'])
+                return self._format_string_long_date_time_to_short_date(event['timestamp'][:10])
         raise InvalidEqPayLoad('Event not found for collection {} for search param {}'.format(collex_id, search_param))
 
     @staticmethod
     def _format_string_long_date_time_to_short_date(string_date):
         """
         Formats the date from a string to %Y-%m-%d eg 2018-01-20
-        :param string_date: The date in string format should be in format %Y-%m-%dT%H:%M:%S.%fZ
+        :param string_date: The date in string format should be in format %Y-%m-%d
         :return formatted date
         """
 
         try:
-            formatted_date = datetime.datetime.strptime(string_date, '%Y-%m-%dT%H:%M:%S.%fZ').strftime('%Y-%m-%d')
+            formatted_date = datetime.datetime.strptime(string_date, '%Y-%m-%d').strftime('%Y-%m-%d')
         except ValueError:
-            raise InvalidEqPayLoad('Unable to format {}, expected format %Y-%m-%dT%H:%M:%S.%fZ'.format(string_date))
+            raise InvalidEqPayLoad('Unable to format {}, expected format %Y-%m-%d'.format(string_date))
         return formatted_date

@@ -33,5 +33,12 @@
     "longDescription": "Access code authentication attempted",
     "role": "collect-csos, collect-admins",
     "group": "general"
+  },
+  {
+    "name": "EQ_LAUNCH",
+    "shortDescription": "Access code authentication attempted",
+    "longDescription": "Access code authentication attempted",
+    "role": "collect-csos, collect-admins",
+    "group": "general"
   }
 ]

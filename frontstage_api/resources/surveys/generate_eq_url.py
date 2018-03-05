@@ -41,6 +41,14 @@ class GenerateEqUrl(Resource):
         token = encrypter.encrypt(payload)
 
         eq_url = current_app.config['EQ_URL']+token
+
+        category = 'EQ_LAUNCH'
+        case_controller.post_case_event(case_id,
+                                        party_id=party_id,
+                                        category=category,
+                                        description='Instrument {} launched by {} for case {}'.format(
+                                            case['collectionInstrumentId'], party_id, case_id))
+
         return {"eq_url": eq_url}
 
 

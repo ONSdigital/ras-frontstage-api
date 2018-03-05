@@ -116,7 +116,7 @@ def build_full_case_data(case):
     collection_instrument = collection_instrument_controller \
         .get_collection_instrument(case['collectionInstrumentId'])
 
-    status = calculate_case_status(case)
+    status = calculate_case_status(case, collection_instrument['type'])
     survey_data = {
         "case": case,
         "collection_exercise": collection_exercise_formatted,
@@ -131,15 +131,19 @@ def build_full_case_data(case):
     return survey_data
 
 
-def calculate_case_status(case):
+def calculate_case_status(case, collection_instrument_type):
     logger.debug('Getting the status of case')
+    status = 'Not started'
     case_group_status = case.get('caseGroup', {}).get('caseGroupStatus')
 
-    status = {
-        'COMPLETE': 'Complete',
-        'COMPLETEDBYPHONE': 'Completed by phone',
-        'INPROGRESS': 'Downloaded'
-    }.get(case_group_status, 'Not Started')
+    if case_group_status == 'COMPLETE':
+        status = 'Complete'
+    elif case_group_status == 'COMPLETEDBYPHONE':
+        status = 'Completed by phone'
+    elif case_group_status == 'INPROGRESS' and collection_instrument_type == 'EQ':
+        status = 'Started'
+    elif case_group_status == 'INPROGRESS' and collection_instrument_type == 'SEFT':
+        status = 'Downloaded'
 
     logger.debug('Retrieved the status of case', status=status)
     return status

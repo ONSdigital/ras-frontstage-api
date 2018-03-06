@@ -141,7 +141,7 @@ def calculate_case_status(case, collection_instrument_type):
     elif case_group_status == 'COMPLETEDBYPHONE':
         status = 'Completed by phone'
     elif case_group_status == 'INPROGRESS' and collection_instrument_type == 'EQ':
-        status = 'Started'
+        status = 'In progress'
     elif case_group_status == 'INPROGRESS' and collection_instrument_type == 'SEFT':
         status = 'Downloaded'
 

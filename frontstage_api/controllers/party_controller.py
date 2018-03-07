@@ -116,6 +116,18 @@ def verify_email(token):
     logger.debug('Successfully verified email address', token=token)
 
 
+def resend_verification_email(party_id):
+    logger.debug('Resending verification email')
+    url = app.config['RAS_PARTY_RESEND_VERIFICATION_EMAIL'].format(party_id)
+    response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
+
+    if response.status_code != 200:
+        logger.error('Failed to resend verification email')
+        raise ApiError(url=url, status_code=response.status_code)
+
+    logger.debug('Successfully resent verification email')
+
+
 def add_survey(party_id, enrolment_code):
     logger.debug('Adding a survey')
     url = app.config['RAS_PARTY_ADD_SURVEY']

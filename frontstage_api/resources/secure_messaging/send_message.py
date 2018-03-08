@@ -19,7 +19,7 @@ message_details = secure_messaging_api.model('MessageDetails', {
         'thread_id': fields.String(),
         'ru_id': fields.String(required=True),
         'survey': fields.String(required=True),
-        'collection_case': fields.String(required=True)
+        'collection_case': fields.String(required=False)
 })
 
 

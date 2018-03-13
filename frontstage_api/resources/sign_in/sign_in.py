@@ -29,8 +29,10 @@ class SignIn(Resource):
         password = message_json['password']
 
         oauth2_token = django_controller.sign_in(username, password)
-        party_id = party_controller.get_party_by_email(username).get('id')
+        respondent = party_controller.get_party_by_email(username)
 
-        response_json = {**oauth2_token, "party_id": party_id}
+        respondent_status = respondent['status']
+
+        response_json = {**oauth2_token, "party_id": respondent.get('party_id'), "respondent_status": respondent_status}
         logger.info('Successfully retrieved sign-in details')
         return make_response(jsonify(response_json), 200)

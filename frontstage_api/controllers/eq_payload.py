@@ -68,7 +68,7 @@ class EqPayload(object):
             'collection_exercise_sid': collex['id'],
             'ref_p_start_date': collex_event_dates['ref_p_start_date'],
             'ref_p_end_date': collex_event_dates['ref_p_end_date'],
-            'ru_ref': party['sampleUnitRef'],
+            'ru_ref': party['sampleUnitRef'] + party['checkletter'],
             'ru_name': party['name'],
             'return_by': collex_event_dates['return_by'],
             'survey_id': survey['surveyRef'],

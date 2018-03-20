@@ -20,8 +20,8 @@ gunicorn = "==19.7.1"
 requests = "==2.11.1"
 structlog = "==17.2.0"
 sdc-cryptography = "==0.2.0"
-arrow = "*"
-pytest = "*"
+arrow = "==0.12.1"
+pytest = "==3.4.0"
 
 
 [dev-packages]

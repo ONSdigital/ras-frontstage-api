@@ -75,7 +75,7 @@ class EqPayload(object):
             'case_id': case['id'],
             'case_ref': case['caseRef'],
             'account_service_url': account_service_url,
-            'trading_as': f"{party['tradstyle1']} {party['tradstyle2']} {party['tradstyle3']}"
+            'trad_as': f"{party['tradstyle1']} {party['tradstyle2']} {party['tradstyle3']}"
         }
 
     def _get_collex_event_dates(self, collex_id):

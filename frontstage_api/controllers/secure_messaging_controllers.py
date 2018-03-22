@@ -13,7 +13,7 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 def get_messages_list(encoded_jwt, label):
     logger.debug('Attempting to retrieve the messages list', label=label)
-    url = '{}&label={}'.format(app.config['MESSAGES_LIST_URL'], label)
+    url = f"{app.config['MESSAGES_LIST_URL']}&label={label}"
     headers = {"Authorization": encoded_jwt}
     response = request_handler('GET', url, headers=headers)
 
@@ -45,7 +45,7 @@ def get_unread_message_total(encoded_jwt):
 def get_message(encoded_jwt, message_id, label):
     logger.debug('Attempting to retrieve message', message_id=message_id, label=label)
     url = app.config['DRAFT_URL'] if label == 'DRAFT' else app.config['MESSAGE_URL']
-    url = '{}/{}'.format(url, message_id)
+    url = f'{url}/{message_id}'
     headers = {"Authorization": encoded_jwt}
     response = request_handler('GET', url, headers=headers)
 
@@ -60,7 +60,7 @@ def get_message(encoded_jwt, message_id, label):
 def get_thread_message(encoded_jwt, thread_id, party_id):
     logger.debug('Attempting to retrieve thread message', thread_id=thread_id, party_id=party_id)
     method = 'GET'
-    url = '{}/{}'.format(app.config['THREAD_URL'], thread_id)
+    url = f"{app.config['THREAD_URL']}/{thread_id}"
     headers = {"Authorization": encoded_jwt}
     response = request_handler(method, url, headers=headers)
 

@@ -34,7 +34,7 @@ def download_collection_instrument(collection_instrument_id, case_id, party_id):
     case_controller.post_case_event(case_id,
                                     party_id=party_id,
                                     category=category,
-                                    description='Instrument {} downloaded by {} for case {}'.format(collection_instrument_id, party_id, case_id))
+                                    description=f'Instrument {collection_instrument_id} downloaded by {party_id} for case {case_id}')
 
     if response.status_code != 200:
         raise ApiError(url=url, status_code=response.status_code,
@@ -55,7 +55,7 @@ def upload_collection_instrument(upload_file, case_id, party_id):
     case_controller.post_case_event(case_id,
                                     party_id=party_id,
                                     category=category,
-                                    description='Survey response for case {} uploaded by {}'.format(case_id, party_id))
+                                    description=f'Survey response for case {case_id} uploaded by {party_id}')
 
     if response.status_code == 400:
         data = {

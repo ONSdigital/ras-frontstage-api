@@ -11,7 +11,7 @@ from tests.Resources.surveys.mocked_services import business_party, case, comple
     completed_by_phone_case
 
 party_id = '07d672bc-497b-448f-a406-a20a7e6013d7'
-test_surveys_list_todo = '/surveys/surveys-list?list=todo&party_id={}'.format(party_id)
+test_surveys_list_todo = f'/surveys/surveys-list?list=todo&party_id={party_id}'
 
 
 class TestGetSurveysList(unittest.TestCase):

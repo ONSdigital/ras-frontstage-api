@@ -17,11 +17,12 @@ class TestSignIn(unittest.TestCase):
 
     def setUp(self):
         self.app = app.test_client()
+        auth_string = base64.b64encode(
+            bytes(f"{app.config['SECURITY_USER_NAME']}:{app.config['SECURITY_USER_PASSWORD']}", 'ascii')
+        ).decode("ascii")
         self.headers = {
+            'Authorization': f'Basic {auth_string}',
             'Content-Type': 'application/json',
-            'Authorization': 'Basic {}'.format(base64.b64encode(
-                bytes("{}:{}".format(app.config['SECURITY_USER_NAME'], app.config['SECURITY_USER_PASSWORD']), 'ascii')
-            ).decode("ascii"))
         }
         self.posted_form = {
             'username': 'test',

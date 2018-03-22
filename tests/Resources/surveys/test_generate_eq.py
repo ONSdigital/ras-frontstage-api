@@ -16,7 +16,7 @@ from tests.Resources.surveys.basic_auth_header import basic_auth_header
 
 party_id = '07d672bc-497b-448f-a406-a20a7e6013d7'
 case_id = 'abc670a5-67c6-4d96-9164-13b4017b8704'
-test_generate_eq_url = '/surveys/generate-eq-url?party_id={}&case_id={}'.format(party_id, case_id)
+test_generate_eq_url = f'/surveys/generate-eq-url?party_id={party_id}&case_id={case_id}'
 
 
 class TestGenerateEqURL(unittest.TestCase):
@@ -112,8 +112,18 @@ class TestGenerateEqURL(unittest.TestCase):
         # When format_string_long_date_time_to_short_date is called
         # Then an InvalidEqPayLoad is raised
         with self.assertRaises(InvalidEqPayLoad) as e:
-            EqPayload()._format_string_long_date_time_to_short_date(date[:10])
-        self.assertEqual(e.exception.error, 'Unable to format invalid, expected format %Y-%m-%d')
+            EqPayload()._format_string_long_date_time_to_short_date(date)
+        self.assertEqual(e.exception.error, 'Unable to format invalid')
+
+    def test_generate_eq_url_iso8601_date_format(self):
+
+        # Given an invalid date
+        date = '2007-01-25T12:00:00Z'
+
+        # When format_string_long_date_time_to_short_date is called
+        # Then an InvalidEqPayLoad is raised
+        result = EqPayload()._format_string_long_date_time_to_short_date(date)
+        self.assertEqual(result, '2007-01-25')
 
     def test_generate_eq_url_missing_event_date(self):
 

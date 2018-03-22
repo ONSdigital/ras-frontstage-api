@@ -46,7 +46,6 @@ class GenerateEqUrl(Resource):
         case_controller.post_case_event(case_id,
                                         party_id=party_id,
                                         category=category,
-                                        description='Instrument {} launched by {} for case {}'.format(
-                                            case['collectionInstrumentId'], party_id, case_id))
+                                        description=f"Instrument {case['collectionInstrumentId']} launched by {party_id} for case {case_id}")
 
         return {"eq_url": eq_url}

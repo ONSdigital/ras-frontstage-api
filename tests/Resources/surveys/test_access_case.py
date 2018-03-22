@@ -11,7 +11,7 @@ from tests.Resources.surveys.mocked_services import business_party, case, collec
 
 case_id = 'abc670a5-67c6-4d96-9164-13b4017b8704'
 party_id = '07d672bc-497b-448f-a406-a20a7e6013d7'
-test_access_case_url = '/surveys/access-case?case_id={}&party_id={}'.format(case_id, party_id)
+test_access_case_url = f'/surveys/access-case?case_id={case_id}&party_id={party_id}'
 
 
 class TestAccessCase(unittest.TestCase):

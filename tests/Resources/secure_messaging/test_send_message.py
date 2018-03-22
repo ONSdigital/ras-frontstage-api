@@ -7,7 +7,7 @@ import requests_mock
 from frontstage_api import app
 
 
-url_get_thread = '{}/{}'.format(app.config['THREAD_URL'], 'dfcb2b2c-a1d8-4d86-a974-7ffe05a3141c')
+url_get_thread = f"{app.config['THREAD_URL']}/dfcb2b2c-a1d8-4d86-a974-7ffe05a3141c"
 with open('tests/test_data/secure_messaging/thread.json') as json_data:
     thread = json.load(json_data)
 with open('tests/test_data/secure_messaging/thread_no_party.json') as json_data:
@@ -44,12 +44,13 @@ class TestSendMessage(unittest.TestCase):
             'status': '201',
             'thread_id': '8caeff79-6067-4f2a-96e0-08617fdeb496'
         }
+        auth_string = base64.b64encode(
+            bytes(f"{app.config['SECURITY_USER_NAME']}:{app.config['SECURITY_USER_PASSWORD']}", 'ascii')
+        ).decode("ascii")
         self.headers = {
-            'jwt': encoded_jwt,
+            'Authorization': f'Basic {auth_string}',
             'Content-Type': 'application/json',
-            'Authorization': 'Basic {}'.format(base64.b64encode(
-                bytes("{}:{}".format(app.config['SECURITY_USER_NAME'], app.config['SECURITY_USER_PASSWORD']),
-                      'ascii')).decode("ascii"))
+            'jwt': encoded_jwt,
         }
 
     @requests_mock.mock()

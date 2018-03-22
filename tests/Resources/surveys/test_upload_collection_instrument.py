@@ -11,7 +11,7 @@ from tests.Resources.surveys.basic_auth_header import basic_auth_header
 
 case_id = 'abc670a5-67c6-4d96-9164-13b4017b8704'
 party_id = '07d672bc-497b-448f-a406-a20a7e6013d7'
-test_upload_ci_url = '/surveys/upload-ci?case_id={}&party_id={}'.format(case_id, party_id)
+test_upload_ci_url = f'/surveys/upload-ci?case_id={case_id}&party_id={party_id}'
 
 
 class TestUploadCollectionInstrument(unittest.TestCase):
@@ -33,7 +33,7 @@ class TestUploadCollectionInstrument(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_upload_collection_instrument_missing_args(self):
-        response = self.app.post('/surveys/upload-ci?case_id={}'.format(case_id),
+        response = self.app.post(f'/surveys/upload-ci?case_id={case_id}',
                                  headers=self.headers, data=self.ci_data)
 
         self.assertEqual(response.status_code, 400)

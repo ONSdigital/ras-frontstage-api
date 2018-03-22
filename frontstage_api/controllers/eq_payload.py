@@ -1,4 +1,3 @@
-import datetime
 import logging
 import time
 import uuid
@@ -7,6 +6,7 @@ from flask import current_app
 from frontstage_api.controllers import collection_exercise_controller, \
     collection_instrument_controller, party_controller, survey_controller
 from frontstage_api.exceptions.exceptions import InvalidEqPayLoad
+import iso8601
 from structlog import wrap_logger
 
 logger = wrap_logger(logging.getLogger(__name__))
@@ -29,11 +29,11 @@ class EqPayload(object):
         ci_id = case['collectionInstrumentId']
         ci = collection_instrument_controller.get_collection_instrument(ci_id)
         if ci['type'] != 'EQ':
-            raise InvalidEqPayLoad('Collection instrument {} type is not EQ'.format(ci_id))
+            raise InvalidEqPayLoad(f'Collection instrument {ci_id} type is not EQ')
 
         classifiers = ci['classifiers']
         if not classifiers or not classifiers.get('eq_id') or not classifiers.get('form_type'):
-            raise InvalidEqPayLoad('Collection instrument {} classifiers are incorrect or missing'.format(ci_id))
+            raise InvalidEqPayLoad(f'Collection instrument {ci_id} classifiers are incorrect or missing')
 
         eq_id = ci['classifiers']['eq_id']
         form_type = ci['classifiers']['form_type']
@@ -101,19 +101,18 @@ class EqPayload(object):
 
         for event in collex_events:
             if event['tag'] == search_param and event.get('timestamp'):
-                return self._format_string_long_date_time_to_short_date(event['timestamp'][:10])
-        raise InvalidEqPayLoad('Event not found for collection {} for search param {}'.format(collex_id, search_param))
+                return self._format_string_long_date_time_to_short_date(event['timestamp'])
+        raise InvalidEqPayLoad(f'Event not found for collection {collex_id} for search param {search_param}')
 
     @staticmethod
     def _format_string_long_date_time_to_short_date(string_date):
         """
         Formats the date from a string to %Y-%m-%d eg 2018-01-20
-        :param string_date: The date in string format should be in format %Y-%m-%d
+        :param string_date: The date string
         :return formatted date
         """
 
         try:
-            formatted_date = datetime.datetime.strptime(string_date, '%Y-%m-%d').strftime('%Y-%m-%d')
-        except ValueError:
-            raise InvalidEqPayLoad('Unable to format {}, expected format %Y-%m-%d'.format(string_date))
-        return formatted_date
+            return iso8601.parse_date(string_date).strftime('%Y-%m-%d')
+        except (ValueError, iso8601.iso8601.ParseError):
+            raise InvalidEqPayLoad(f'Unable to format {string_date}')

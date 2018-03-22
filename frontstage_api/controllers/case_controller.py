@@ -30,7 +30,7 @@ def get_case_by_party_id(party_id, case_events=False):
     logger.debug('Retrieving case', party_id=party_id)
     url = app.config['RM_CASE_GET_BY_PARTY'].format(party_id)
     if case_events:
-        url = '{}?caseevents=true'.format(url)
+        url = f'{url}?caseevents=true'
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
     if response.status_code != 200:

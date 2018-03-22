@@ -8,7 +8,7 @@ from tests.Resources.surveys.basic_auth_header import basic_auth_header
 
 case_id = 'abc670a5-67c6-4d96-9164-13b4017b8704'
 party_id = '07d672bc-497b-448f-a406-a20a7e6013d7'
-test_download_ci = '/surveys/download-ci?case_id={}&party_id={}'.format(case_id, party_id)
+test_download_ci = f'/surveys/download-ci?case_id={case_id}&party_id={party_id}'
 
 
 class TestDownloadCollectionInstrument(unittest.TestCase):

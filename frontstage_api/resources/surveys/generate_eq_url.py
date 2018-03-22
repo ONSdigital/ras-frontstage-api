@@ -50,5 +50,3 @@ class GenerateEqUrl(Resource):
                                             case['collectionInstrumentId'], party_id, case_id))
 
         return {"eq_url": eq_url}
-
-

@@ -1,5 +1,4 @@
 import logging
-import json
 
 from structlog import wrap_logger
 

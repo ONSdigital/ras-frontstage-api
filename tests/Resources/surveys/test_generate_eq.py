@@ -16,7 +16,7 @@ from tests.Resources.surveys.basic_auth_header import basic_auth_header
 
 party_id = '07d672bc-497b-448f-a406-a20a7e6013d7'
 case_id = 'abc670a5-67c6-4d96-9164-13b4017b8704'
-test_generate_eq_url = '/surveys/generate-eq-url?party_id={}&case_id={}'.format(party_id,case_id)
+test_generate_eq_url = '/surveys/generate-eq-url?party_id={}&case_id={}'.format(party_id, case_id)
 
 
 class TestGenerateEqURL(unittest.TestCase):
@@ -55,9 +55,7 @@ class TestGenerateEqURL(unittest.TestCase):
         mock_request.get(url_get_survey, json=survey)
         mock_request.get(url_get_collection_instrument, json=collection_instrument_seft)
 
-
-        # When create_payload is called
-        # Then an InvalidEqPayLoad is raised
+        # When create_payload is called, an InvalidEqPayLoad is raised
         with self.assertRaises(InvalidEqPayLoad) as e:
             EqPayload().create_payload(case)
         self.assertEqual(e.exception.error, 'Collection instrument 68ad4018-2ddd-4894-89e7-33f0135887a2 type is not EQ')

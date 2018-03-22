@@ -10,7 +10,7 @@ from frontstage_api.exceptions.exceptions import ApiError, InvalidEqPayLoad
 from tests.Resources.surveys.mocked_services import case, collection_exercise, collection_exercise_events, \
      business_party, survey, collection_instrument_eq, url_get_case, url_get_collection_exercise, \
      url_get_collection_exercise_events, url_get_business_party, url_get_survey, url_get_collection_instrument, \
-     collection_instrument_seft, url_post_case_event_uuid, url_get_case_categories, categories
+     collection_instrument_seft, url_post_case_event_uuid, url_get_case_categories, categories, completed_case
 from tests.Resources.surveys.basic_auth_header import basic_auth_header
 
 
@@ -41,9 +41,21 @@ class TestGenerateEqURL(unittest.TestCase):
         # When the generate-eq-url is called
         response = self.app.get(test_generate_eq_url, headers=self.headers)
 
-        # A dict with the eq_url is returned
+        # An eq url is generated
         self.assertEqual(response.status_code, 200)
-        self.assertIn("eq_url", json.loads(response.data))
+        self.assertIn("https://eq-test/session?token=", json.loads(response.data)['eq_url'])
+
+    @requests_mock.mock()
+    def test_generate_eq_url_complete_case(self, mock_request):
+
+        # Given a mocked case has its caseGroup status as complete
+        mock_request.get(url_get_case, json=completed_case)
+
+        # When the generate-eq-url is called
+        response = self.app.get(test_generate_eq_url, headers=self.headers)
+
+        # A 403 is returned
+        self.assertEqual(response.status_code, 403)
 
     @requests_mock.mock()
     def test_generate_eq_url_seft(self, mock_request):
@@ -55,7 +67,8 @@ class TestGenerateEqURL(unittest.TestCase):
         mock_request.get(url_get_survey, json=survey)
         mock_request.get(url_get_collection_instrument, json=collection_instrument_seft)
 
-        # When create_payload is called, an InvalidEqPayLoad is raised
+        # When create_payload is called
+        # Then an InvalidEqPayLoad is raised
         with self.assertRaises(InvalidEqPayLoad) as e:
             EqPayload().create_payload(case)
         self.assertEqual(e.exception.error, 'Collection instrument 68ad4018-2ddd-4894-89e7-33f0135887a2 type is not EQ')

@@ -54,7 +54,7 @@ class TestGetSurveysList(unittest.TestCase):
 
     @requests_mock.mock()
     def test_get_surveys_list_history(self, mock_request):
-        mock_request.get(url_get_case_by_party, json=completed_case)
+        mock_request.get(url_get_case_by_party, json=[completed_case])
         mock_request.get(url_get_collection_exercise, json=collection_exercise)
         mock_request.get(url_get_collection_exercise_go_live, json=go_live_event)
         mock_request.get(url_get_business_party, json=business_party)

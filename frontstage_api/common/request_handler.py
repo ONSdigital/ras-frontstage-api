@@ -13,7 +13,7 @@ logger = wrap_logger(logging.getLogger(__name__))
 def request_handler(method, url, auth=None, headers=None, json=None, data=None, files=None, fail=True):
     try:
         if method == 'GET':
-            response = requests.get(url, auth=auth, headers=headers)
+            response = requests.get(url, json=json, auth=auth, headers=headers)
         elif method == 'POST':
             response = requests.post(url, auth=auth, headers=headers, json=json, data=data, files=files)
         elif method == 'PUT':

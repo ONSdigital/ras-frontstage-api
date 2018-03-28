@@ -48,7 +48,7 @@ class Config(object):
     RAS_PARTY_SERVICE_PROTOCOL = os.getenv('RAS_PARTY_SERVICE_PROTOCOL', 'http')
     RAS_PARTY_SERVICE = '{}://{}:{}/'.format(RAS_PARTY_SERVICE_PROTOCOL, RAS_PARTY_SERVICE_HOST, RAS_PARTY_SERVICE_PORT)
     RAS_PARTY_GET_BY_RESPONDENT_ID = '{}party-api/v1/respondents/id/{}'.format(RAS_PARTY_SERVICE, '{}')
-    RAS_PARTY_GET_BY_EMAIL_URL = '{}party-api/v1/respondents/email/{}'.format(RAS_PARTY_SERVICE, '{}')
+    RAS_PARTY_GET_BY_EMAIL_URL = '{}party-api/v1/respondents/email'.format(RAS_PARTY_SERVICE)
     RAS_PARTY_RESET_PASSWORD_REQUEST = '{}party-api/v1/respondents/request_password_change'.format(RAS_PARTY_SERVICE)
     RAS_PARTY_VERIFY_PASSWORD_TOKEN = '{}party-api/v1/tokens/verify/{}'.format(RAS_PARTY_SERVICE, '{}')
     RAS_PARTY_CHANGE_PASSWORD = '{}party-api/v1/respondents/change_password/{}'.format(RAS_PARTY_SERVICE, '{}')

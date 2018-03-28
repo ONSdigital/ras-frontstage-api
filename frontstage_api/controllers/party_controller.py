@@ -41,8 +41,8 @@ def get_party_by_business_id(party_id, collection_exercise_id=None):
 
 def get_party_by_email(email):
     logger.debug('Retrieving party')
-    url = app.config['RAS_PARTY_GET_BY_EMAIL_URL'].format(email)
-    response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
+    url = app.config['RAS_PARTY_GET_BY_EMAIL_URL']
+    response = request_handler('GET', url, json={"email": email}, auth=app.config['BASIC_AUTH'])
 
     if response.status_code != 200:
         logger.error('Failed to retrieve party')

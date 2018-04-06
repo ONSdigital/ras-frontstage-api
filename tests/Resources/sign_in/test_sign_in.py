@@ -7,8 +7,8 @@ import requests_mock
 from frontstage_api import app
 
 
-url_get_token = app.config['OAUTH_TOKEN_URL']
-url_get_party_by_email = app.config['RAS_PARTY_GET_BY_EMAIL_URL']
+url_get_token = f"{app.config['RAS_OAUTH_SERVICE']}/api/v1/tokens/"
+url_get_party_by_email = f"{app.config['RAS_PARTY_SERVICE']}/party-api/v1/respondents/email"
 with open('tests/test_data/party/party.json') as json_data:
     party = json.load(json_data)
 

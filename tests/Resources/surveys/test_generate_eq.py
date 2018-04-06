@@ -9,7 +9,7 @@ from frontstage_api.exceptions.exceptions import ApiError, InvalidEqPayLoad
 
 from tests.Resources.surveys.mocked_services import case, collection_exercise, collection_exercise_events, \
      business_party, survey, collection_instrument_eq, url_get_case, url_get_collection_exercise, \
-     url_get_collection_exercise_events, url_get_business_party, url_get_survey, url_get_collection_instrument, \
+     url_get_collection_exercise_events, url_get_business_party, url_get_survey, url_get_ci, \
      collection_instrument_seft, url_post_case_event_uuid, url_get_case_categories, categories, completed_case
 from tests.Resources.surveys.basic_auth_header import basic_auth_header
 
@@ -34,7 +34,7 @@ class TestGenerateEqURL(unittest.TestCase):
         mock_request.get(url_get_collection_exercise_events, json=collection_exercise_events)
         mock_request.get(url_get_business_party, json=business_party)
         mock_request.get(url_get_survey, json=survey)
-        mock_request.get(url_get_collection_instrument, json=collection_instrument_eq)
+        mock_request.get(url_get_ci, json=collection_instrument_eq)
         mock_request.get(url_get_case_categories, json=categories)
         mock_request.post(url_post_case_event_uuid, status_code=201)
 
@@ -65,7 +65,7 @@ class TestGenerateEqURL(unittest.TestCase):
         mock_request.get(url_get_collection_exercise_events, json=collection_exercise_events)
         mock_request.get(url_get_business_party, json=business_party)
         mock_request.get(url_get_survey, json=survey)
-        mock_request.get(url_get_collection_instrument, json=collection_instrument_seft)
+        mock_request.get(url_get_ci, json=collection_instrument_seft)
 
         # When create_payload is called
         # Then an InvalidEqPayLoad is raised
@@ -80,7 +80,7 @@ class TestGenerateEqURL(unittest.TestCase):
         with open('tests/test_data/collection_instrument/collection_instrument_eq_no_eq_id.json') as json_data:
             collection_instrument_eq_no_eq_id = json.load(json_data)
 
-        mock_request.get(url_get_collection_instrument, json=collection_instrument_eq_no_eq_id)
+        mock_request.get(url_get_ci, json=collection_instrument_eq_no_eq_id)
 
         # When create_payload is called
         # Then an InvalidEqPayLoad is raised
@@ -96,7 +96,7 @@ class TestGenerateEqURL(unittest.TestCase):
         with open('tests/test_data/collection_instrument/collection_instrument_eq_no_form_type.json') as json_data:
             collection_instrument_eq_no_form_type = json.load(json_data)
 
-        mock_request.get(url_get_collection_instrument, json=collection_instrument_eq_no_form_type)
+        mock_request.get(url_get_ci, json=collection_instrument_eq_no_form_type)
 
         # When create_payload is called
         # Then an InvalidEqPayLoad is raised

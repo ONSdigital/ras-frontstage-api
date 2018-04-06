@@ -7,8 +7,8 @@ import requests_mock
 from frontstage_api import app
 
 
-url_get_token = app.config['OAUTH_TOKEN_URL']
-url_reset_password_request = app.config['RAS_PARTY_RESET_PASSWORD_REQUEST']
+url_get_token = f"{app.config['RAS_OAUTH_SERVICE']}/api/v1/tokens/"
+url_reset_password_request = f"{app.config['RAS_PARTY_SERVICE']}/party-api/v1/respondents/request_password_change"
 
 
 class TestRequestPasswordChange(unittest.TestCase):

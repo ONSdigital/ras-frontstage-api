@@ -5,7 +5,7 @@ import requests_mock
 
 from frontstage_api import app
 
-url_verify_email = app.config['RAS_PARTY_VERIFY_EMAIL'].format('test_token')
+url_verify_email = f"{app.config['RAS_PARTY_SERVICE']}/party-api/v1/emailverification/test_token"
 
 
 class TestRegister(unittest.TestCase):

@@ -7,7 +7,7 @@ import requests_mock
 from frontstage_api import app
 
 
-url_verify_token = app.config['RAS_PARTY_VERIFY_PASSWORD_TOKEN']
+url_verify_token = f"{app.config['RAS_PARTY_SERVICE']}/party-api/v1/tokens/verify/nekoT"
 
 
 class TestVerifyPasswordToken(unittest.TestCase):
@@ -39,7 +39,7 @@ class TestVerifyPasswordToken(unittest.TestCase):
 
     @requests_mock.mock()
     def test_verify_password_token_successful(self, mock_request):
-        mock_request.get(url_verify_token.format('nekoT'), status_code=200, json={"status": "OKs"})
+        mock_request.get(url_verify_token, status_code=200, json={"status": "OKs"})
 
         response = self.app.get('/passwords/verify-password-token', headers=self.headers, query_string=self.params)
 
@@ -47,7 +47,7 @@ class TestVerifyPasswordToken(unittest.TestCase):
 
     @requests_mock.mock()
     def test_verify_password_token_party_fail(self, mock_request):
-        mock_request.get(url_verify_token.format('nekoT'), status_code=500)
+        mock_request.get(url_verify_token, status_code=500)
 
         response = self.app.get('/passwords/verify-password-token', headers=self.headers, query_string=self.params)
 
@@ -56,7 +56,7 @@ class TestVerifyPasswordToken(unittest.TestCase):
 
     @requests_mock.mock()
     def test_verify_password_token_token_expired(self, mock_request):
-        mock_request.get(url_verify_token.format('nekoT'), status_code=409)
+        mock_request.get(url_verify_token, status_code=409)
 
         response = self.app.get('/passwords/verify-password-token', headers=self.headers, query_string=self.params)
 
@@ -65,7 +65,7 @@ class TestVerifyPasswordToken(unittest.TestCase):
 
     @requests_mock.mock()
     def test_verify_password_token_token_invalid(self, mock_request):
-        mock_request.get(url_verify_token.format('nekoT'), status_code=404)
+        mock_request.get(url_verify_token, status_code=404)
 
         response = self.app.get('/passwords/verify-password-token', headers=self.headers, query_string=self.params)
 

@@ -13,7 +13,7 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 def get_survey(survey_id):
     logger.debug('Retrieving survey', survey_id=survey_id)
-    url = app.config['RM_SURVEY_GET'].format(survey_id)
+    url = f"{app.config['RM_SURVEY_SERVICE']}/surveys/{survey_id}"
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
     if response.status_code != 200:

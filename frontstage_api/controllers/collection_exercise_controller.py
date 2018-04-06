@@ -12,7 +12,7 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 def get_collection_exercise(collection_exercise_id):
     logger.debug('Retrieving collection exercise', collection_exercise_id=collection_exercise_id)
-    url = app.config['RM_COLLECTION_EXERCISE_GET'].format(collection_exercise_id)
+    url = f"{app.config['RM_COLLECTION_EXERCISE_SERVICE']}/collectionexercises/{collection_exercise_id}"
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
     if response.status_code != 200:
@@ -26,7 +26,7 @@ def get_collection_exercise(collection_exercise_id):
 
 def get_collection_exercise_events(collection_exercise_id):
     logger.debug('Retrieving collection exercise events', collection_exercise_id=collection_exercise_id)
-    url = app.config['RM_COLLECTION_EXERCISE_EVENTS'].format(collection_exercise_id)
+    url = f"{app.config['RM_COLLECTION_EXERCISE_SERVICE']}/collectionexercises/{collection_exercise_id}/events"
 
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
@@ -41,7 +41,7 @@ def get_collection_exercise_events(collection_exercise_id):
 
 def get_collection_exercise_event(collection_exercise_id, tag):
     logger.debug('Retrieving collection exercise event', collection_exercise_id=collection_exercise_id, tag=tag)
-    url = app.config['RM_COLLECTION_EXERCISE_EVENT'].format(collection_exercise_id, tag)
+    url = f"{app.config['RM_COLLECTION_EXERCISE_SERVICE']}/collectionexercises/{collection_exercise_id}/events/{tag}"
 
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 

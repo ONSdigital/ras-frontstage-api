@@ -7,8 +7,8 @@ import requests_mock
 from frontstage_api import app
 
 
-url_get_iac = app.config['RM_IAC_GET'].format('test_enrolment')
-url_create_account = app.config['RAS_PARTY_POST_RESPONDENTS']
+url_get_iac = f"{app.config['RM_IAC_SERVICE']}/iacs/test_enrolment"
+url_create_account = f"{app.config['RAS_PARTY_SERVICE']}/party-api/v1/respondents"
 
 
 class TestRegister(unittest.TestCase):

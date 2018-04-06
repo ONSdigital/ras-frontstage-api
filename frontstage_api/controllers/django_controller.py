@@ -13,7 +13,7 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 def sign_in(username, password):
     logger.debug('Attempting to retrieve OAuth2 token for sign-in')
-    url = app.config['OAUTH_TOKEN_URL']
+    url = f"{app.config['RAS_OAUTH_SERVICE']}/api/v1/tokens/"
     data = {
         'grant_type': 'password',
         'client_id': app.config['DJANGO_CLIENT_ID'],
@@ -40,7 +40,7 @@ def sign_in(username, password):
 
 def check_account_valid(username):
     logger.debug('Attempting to check if account is valid in OAuth2')
-    url = app.config['OAUTH_TOKEN_URL']
+    url = f"{app.config['RAS_OAUTH_SERVICE']}/api/v1/tokens/"
     data = {
         'grant_type': 'reset_password',
         'client_id': app.config['DJANGO_CLIENT_ID'],

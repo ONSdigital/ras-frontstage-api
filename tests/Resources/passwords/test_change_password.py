@@ -6,7 +6,7 @@ import requests_mock
 
 from frontstage_api import app
 
-url_change_password = app.config['RAS_PARTY_CHANGE_PASSWORD']
+url_change_password = f"{app.config['RAS_PARTY_SERVICE']}/party-api/v1/respondents/change_password/nekoT"
 
 
 class TestChangePassword(unittest.TestCase):
@@ -36,7 +36,7 @@ class TestChangePassword(unittest.TestCase):
 
     @requests_mock.mock()
     def test_change_password_successful(self, mock_request):
-        mock_request.put(url_change_password.format('nekoT'), status_code=200)
+        mock_request.put(url_change_password, status_code=200)
 
         response = self.app.put('/passwords/change-password', headers=self.headers, data=json.dumps(self.posted_form))
 
@@ -44,7 +44,7 @@ class TestChangePassword(unittest.TestCase):
 
     @requests_mock.mock()
     def test_change_password_party_fail(self, mock_request):
-        mock_request.put(url_change_password.format('nekoT'), status_code=500)
+        mock_request.put(url_change_password, status_code=500)
 
         response = self.app.put('/passwords/change-password', headers=self.headers, data=json.dumps(self.posted_form))
 
@@ -53,7 +53,7 @@ class TestChangePassword(unittest.TestCase):
 
     @requests_mock.mock()
     def test_change_password_token_expired(self, mock_request):
-        mock_request.put(url_change_password.format('nekoT'), status_code=409)
+        mock_request.put(url_change_password, status_code=409)
 
         response = self.app.put('/passwords/change-password', headers=self.headers, data=json.dumps(self.posted_form))
 
@@ -62,7 +62,7 @@ class TestChangePassword(unittest.TestCase):
 
     @requests_mock.mock()
     def test_change_password_invalid(self, mock_request):
-        mock_request.put(url_change_password.format('nekoT'), status_code=404)
+        mock_request.put(url_change_password, status_code=404)
 
         response = self.app.put('/passwords/change-password', headers=self.headers, data=json.dumps(self.posted_form))
 

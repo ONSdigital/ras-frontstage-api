@@ -9,11 +9,11 @@ from frontstage_api import app
 from frontstage_api.exceptions.exceptions import InvalidRequestMethod
 
 
-url_get_messages_list_INBOX = f"{app.config['MESSAGES_LIST_URL']}&label=INBOX"
+url_get_messages_list_INBOX = f"{app.config['RAS_SECURE_MESSAGE_SERVICE']}/messages?limit={app.config['MESSAGE_LIMIT']}&label=INBOX"
 with open('tests/test_data/secure_messaging/messages_list_inbox.json') as json_data:
     messages_list_inbox = json.load(json_data)
-url_get_unread_messages_total = app.config['UNREAD_MESSAGES_TOTAL_URL']
-url_get_message = f"{app.config['MESSAGE_URL']}/dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b"
+url_get_unread_messages_total = f"{app.config['RAS_SECURE_MESSAGE_SERVICE']}/labels?name=unread"
+url_get_message = f"{app.config['RAS_SECURE_MESSAGE_SERVICE']}/message/dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b"
 with open('tests/test_data/secure_messaging/message.json') as json_data:
     message = json.load(json_data)
 

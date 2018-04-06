@@ -13,7 +13,7 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 def get_messages_list(encoded_jwt, label):
     logger.debug('Attempting to retrieve the messages list', label=label)
-    url = f"{app.config['MESSAGES_LIST_URL']}&label={label}"
+    url = f"{app.config['RAS_SECURE_MESSAGE_SERVICE']}/messages?limit={app.config['MESSAGE_LIMIT']}&label={label}"
     headers = {"Authorization": encoded_jwt}
     response = request_handler('GET', url, headers=headers)
 
@@ -27,7 +27,7 @@ def get_messages_list(encoded_jwt, label):
 
 def get_unread_message_total(encoded_jwt):
     logger.debug('Attempting to retrieve the unread message total')
-    url = app.config['UNREAD_MESSAGES_TOTAL_URL']
+    url = f"{app.config['RAS_SECURE_MESSAGE_SERVICE']}/labels?name=unread"
     headers = {"Authorization": encoded_jwt}
     response = request_handler('GET', url, headers=headers, fail=False)
 
@@ -44,7 +44,7 @@ def get_unread_message_total(encoded_jwt):
 
 def get_message(encoded_jwt, message_id, label):
     logger.debug('Attempting to retrieve message', message_id=message_id, label=label)
-    url = app.config['DRAFT_URL'] if label == 'DRAFT' else app.config['MESSAGE_URL']
+    url = f"{app.config['RAS_SECURE_MESSAGE_SERVICE']}/draft" if label == 'DRAFT' else f"{app.config['RAS_SECURE_MESSAGE_SERVICE']}/message"
     url = f'{url}/{message_id}'
     headers = {"Authorization": encoded_jwt}
     response = request_handler('GET', url, headers=headers)
@@ -60,7 +60,7 @@ def get_message(encoded_jwt, message_id, label):
 def get_thread_message(encoded_jwt, thread_id, party_id):
     logger.debug('Attempting to retrieve thread message', thread_id=thread_id, party_id=party_id)
     method = 'GET'
-    url = f"{app.config['THREAD_URL']}/{thread_id}"
+    url = f"{app.config['RAS_SECURE_MESSAGE_SERVICE']}/thread/{thread_id}"
     headers = {"Authorization": encoded_jwt}
     response = request_handler(method, url, headers=headers)
 
@@ -84,7 +84,7 @@ def get_thread_message(encoded_jwt, thread_id, party_id):
 
 def remove_unread_label(encoded_jwt, message_id):
     logger.debug('Attempting to remove unread label', message_id=message_id)
-    url = app.config['REMOVE_UNREAD_LABEL_URL'].format(message_id)
+    url = f"{app.config['RAS_SECURE_MESSAGE_SERVICE']}/message/{message_id}/modify"
     headers = {"Authorization": encoded_jwt}
     data = {"label": 'UNREAD', "action": 'remove'}
     response = request_handler('PUT', url, headers=headers, json=data, fail=False)
@@ -102,7 +102,7 @@ def remove_unread_label(encoded_jwt, message_id):
 def send_message(encoded_jwt, message_json):
     logger.debug('Attempting to send message')
     headers = {"Authorization": encoded_jwt}
-    url = app.config['SEND_MESSAGE_URL']
+    url = f"{app.config['RAS_SECURE_MESSAGE_SERVICE']}/v2/messages"
     response = request_handler('POST', url, headers=headers, json=message_json)
 
     if response.status_code == 400:
@@ -123,10 +123,10 @@ def save_draft(encoded_jwt, message_json):
 
     # If message already exists modify, otherwise save a new draft
     if message_json.get('msg_id'):
-        url = app.config['DRAFT_MODIFY_URL'].format(message_json['msg_id'])
+        url = f"{app.config['RAS_SECURE_MESSAGE_SERVICE']}/draft/{message_json['msg_id']}/modify"
         response = request_handler('PUT', url, headers=headers, json=message_json)
     else:
-        url = app.config['DRAFT_SAVE_URL']
+        url = f"{app.config['RAS_SECURE_MESSAGE_SERVICE']}/draft/save"
         response = request_handler('POST', url, headers=headers, json=message_json)
 
     if response.status_code == 400:

@@ -14,7 +14,7 @@ logger = wrap_logger(logging.getLogger(__name__))
 def get_collection_instrument(collection_instrument_id):
     logger.debug('Retrieving collection instrument',
                  collection_instrument_id=collection_instrument_id)
-    url = app.config['RAS_CI_DETAILS'].format(collection_instrument_id)
+    url = f"{app.config['RAS_COLLECTION_INSTRUMENT_SERVICE']}/collection-instrument-api/1.0.2/collectioninstrument/id/{collection_instrument_id}"
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
     if response.status_code != 200:
@@ -26,7 +26,7 @@ def get_collection_instrument(collection_instrument_id):
 
 def download_collection_instrument(collection_instrument_id, case_id, party_id):
     logger.debug('Downloading collection instrument', collection_instrument_id=collection_instrument_id)
-    url = app.config['RAS_CI_DOWNLOAD'].format(collection_instrument_id)
+    url = f"{app.config['RAS_COLLECTION_INSTRUMENT_SERVICE']}/collection-instrument-api/1.0.2/download/{collection_instrument_id}"
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
     # Post relevant download case event
@@ -47,7 +47,7 @@ def download_collection_instrument(collection_instrument_id, case_id, party_id):
 
 def upload_collection_instrument(upload_file, case_id, party_id):
     logger.info('Attempting to upload collection instrument', case_id=case_id)
-    url = app.config['RAS_CI_UPLOAD'].format(case_id)
+    url = f"{app.config['RAS_COLLECTION_INSTRUMENT_SERVICE']}/survey_response-api/v1/survey_responses/{case_id}"
     response = request_handler('POST', url, auth=app.config['BASIC_AUTH'], files=upload_file)
 
     # Post relevant upload case event

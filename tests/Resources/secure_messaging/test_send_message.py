@@ -7,20 +7,20 @@ import requests_mock
 from frontstage_api import app
 
 
-url_get_thread = f"{app.config['THREAD_URL']}/dfcb2b2c-a1d8-4d86-a974-7ffe05a3141c"
+url_get_thread = f"{app.config['RAS_SECURE_MESSAGE_SERVICE']}/thread/dfcb2b2c-a1d8-4d86-a974-7ffe05a3141c"
 with open('tests/test_data/secure_messaging/thread.json') as json_data:
     thread = json.load(json_data)
 with open('tests/test_data/secure_messaging/thread_no_party.json') as json_data:
     thread_no_party = json.load(json_data)
-url_get_party_from_id = app.config['RAS_PARTY_GET_BY_RESPONDENT_ID'].format('07d672bc-497b-448f-a406-a20a7e6013d7')
+url_get_party_from_id = f"{app.config['RAS_PARTY_SERVICE']}/party-api/v1/respondents/id/07d672bc-497b-448f-a406-a20a7e6013d7"
 with open('tests/test_data/party/party.json') as json_data:
     party = json.load(json_data)
-url_get_case_from_party_id = app.config['RM_CASE_GET_BY_PARTY'].format('07d672bc-497b-448f-a406-a20a7e6013d7')
+url_get_case_from_party_id = f"{app.config['RM_CASE_SERVICE']}/cases/partyid/07d672bc-497b-448f-a406-a20a7e6013d7"
 with open('tests/test_data/case/case.json') as json_data:
     case = [json.load(json_data)]
-url_send_message = app.config['SEND_MESSAGE_URL']
-url_save_draft = app.config['DRAFT_SAVE_URL']
-url_modify_draft = app.config['DRAFT_MODIFY_URL'].format('msg_id')
+url_send_message = f"{app.config['RAS_SECURE_MESSAGE_SERVICE']}/v2/messages"
+url_save_draft = f"{app.config['RAS_SECURE_MESSAGE_SERVICE']}/draft/save"
+url_modify_draft = f"{app.config['RAS_SECURE_MESSAGE_SERVICE']}/draft/msg_id/modify"
 
 encoded_jwt = 'testjwt'
 

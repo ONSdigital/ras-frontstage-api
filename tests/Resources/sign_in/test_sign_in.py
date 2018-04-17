@@ -7,8 +7,8 @@ import requests_mock
 from frontstage_api import app
 
 
-url_get_token = app.config['OAUTH_TOKEN_URL']
-url_get_party_by_email = app.config['RAS_PARTY_GET_BY_EMAIL_URL'].format('test')
+url_get_token = f"{app.config['RAS_OAUTH_SERVICE']}/api/v1/tokens/"
+url_get_party_by_email = f"{app.config['RAS_PARTY_SERVICE']}/party-api/v1/respondents/email"
 with open('tests/test_data/party/party.json') as json_data:
     party = json.load(json_data)
 
@@ -17,11 +17,12 @@ class TestSignIn(unittest.TestCase):
 
     def setUp(self):
         self.app = app.test_client()
+        auth_string = base64.b64encode(
+            bytes(f"{app.config['SECURITY_USER_NAME']}:{app.config['SECURITY_USER_PASSWORD']}", 'ascii')
+        ).decode("ascii")
         self.headers = {
+            'Authorization': f'Basic {auth_string}',
             'Content-Type': 'application/json',
-            'Authorization': 'Basic {}'.format(base64.b64encode(
-                bytes("{}:{}".format(app.config['SECURITY_USER_NAME'], app.config['SECURITY_USER_PASSWORD']), 'ascii')
-            ).decode("ascii"))
         }
         self.posted_form = {
             'username': 'test',

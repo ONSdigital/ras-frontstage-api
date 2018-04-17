@@ -13,7 +13,7 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 def get_party_by_respondent_id(party_id):
     logger.debug('Retrieving party', party_id=party_id)
-    url = app.config['RAS_PARTY_GET_BY_RESPONDENT_ID'].format(party_id)
+    url = f"{app.config['RAS_PARTY_SERVICE']}/party-api/v1/respondents/id/{party_id}"
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
     if response.status_code != 200:
@@ -26,7 +26,7 @@ def get_party_by_respondent_id(party_id):
 
 def get_party_by_business_id(party_id, collection_exercise_id=None):
     logger.debug('Retrieving party', party_id=party_id)
-    url = app.config['RAS_PARTY_GET_BY_BUSINESS_ID'].format(party_id)
+    url = f"{app.config['RAS_PARTY_SERVICE']}/party-api/v1/businesses/id/{party_id}"
     if collection_exercise_id:
         url += f"?collection_exercise_id={collection_exercise_id}&verbose=True"
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
@@ -41,8 +41,8 @@ def get_party_by_business_id(party_id, collection_exercise_id=None):
 
 def get_party_by_email(email):
     logger.debug('Retrieving party')
-    url = app.config['RAS_PARTY_GET_BY_EMAIL_URL'].format(email)
-    response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
+    url = f"{app.config['RAS_PARTY_SERVICE']}/party-api/v1/respondents/email"
+    response = request_handler('GET', url, json={"email": email}, auth=app.config['BASIC_AUTH'])
 
     if response.status_code != 200:
         logger.error('Failed to retrieve party')
@@ -54,7 +54,7 @@ def get_party_by_email(email):
 
 def verify_token(token):
     logger.debug('Verifying token party')
-    url = app.config['RAS_PARTY_VERIFY_PASSWORD_TOKEN'].format(token)
+    url = f"{app.config['RAS_PARTY_SERVICE']}/party-api/v1/tokens/verify/{token}"
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
     if response.status_code != 200:
@@ -68,7 +68,7 @@ def verify_token(token):
 def reset_password_request(username):
     logger.debug('Sending reset password request party')
     post_data = {"email_address": username}
-    url = app.config['RAS_PARTY_RESET_PASSWORD_REQUEST'].format(username)
+    url = f"{app.config['RAS_PARTY_SERVICE']}/party-api/v1/respondents/request_password_change"
     response = request_handler('POST', url, auth=app.config['BASIC_AUTH'], json=post_data)
 
     if response.status_code != 200:
@@ -81,7 +81,7 @@ def reset_password_request(username):
 def change_password(password, token):
     logger.debug('Changing password party')
     post_data = {"new_password": password}
-    url = app.config['RAS_PARTY_CHANGE_PASSWORD'].format(token)
+    url = f"{app.config['RAS_PARTY_SERVICE']}/party-api/v1/respondents/change_password/{token}"
     response = request_handler('PUT', url, auth=app.config['BASIC_AUTH'], json=post_data)
 
     if response.status_code != 200:
@@ -92,7 +92,7 @@ def change_password(password, token):
 
 def create_account(registration_data):
     logger.debug('Creating account')
-    url = app.config['RAS_PARTY_POST_RESPONDENTS']
+    url = f"{app.config['RAS_PARTY_SERVICE']}/party-api/v1/respondents"
     registration_data['status'] = 'CREATED'
     response = request_handler('POST', url, auth=app.config['BASIC_AUTH'], json=registration_data)
 
@@ -106,7 +106,7 @@ def create_account(registration_data):
 
 def verify_email(token):
     logger.debug('Verifying email address', token=token)
-    url = app.config['RAS_PARTY_VERIFY_EMAIL'].format(token)
+    url = f"{app.config['RAS_PARTY_SERVICE']}/party-api/v1/emailverification/{token}"
     response = request_handler('PUT', url, auth=app.config['BASIC_AUTH'])
 
     if response.status_code != 200:
@@ -118,7 +118,7 @@ def verify_email(token):
 
 def add_survey(party_id, enrolment_code):
     logger.debug('Adding a survey')
-    url = app.config['RAS_PARTY_ADD_SURVEY']
+    url = f"{app.config['RAS_PARTY_SERVICE']}/party-api/v1/respondents/add_survey"
     request_json = {"party_id": party_id, "enrolment_code": enrolment_code}
     response = request_handler('POST', url, auth=app.config['BASIC_AUTH'], json=request_json)
 

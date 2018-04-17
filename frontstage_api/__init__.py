@@ -61,6 +61,6 @@ from frontstage_api.resources.surveys.download_collection_instrument import Down
 from frontstage_api.resources.surveys.upload_collection_instrument import UploadCollectionInstrument  # NOQA # pylint: disable=wrong-import-position
 from frontstage_api.resources.surveys.add_survey import AddSurvey  # NOQA # pylint: disable=wrong-import-position
 from frontstage_api.resources.surveys.confirm_add_organisation_survey import ConfirmAddOrganisationSurvey  # NOQA # pylint: disable=wrong-import-position
-from frontstage_api.resources.surveys.generate_eq_url import GenerateEqUrl
+from frontstage_api.resources.surveys.generate_eq_url import GenerateEqUrl # NOQA # pylint: disable=wrong-import-position
 
 api.init_app(app)

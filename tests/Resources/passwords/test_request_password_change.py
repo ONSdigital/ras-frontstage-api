@@ -7,18 +7,19 @@ import requests_mock
 from frontstage_api import app
 
 
-url_get_token = app.config['OAUTH_TOKEN_URL']
-url_reset_password_request = app.config['RAS_PARTY_RESET_PASSWORD_REQUEST']
+url_get_token = f"{app.config['RAS_OAUTH_SERVICE']}/api/v1/tokens/"
+url_reset_password_request = f"{app.config['RAS_PARTY_SERVICE']}/party-api/v1/respondents/request_password_change"
 
 
 class TestRequestPasswordChange(unittest.TestCase):
 
     def setUp(self):
         self.app = app.test_client()
+        auth_string = base64.b64encode(
+            bytes(f"{app.config['SECURITY_USER_NAME']}:{app.config['SECURITY_USER_PASSWORD']}", 'ascii')
+        ).decode("ascii")
         self.headers = {
-            'Authorization': 'Basic {}'.format(base64.b64encode(
-                bytes("{}:{}".format(app.config['SECURITY_USER_NAME'], app.config['SECURITY_USER_PASSWORD']), 'ascii')
-            ).decode("ascii")),
+            'Authorization': f'Basic {auth_string}',
             'Content-Type': 'application/json',
         }
         self.posted_form = {

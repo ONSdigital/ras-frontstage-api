@@ -6,12 +6,12 @@ import requests_mock
 from frontstage_api import app
 
 from tests.Resources.surveys.mocked_services import case, categories, url_get_case, url_get_case_categories, \
-    url_upload_collection_instrument, url_post_case_event_uuid
+    url_upload_ci, url_post_case_event_uuid
 from tests.Resources.surveys.basic_auth_header import basic_auth_header
 
 case_id = 'abc670a5-67c6-4d96-9164-13b4017b8704'
 party_id = '07d672bc-497b-448f-a406-a20a7e6013d7'
-test_upload_ci_url = '/surveys/upload-ci?case_id={}&party_id={}'.format(case_id, party_id)
+test_upload_ci_url = f'/surveys/upload-ci?case_id={case_id}&party_id={party_id}'
 
 
 class TestUploadCollectionInstrument(unittest.TestCase):
@@ -24,7 +24,7 @@ class TestUploadCollectionInstrument(unittest.TestCase):
     @requests_mock.mock()
     def test_upload_collection_instrument(self, mock_request):
         mock_request.get(url_get_case, json=case)
-        mock_request.post(url_upload_collection_instrument)
+        mock_request.post(url_upload_ci)
         mock_request.get(url_get_case_categories, json=categories)
         mock_request.post(url_post_case_event_uuid, status_code=201)
 
@@ -33,7 +33,7 @@ class TestUploadCollectionInstrument(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_upload_collection_instrument_missing_args(self):
-        response = self.app.post('/surveys/upload-ci?case_id={}'.format(case_id),
+        response = self.app.post(f'/surveys/upload-ci?case_id={case_id}',
                                  headers=self.headers, data=self.ci_data)
 
         self.assertEqual(response.status_code, 400)
@@ -58,7 +58,7 @@ class TestUploadCollectionInstrument(unittest.TestCase):
     @requests_mock.mock()
     def test_upload_collection_instrument_400(self, mock_request):
         mock_request.get(url_get_case, json=case)
-        mock_request.post(url_upload_collection_instrument, status_code=400, text="FAILED")
+        mock_request.post(url_upload_ci, status_code=400, text="FAILED")
         mock_request.get(url_get_case_categories, json=categories)
         mock_request.post(url_post_case_event_uuid, status_code=201)
 
@@ -70,7 +70,7 @@ class TestUploadCollectionInstrument(unittest.TestCase):
     @requests_mock.mock()
     def test_upload_collection_instrument_fail(self, mock_request):
         mock_request.get(url_get_case, json=case)
-        mock_request.post(url_upload_collection_instrument, status_code=500)
+        mock_request.post(url_upload_ci, status_code=500)
         mock_request.get(url_get_case_categories, json=categories)
         mock_request.post(url_post_case_event_uuid, status_code=201)
 

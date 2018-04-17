@@ -7,20 +7,20 @@ import requests_mock
 from frontstage_api import app
 
 
-url_get_message = '{}/{}'.format(app.config['MESSAGE_URL'], 'dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b')
+url_get_message = f"{app.config['RAS_SECURE_MESSAGE_SERVICE']}/message/dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b"
 with open('tests/test_data/secure_messaging/message.json') as json_data:
     message = json.load(json_data)
-url_get_draft = '{}/{}'.format(app.config['DRAFT_URL'], 'dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b')
+url_get_draft = f"{app.config['RAS_SECURE_MESSAGE_SERVICE']}/draft/dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b"
 with open('tests/test_data/secure_messaging/draft.json') as json_data:
     draft = json.load(json_data)
 with open('tests/test_data/secure_messaging/draft_with_thread.json') as json_data:
     draft_with_thread = json.load(json_data)
-url_get_thread = '{}/{}'.format(app.config['THREAD_URL'], 'dfcb2b2c-a1d8-4d86-a974-7ffe05a3141c')
+url_get_thread = f"{app.config['RAS_SECURE_MESSAGE_SERVICE']}/thread/dfcb2b2c-a1d8-4d86-a974-7ffe05a3141c"
 with open('tests/test_data/secure_messaging/thread.json') as json_data:
     thread = json.load(json_data)
 with open('tests/test_data/secure_messaging/thread_no_party.json') as json_data:
     thread_no_party = json.load(json_data)
-url_remove_unread_label = app.config['REMOVE_UNREAD_LABEL_URL'].format('dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b')
+url_remove_unread_label = f"{app.config['RAS_SECURE_MESSAGE_SERVICE']}/message/dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b/modify"
 encoded_jwt = 'testjwt'
 
 
@@ -29,12 +29,13 @@ class TestGetMessage(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
 
+        auth_string = base64.b64encode(
+            bytes(f"{app.config['SECURITY_USER_NAME']}:{app.config['SECURITY_USER_PASSWORD']}", 'ascii')
+        ).decode("ascii")
         self.headers = {
-            'jwt': encoded_jwt,
+            'Authorization': f'Basic {auth_string}',
             'Content-Type': 'application/json',
-            'Authorization': 'Basic {}'.format(base64.b64encode(
-                bytes("{}:{}".format(app.config['SECURITY_USER_NAME'], app.config['SECURITY_USER_PASSWORD']),
-                      'ascii')).decode("ascii"))
+            'jwt': encoded_jwt,
         }
 
     @requests_mock.mock()

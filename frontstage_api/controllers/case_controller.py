@@ -15,7 +15,7 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 def get_case_by_case_id(case_id):
     logger.debug('Retrieving case', case_id=case_id)
-    url = app.config['RM_CASE_GET_BY_ID'].format(case_id)
+    url = f"{app.config['RM_CASE_SERVICE']}/cases/{case_id}"
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
     if response.status_code != 200:
@@ -28,9 +28,9 @@ def get_case_by_case_id(case_id):
 
 def get_case_by_party_id(party_id, case_events=False):
     logger.debug('Retrieving case', party_id=party_id)
-    url = app.config['RM_CASE_GET_BY_PARTY'].format(party_id)
+    url = f"{app.config['RM_CASE_SERVICE']}/cases/partyid/{party_id}"
     if case_events:
-        url = '{}?caseevents=true'.format(url)
+        url = f'{url}?caseevents=true'
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
     if response.status_code != 200:
@@ -43,7 +43,7 @@ def get_case_by_party_id(party_id, case_events=False):
 
 def get_case_by_enrolment_code(enrolment_code):
     logger.debug('Retrieving case', enrolment_code=enrolment_code)
-    url = app.config['RM_CASE_GET_BY_IAC'].format(enrolment_code)
+    url = f"{app.config['RM_CASE_SERVICE']}/cases/iac/{enrolment_code}"
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
     if response.status_code != 200:
@@ -56,7 +56,7 @@ def get_case_by_enrolment_code(enrolment_code):
 
 def get_case_categories():
     logger.debug('Retrieving case categories')
-    url = app.config['RM_CASE_GET_CATEGORIES']
+    url = f"{app.config['RM_CASE_SERVICE']}/categories"
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
     if response.status_code != 200:
@@ -77,7 +77,7 @@ def validate_case_category(category):
 def post_case_event(case_id, party_id, category, description):
     logger.debug('Posting case event', case_id=case_id)
     validate_case_category(category)
-    url = app.config['RM_CASE_POST_CASE_EVENT'].format(case_id)
+    url = f"{app.config['RM_CASE_SERVICE']}/cases/{case_id}/events"
     message = {
         'description': description,
         'category': category,

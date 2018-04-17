@@ -7,19 +7,20 @@ import requests_mock
 from frontstage_api import app
 
 
-url_get_iac = app.config['RM_IAC_GET'].format('test_enrolment')
-url_create_account = app.config['RAS_PARTY_POST_RESPONDENTS']
+url_get_iac = f"{app.config['RM_IAC_SERVICE']}/iacs/test_enrolment"
+url_create_account = f"{app.config['RAS_PARTY_SERVICE']}/party-api/v1/respondents"
 
 
 class TestRegister(unittest.TestCase):
 
     def setUp(self):
         self.app = app.test_client()
+        auth_string = base64.b64encode(
+            bytes(f"{app.config['SECURITY_USER_NAME']}:{app.config['SECURITY_USER_PASSWORD']}", 'ascii')
+        ).decode("ascii")
         self.headers = {
+            'Authorization': f'Basic {auth_string}',
             'Content-Type': 'application/json',
-            'Authorization': 'Basic {}'.format(base64.b64encode(
-                bytes("{}:{}".format(app.config['SECURITY_USER_NAME'], app.config['SECURITY_USER_PASSWORD']), 'ascii')
-            ).decode("ascii"))
         }
         self.iac_response = {
             "iac": "test_enrolment",

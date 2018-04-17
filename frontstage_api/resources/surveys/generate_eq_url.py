@@ -1,6 +1,6 @@
 import logging
 
-from flask import request, current_app
+from flask import current_app, jsonify, make_response, Response, request
 from flask_restplus import Resource, reqparse
 from structlog import wrap_logger
 
@@ -32,6 +32,12 @@ class GenerateEqUrl(Resource):
         logger.info('Generating EQ URL', case_id=case_id, party_id=party_id)
 
         case = case_controller.get_case_by_case_id(case_id)
+
+        if case['caseGroup']['caseGroupStatus'] == 'COMPLETE':
+            logger.info('The case group status is complete, opening an EQ is forbidden',
+                        case_id=case_id, party_id=party_id)
+            return Response(status=403)
+
         case_controller.check_case_permissions(party_id, case['partyId'], case_id=case_id)
 
         payload = EqPayload().create_payload(case)
@@ -46,9 +52,6 @@ class GenerateEqUrl(Resource):
         case_controller.post_case_event(case_id,
                                         party_id=party_id,
                                         category=category,
-                                        description='Instrument {} launched by {} for case {}'.format(
-                                            case['collectionInstrumentId'], party_id, case_id))
+                                        description=f"Instrument {case['collectionInstrumentId']} launched by {party_id} for case {case_id}")
 
-        return {"eq_url": eq_url}
-
-
+        return make_response(jsonify(eq_url=eq_url), 200)

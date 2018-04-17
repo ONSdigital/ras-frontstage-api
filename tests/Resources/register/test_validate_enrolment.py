@@ -7,25 +7,26 @@ import requests_mock
 from frontstage_api import app
 
 
-url_get_iac = app.config['RM_IAC_GET'].format('test_enrolment')
-url_get_case_by_enrolment = app.config['RM_CASE_GET_BY_IAC'].format('test_enrolment')
+url_get_iac = f"{app.config['RM_IAC_SERVICE']}/iacs/test_enrolment"
+url_get_case_by_enrolment = f"{app.config['RM_CASE_SERVICE']}/cases/iac/test_enrolment"
 with open('tests/test_data/case/case.json') as json_data:
     case = json.load(json_data)
-url_get_case_categories = app.config['RM_CASE_GET_CATEGORIES']
+url_get_case_categories = f"{app.config['RM_CASE_SERVICE']}/categories"
 with open('tests/test_data/case/categories.json') as json_data:
     categories = json.load(json_data)
-url_post_case_event = app.config['RM_CASE_POST_CASE_EVENT'].format('test_case_id')
+url_post_case_event = f"{app.config['RM_CASE_SERVICE']}/cases/test_case_id/events"
 
 
 class TestRegister(unittest.TestCase):
 
     def setUp(self):
         self.app = app.test_client()
+        auth_string = base64.b64encode(
+            bytes(f"{app.config['SECURITY_USER_NAME']}:{app.config['SECURITY_USER_PASSWORD']}", 'ascii')
+        ).decode("ascii")
         self.headers = {
+            'Authorization': f'Basic {auth_string}',
             'Content-Type': 'application/json',
-            'Authorization': 'Basic {}'.format(base64.b64encode(
-                bytes("{}:{}".format(app.config['SECURITY_USER_NAME'], app.config['SECURITY_USER_PASSWORD']), 'ascii')
-            ).decode("ascii"))
         }
         self.enrolment_json = {
             'enrolment_code': 'test_enrolment',

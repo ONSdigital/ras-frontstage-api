@@ -5,13 +5,13 @@ from frontstage_api import app
 from tests.Resources.surveys.basic_auth_header import basic_auth_header
 from tests.Resources.surveys.mocked_services import business_party, case, collection_exercise, \
      collection_instrument_seft, go_live_event, survey, url_get_business_party, \
-     url_get_case, url_get_collection_exercise, url_get_collection_exercise_go_live, url_get_collection_instrument, \
+     url_get_case, url_get_collection_exercise, url_get_collection_exercise_go_live, url_get_ci, \
      url_get_survey
 
 
 case_id = 'abc670a5-67c6-4d96-9164-13b4017b8704'
 party_id = '07d672bc-497b-448f-a406-a20a7e6013d7'
-test_access_case_url = '/surveys/access-case?case_id={}&party_id={}'.format(case_id, party_id)
+test_access_case_url = f'/surveys/access-case?case_id={case_id}&party_id={party_id}'
 
 
 class TestAccessCase(unittest.TestCase):
@@ -27,7 +27,7 @@ class TestAccessCase(unittest.TestCase):
         mock_request.get(url_get_collection_exercise_go_live, json=go_live_event)
         mock_request.get(url_get_business_party, json=business_party)
         mock_request.get(url_get_survey, json=survey)
-        mock_request.get(url_get_collection_instrument, json=collection_instrument_seft)
+        mock_request.get(url_get_ci, json=collection_instrument_seft)
 
         response = self.app.get(test_access_case_url, headers=self.headers)
 

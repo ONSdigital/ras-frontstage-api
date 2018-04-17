@@ -3,8 +3,9 @@ from frontstage_api import app
 
 
 def basic_auth_header():
+    auth_string = base64.b64encode(
+        bytes(f"{app.config['SECURITY_USER_NAME']}:{app.config['SECURITY_USER_PASSWORD']}", 'ascii')
+    ).decode("ascii")
     return {
-        'Authorization': 'Basic {}'.format(base64.b64encode(
-            bytes("{}:{}".format(app.config['SECURITY_USER_NAME'], app.config['SECURITY_USER_PASSWORD']),
-                  'ascii')).decode("ascii"))
+        'Authorization': f'Basic {auth_string}',
     }

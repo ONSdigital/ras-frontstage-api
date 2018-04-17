@@ -9,14 +9,14 @@ from frontstage_api.exceptions.exceptions import ApiError, InvalidEqPayLoad
 
 from tests.Resources.surveys.mocked_services import case, collection_exercise, collection_exercise_events, \
      business_party, survey, collection_instrument_eq, url_get_case, url_get_collection_exercise, \
-     url_get_collection_exercise_events, url_get_business_party, url_get_survey, url_get_collection_instrument, \
-     collection_instrument_seft, url_post_case_event_uuid, url_get_case_categories, categories
+     url_get_collection_exercise_events, url_get_business_party, url_get_survey, url_get_ci, \
+     collection_instrument_seft, url_post_case_event_uuid, url_get_case_categories, categories, completed_case
 from tests.Resources.surveys.basic_auth_header import basic_auth_header
 
 
 party_id = '07d672bc-497b-448f-a406-a20a7e6013d7'
 case_id = 'abc670a5-67c6-4d96-9164-13b4017b8704'
-test_generate_eq_url = '/surveys/generate-eq-url?party_id={}&case_id={}'.format(party_id,case_id)
+test_generate_eq_url = f'/surveys/generate-eq-url?party_id={party_id}&case_id={case_id}'
 
 
 class TestGenerateEqURL(unittest.TestCase):
@@ -34,16 +34,28 @@ class TestGenerateEqURL(unittest.TestCase):
         mock_request.get(url_get_collection_exercise_events, json=collection_exercise_events)
         mock_request.get(url_get_business_party, json=business_party)
         mock_request.get(url_get_survey, json=survey)
-        mock_request.get(url_get_collection_instrument, json=collection_instrument_eq)
+        mock_request.get(url_get_ci, json=collection_instrument_eq)
         mock_request.get(url_get_case_categories, json=categories)
         mock_request.post(url_post_case_event_uuid, status_code=201)
 
         # When the generate-eq-url is called
         response = self.app.get(test_generate_eq_url, headers=self.headers)
 
-        # A dict with the eq_url is returned
+        # An eq url is generated
         self.assertEqual(response.status_code, 200)
-        self.assertIn("eq_url", json.loads(response.data))
+        self.assertIn("https://eq-test/session?token=", json.loads(response.data)['eq_url'])
+
+    @requests_mock.mock()
+    def test_generate_eq_url_complete_case(self, mock_request):
+
+        # Given a mocked case has its caseGroup status as complete
+        mock_request.get(url_get_case, json=completed_case)
+
+        # When the generate-eq-url is called
+        response = self.app.get(test_generate_eq_url, headers=self.headers)
+
+        # A 403 is returned
+        self.assertEqual(response.status_code, 403)
 
     @requests_mock.mock()
     def test_generate_eq_url_seft(self, mock_request):
@@ -53,8 +65,7 @@ class TestGenerateEqURL(unittest.TestCase):
         mock_request.get(url_get_collection_exercise_events, json=collection_exercise_events)
         mock_request.get(url_get_business_party, json=business_party)
         mock_request.get(url_get_survey, json=survey)
-        mock_request.get(url_get_collection_instrument, json=collection_instrument_seft)
-
+        mock_request.get(url_get_ci, json=collection_instrument_seft)
 
         # When create_payload is called
         # Then an InvalidEqPayLoad is raised
@@ -69,7 +80,7 @@ class TestGenerateEqURL(unittest.TestCase):
         with open('tests/test_data/collection_instrument/collection_instrument_eq_no_eq_id.json') as json_data:
             collection_instrument_eq_no_eq_id = json.load(json_data)
 
-        mock_request.get(url_get_collection_instrument, json=collection_instrument_eq_no_eq_id)
+        mock_request.get(url_get_ci, json=collection_instrument_eq_no_eq_id)
 
         # When create_payload is called
         # Then an InvalidEqPayLoad is raised
@@ -85,7 +96,7 @@ class TestGenerateEqURL(unittest.TestCase):
         with open('tests/test_data/collection_instrument/collection_instrument_eq_no_form_type.json') as json_data:
             collection_instrument_eq_no_form_type = json.load(json_data)
 
-        mock_request.get(url_get_collection_instrument, json=collection_instrument_eq_no_form_type)
+        mock_request.get(url_get_ci, json=collection_instrument_eq_no_form_type)
 
         # When create_payload is called
         # Then an InvalidEqPayLoad is raised
@@ -114,8 +125,18 @@ class TestGenerateEqURL(unittest.TestCase):
         # When format_string_long_date_time_to_short_date is called
         # Then an InvalidEqPayLoad is raised
         with self.assertRaises(InvalidEqPayLoad) as e:
-            EqPayload()._format_string_long_date_time_to_short_date(date[:10])
-        self.assertEqual(e.exception.error, 'Unable to format invalid, expected format %Y-%m-%d')
+            EqPayload()._format_string_long_date_time_to_short_date(date)
+        self.assertEqual(e.exception.error, 'Unable to format invalid')
+
+    def test_generate_eq_url_iso8601_date_format(self):
+
+        # Given an invalid date
+        date = '2007-01-25T12:00:00Z'
+
+        # When format_string_long_date_time_to_short_date is called
+        # Then an InvalidEqPayLoad is raised
+        result = EqPayload()._format_string_long_date_time_to_short_date(date)
+        self.assertEqual(result, '2007-01-25')
 
     def test_generate_eq_url_missing_event_date(self):
 

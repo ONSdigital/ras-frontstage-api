@@ -13,7 +13,7 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 def get_iac_from_enrolment(enrolment_code):
     logger.debug('Retrieving IAC', enrolment_code=enrolment_code)
-    url = app.config['RM_IAC_GET'].format(enrolment_code)
+    url = f"{app.config['RM_IAC_SERVICE']}/iacs/{enrolment_code}"
     response = request_handler('GET', url, auth=app.config['BASIC_AUTH'])
 
     if response.status_code == 404:

@@ -7,11 +7,11 @@ from tests.Resources.surveys.basic_auth_header import basic_auth_header
 from tests.Resources.surveys.mocked_services import business_party, case, completed_case, \
     collection_exercise, collection_exercise_before_go_live, collection_instrument_seft, \
     survey, go_live_event, go_live_event_before, url_get_business_party, url_get_case_by_party, \
-    url_get_collection_exercise, url_get_collection_exercise_go_live, url_get_survey, url_get_collection_instrument, \
+    url_get_collection_exercise, url_get_collection_exercise_go_live, url_get_survey, url_get_ci, \
     completed_by_phone_case
 
 party_id = '07d672bc-497b-448f-a406-a20a7e6013d7'
-test_surveys_list_todo = '/surveys/surveys-list?list=todo&party_id={}'.format(party_id)
+test_surveys_list_todo = f'/surveys/surveys-list?list=todo&party_id={party_id}'
 
 
 class TestGetSurveysList(unittest.TestCase):
@@ -27,7 +27,7 @@ class TestGetSurveysList(unittest.TestCase):
         mock_request.get(url_get_collection_exercise_go_live, json=go_live_event)
         mock_request.get(url_get_business_party, json=business_party)
         mock_request.get(url_get_survey, json=survey)
-        mock_request.get(url_get_collection_instrument, json=collection_instrument_seft)
+        mock_request.get(url_get_ci, json=collection_instrument_seft)
 
         response = self.app.get(test_surveys_list_todo, headers=self.headers)
 
@@ -43,7 +43,7 @@ class TestGetSurveysList(unittest.TestCase):
         mock_request.get(url_get_collection_exercise_go_live, json=go_live_event_before)
         mock_request.get(url_get_business_party, json=business_party)
         mock_request.get(url_get_survey, json=survey)
-        mock_request.get(url_get_collection_instrument, json=collection_instrument_seft)
+        mock_request.get(url_get_ci, json=collection_instrument_seft)
 
         response = self.app.get(test_surveys_list_todo, headers=self.headers)
 
@@ -54,12 +54,12 @@ class TestGetSurveysList(unittest.TestCase):
 
     @requests_mock.mock()
     def test_get_surveys_list_history(self, mock_request):
-        mock_request.get(url_get_case_by_party, json=completed_case)
+        mock_request.get(url_get_case_by_party, json=[completed_case])
         mock_request.get(url_get_collection_exercise, json=collection_exercise)
         mock_request.get(url_get_collection_exercise_go_live, json=go_live_event)
         mock_request.get(url_get_business_party, json=business_party)
         mock_request.get(url_get_survey, json=survey)
-        mock_request.get(url_get_collection_instrument, json=collection_instrument_seft)
+        mock_request.get(url_get_ci, json=collection_instrument_seft)
 
         response = self.app.get('/surveys/surveys-list?list=history&party_id=07d672bc-497b-448f-a406-a20a7e6013d7',
                                 headers=self.headers)
@@ -76,7 +76,7 @@ class TestGetSurveysList(unittest.TestCase):
         mock_request.get(url_get_collection_exercise_go_live, json=go_live_event)
         mock_request.get(url_get_business_party, json=business_party)
         mock_request.get(url_get_survey, json=survey)
-        mock_request.get(url_get_collection_instrument, json=collection_instrument_seft)
+        mock_request.get(url_get_ci, json=collection_instrument_seft)
 
         response = self.app.get('/surveys/surveys-list?list=history&party_id=07d672bc-497b-448f-a406-a20a7e6013d7',
                                 headers=self.headers)
@@ -160,7 +160,7 @@ class TestGetSurveysList(unittest.TestCase):
         mock_request.get(url_get_collection_exercise_go_live, json=go_live_event)
         mock_request.get(url_get_business_party, json=business_party)
         mock_request.get(url_get_survey, json=survey)
-        mock_request.get(url_get_collection_instrument, status_code=500)
+        mock_request.get(url_get_ci, status_code=500)
 
         response = self.app.get(test_surveys_list_todo, headers=self.headers)
 

@@ -9,11 +9,11 @@ from frontstage_api import app
 from frontstage_api.exceptions.exceptions import InvalidRequestMethod
 
 
-url_get_messages_list_INBOX = '{}&label={}'.format(app.config['MESSAGES_LIST_URL'], 'INBOX')
+url_get_messages_list_INBOX = f"{app.config['RAS_SECURE_MESSAGE_SERVICE']}/messages?limit={app.config['MESSAGE_LIMIT']}&label=INBOX"
 with open('tests/test_data/secure_messaging/messages_list_inbox.json') as json_data:
     messages_list_inbox = json.load(json_data)
-url_get_unread_messages_total = app.config['UNREAD_MESSAGES_TOTAL_URL']
-url_get_message = '{}/{}'.format(app.config['MESSAGE_URL'], 'dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b')
+url_get_unread_messages_total = f"{app.config['RAS_SECURE_MESSAGE_SERVICE']}/labels?name=unread"
+url_get_message = f"{app.config['RAS_SECURE_MESSAGE_SERVICE']}/message/dfcb2b2c-a1d8-4d86-a974-7ffe05a3141b"
 with open('tests/test_data/secure_messaging/message.json') as json_data:
     message = json.load(json_data)
 
@@ -24,12 +24,13 @@ class TestGetMessageList(unittest.TestCase):
 
     def setUp(self):
         self.app = app.test_client()
+        auth_string = base64.b64encode(
+            bytes(f"{app.config['SECURITY_USER_NAME']}:{app.config['SECURITY_USER_PASSWORD']}", 'ascii')
+        ).decode("ascii")
         self.headers = {
-            'jwt': encoded_jwt,
+            'Authorization': f'Basic {auth_string}',
             'Content-Type': 'application/json',
-            'Authorization': 'Basic {}'.format(base64.b64encode(
-                bytes("{}:{}".format(app.config['SECURITY_USER_NAME'], app.config['SECURITY_USER_PASSWORD']),
-                      'ascii')).decode("ascii"))
+            'jwt': encoded_jwt,
         }
 
     @requests_mock.mock()
@@ -50,7 +51,7 @@ class TestGetMessageList(unittest.TestCase):
         response = self.app.get("/secure-messaging/messages-list?label=INBOX", headers=self.headers)
 
         self.assertEqual(response.status_code, 500)
-        self.assertTrue('"url": "{}"'.format(url_get_messages_list_INBOX).encode() in response.data)
+        self.assertTrue(f'"url": "{url_get_messages_list_INBOX}"'.encode() in response.data)
 
     @requests_mock.mock()
     def test_get_messages_list_unread_total_connection_error(self, mock_request):

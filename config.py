@@ -32,7 +32,6 @@ class Config(object):
                                                      RAS_SECURE_MESSAGE_SERVICE_HOST,
                                                      RAS_SECURE_MESSAGE_SERVICE_PORT)
 
-
     RAS_PARTY_SERVICE_HOST = os.getenv('RAS_PARTY_SERVICE_HOST', 'localhost')
     RAS_PARTY_SERVICE_PORT = os.getenv('RAS_PARTY_SERVICE_PORT', 8081)
     RAS_PARTY_SERVICE_PROTOCOL = os.getenv('RAS_PARTY_SERVICE_PROTOCOL', 'http')
@@ -85,4 +84,4 @@ class TestingConfig(DevelopmentConfig):
     LOGGING_LEVEL = os.getenv('LOGGING_LEVEL', 'DEBUG')
     JSON_SECRET_KEYS = open("./tests/jwt-test-keys/test_key.json").read()
     EQ_URL = 'https://eq-test/session?token='
-    ACCOUNT_SERVICE_URL ='http://frontstage-url/surveys'
+    ACCOUNT_SERVICE_URL = 'http://frontstage-url/surveys'

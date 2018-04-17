@@ -25,21 +25,37 @@ class GetSurveysList(Resource):
     @auth.login_required
     @surveys_api.expect(parser)
     def get():
-        party_id = request.args['party_id']
+        respondent_id = request.args['party_id']
         survey_list = request.args['list']
-        logger.info('Attempting to retrieve surveys list', party_id=party_id, survey_list=survey_list)
+        logger.info('Retrieving surveys list', respondent_id=respondent_id, survey_list=survey_list)
 
-        cases = case_controller.get_case_by_party_id(party_id, case_events=True)
+        cases = case_controller.get_case_by_party_id(respondent_id, case_events=True)
+
         # Filter out the cases relevant to the request
         if survey_list == 'todo':
-            filtered_cases = [case for case in cases if case.get('caseGroup', {}).get('caseGroupStatus') not in ['COMPLETE', 'COMPLETEDBYPHONE']]
+            filtered_cases = [case
+                              for case in cases
+                              if case.get('caseGroup', {}).get('caseGroupStatus') not in ['COMPLETE', 'COMPLETEDBYPHONE']]
         elif survey_list == 'history':
-            filtered_cases = [case for case in cases if case.get('caseGroup', {}).get('caseGroupStatus') in ['COMPLETE', 'COMPLETEDBYPHONE']]
+            filtered_cases = [case
+                              for case in cases
+                              if case.get('caseGroup', {}).get('caseGroupStatus') in ['COMPLETE', 'COMPLETEDBYPHONE']]
         else:
             raise InvalidSurveyList(survey_list)
         surveys_data = [case_controller.build_full_case_data(case=case) for case in filtered_cases]
         now = datetime.now(timezone.utc)
         live_cases = [survey for survey in surveys_data if parse_date(survey['go_live']['timestamp']) < now]
+        enrolled_cases = [case for case in live_cases if _case_is_enrolled(case, respondent_id)]
 
-        logger.info('Successfully retrieved surveys list', party_id=party_id, survey_list=survey_list)
-        return live_cases
+        logger.info('Successfully retrieved surveys list', respondent_id=respondent_id, survey_list=survey_list)
+        return enrolled_cases
+
+
+def _case_is_enrolled(case, respondent_id):
+    association = next(association
+                       for association in case['business_party']['associations']
+                       if association['partyId'] == respondent_id)
+    enrolment_status = next(enrolment['enrolmentStatus']
+                            for enrolment in association.get('enrolments')
+                            if enrolment['surveyId'] == case['survey']['id'])
+    return enrolment_status == 'ENABLED'

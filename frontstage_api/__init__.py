@@ -44,8 +44,6 @@ def get_pw(username):
 # Import files containing endpoints to bind them to their respective namespaces
 import frontstage_api.error_handlers  # NOQA # pylint: disable=wrong-import-position
 import frontstage_api.resources.info  # NOQA # pylint: disable=wrong-import-position
-from frontstage_api.resources.secure_messaging.get_message import GetMessageView  # NOQA # pylint: disable=wrong-import-position
-from frontstage_api.resources.secure_messaging.get_message_list import GetMessagesList  # NOQA # pylint: disable=wrong-import-position
 from frontstage_api.resources.secure_messaging.send_message import SendMessage  # NOQA # pylint: disable=wrong-import-position
 from frontstage_api.resources.sign_in.sign_in import SignIn  # NOQA # pylint: disable=wrong-import-position
 from frontstage_api.resources.passwords.request_password_change import RequestPasswordChange  # NOQA # pylint: disable=wrong-import-position

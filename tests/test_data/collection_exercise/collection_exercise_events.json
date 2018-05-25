@@ -16,5 +16,11 @@
     "collectionExerciseId": "df634637-2aac-487f-9d2f-eb56615ed80e",
     "tag": "ref_period_end",
     "timestamp": "2020-05-31T00:00:00.000Z"
+    },
+     {
+    "id": "ffd8df48-31cd-49f0-acf6-41188d57fcb9",
+    "collectionExerciseId": "df634637-2aac-487f-9d2f-eb56615ed80e",
+    "tag": "employment",
+    "timestamp": "2020-05-31T00:00:00.000Z"
     }
 ]

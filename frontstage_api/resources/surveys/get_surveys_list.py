@@ -32,14 +32,15 @@ class GetSurveysList(Resource):
         cases = case_controller.get_case_by_party_id(respondent_id, case_events=True)
 
         # Filter out the cases relevant to the request
+        history_statuses = ['COMPLETE', 'COMPLETEDBYPHONE', 'NOLONGERREQUIRED']
         if survey_list == 'todo':
             filtered_cases = [case
                               for case in cases
-                              if case.get('caseGroup', {}).get('caseGroupStatus') not in ['COMPLETE', 'COMPLETEDBYPHONE']]
+                              if case.get('caseGroup', {}).get('caseGroupStatus') not in history_statuses]
         elif survey_list == 'history':
             filtered_cases = [case
                               for case in cases
-                              if case.get('caseGroup', {}).get('caseGroupStatus') in ['COMPLETE', 'COMPLETEDBYPHONE']]
+                              if case.get('caseGroup', {}).get('caseGroupStatus') in history_statuses]
         else:
             raise InvalidSurveyList(survey_list)
         surveys_data = [case_controller.build_full_case_data(case=case) for case in filtered_cases]
